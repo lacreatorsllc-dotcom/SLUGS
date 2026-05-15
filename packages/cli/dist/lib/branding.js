@@ -1,7 +1,6 @@
-import chalk from 'chalk';
-// Force truecolor so #ff5a00 renders distinctly (not quantized to 256-color index 208)
-chalk.level = 3;
-const orange = chalk.hex('#ff5a00');
+import { Chalk } from 'chalk';
+const brandChalk = new Chalk({ level: 3 });
+const orange = brandChalk.hex('#ff5a00');
 const leftPad = '    ';
 export const bannerLines = [
     '███████╗██╗     ██╗   ██╗ ██████╗ ███████╗',
@@ -16,16 +15,16 @@ export function logoLine(line) {
     return orange(leftPad + line);
 }
 export function subtitleLine() {
-    return chalk.gray(leftPad + subtitle);
+    return brandChalk.gray(leftPad + subtitle);
 }
 export function welcomeLine() {
     return (leftPad +
         orange('> ') +
-        chalk.gray('Welcome to ') +
+        brandChalk.gray('Welcome to ') +
         orange('SLUGS') +
-        chalk.gray('. Type ') +
+        brandChalk.gray('. Type ') +
         orange('slugs --help') +
-        chalk.gray(' to get started.'));
+        brandChalk.gray(' to get started.'));
 }
 export function printBrandHeader() {
     console.log();
