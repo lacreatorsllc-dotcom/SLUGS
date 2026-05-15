@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-const orange = chalk.hex('#ff5a00');
+const orange = chalk.ansi256(166);
 const leftPad = '    ';
 export const bannerLines = [
     '███████╗██╗     ██╗   ██╗ ██████╗ ███████╗',
