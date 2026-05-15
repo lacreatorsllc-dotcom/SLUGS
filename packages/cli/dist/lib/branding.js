@@ -1,5 +1,5 @@
-export const orange = (text) => `\x1b[38;2;255;90;0m${text}\x1b[39m`;
-const gray = (text) => `\x1b[90m${text}\x1b[39m`;
+export const orange = (text) => `\x1b[38;5;166m${text}\x1b[0m`;
+const gray = (text) => `\x1b[90m${text}\x1b[0m`;
 const leftPad = '    ';
 export const bannerLines = [
     '███████╗██╗     ██╗   ██╗ ██████╗ ███████╗',
