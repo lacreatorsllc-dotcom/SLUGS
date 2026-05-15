@@ -16,5 +16,9 @@ import { orange } from './lib/branding.js';
     initCommand(program);
     agentCommand(program);
     statusCommand(program);
+    if (process.argv.length <= 2) {
+        program.outputHelp();
+        return;
+    }
     program.parse();
 })();

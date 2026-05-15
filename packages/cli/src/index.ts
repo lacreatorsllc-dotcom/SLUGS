@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { program } from 'commander';
-import chalk from 'chalk';
 import { initCommand } from './commands/init.js';
 import { agentCommand } from './commands/agent.js';
 import { statusCommand } from './commands/status.js';
@@ -21,6 +20,11 @@ import { orange } from './lib/branding.js';
   initCommand(program);
   agentCommand(program);
   statusCommand(program);
+
+  if (process.argv.length <= 2) {
+    program.outputHelp();
+    return;
+  }
 
   program.parse();
 })();

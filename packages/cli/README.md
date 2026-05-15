@@ -4,6 +4,32 @@ Terminal control center for autonomous trading agents.
 
 ## Quick Start
 
+### Install
+
+Once published to npm:
+
+```bash
+npm install -g @slugs/cli
+slugs
+```
+
+For local development:
+
+```bash
+cd packages/cli
+npm install
+npm link
+slugs
+```
+
+If `slugs` is not found after `npm link`, make sure npm's global bin is on your `PATH`:
+
+```bash
+export PATH="$HOME/.npm-global/bin:$PATH"
+```
+
+### Develop
+
 ```bash
 cd packages/cli
 npm install
@@ -53,6 +79,20 @@ npm run dev -- status
 
 ```bash
 npm run build
+```
+
+## Publish
+
+```bash
+npm login
+npm publish --access public
+```
+
+Users can then install it globally:
+
+```bash
+npm install -g @slugs/cli
+slugs
 ```
 
 ## Architecture

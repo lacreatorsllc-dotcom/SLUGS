@@ -4,13 +4,25 @@
   "description": "SLUGS CLI — Terminal control center for autonomous trading agents",
   "main": "dist/index.js",
   "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "bin": {
     "slugs": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsx src/index.ts",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run build",
     "start": "tsx src/index.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "chalk": "^5.3.0",
