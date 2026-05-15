@@ -1,9 +1,6 @@
 import chalk from 'chalk';
 
-// Force truecolor so #ff5a00 renders distinctly (not quantized to 256-color index 208)
-chalk.level = 3;
-
-const orange = chalk.hex('#ff5a00');
+const orange = chalk.ansi256(166);
 const leftPad = '    ';
 
 export const bannerLines = [

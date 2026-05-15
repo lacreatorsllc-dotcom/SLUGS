@@ -1,16 +1,19 @@
 <claude-mem-context>
 # Memory Context
 
-# claude-mem status
+# [cli] recent context, 2026-05-14 8:04pm MDT
 
-This project has no memory yet. The current session will seed it; subsequent sessions will receive auto-injected context for relevant past work.
+Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
+Format: ID TIME TYPE TITLE
+Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Memory injection starts on your second session in a project.
+Stats: 4 obs (1,707t read) | 13,859t work | 88% savings
 
-`/learn-codebase` is available if the user wants to front-load the entire repo into memory in a single pass (~5 minutes on a typical repo, optional). Otherwise memory builds passively as work happens.
+### May 14, 2026
+129 7:56p ✅ SLUGS CLI Banner Visual Refinement
+130 " 🔵 SLUGS CLI Brand File Named `branding.ts`, Not `brand.ts`
+131 " ✅ SLUGS CLI Banner Color and Padding Updated in `branding.ts` and `animation.ts`
+132 7:57p ✅ SLUGS CLI Banner Styling Overhaul
 
-Live activity: http://localhost:37777
-How it works: `/how-it-works`
-
-This message disappears once the first observation lands.
+Access 14k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>
