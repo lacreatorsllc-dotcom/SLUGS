@@ -1,13 +1,13 @@
 <claude-mem-context>
 # Memory Context
 
-# [cli] recent context, 2026-05-14 8:25pm MDT
+# [cli] recent context, 2026-05-14 8:27pm MDT
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 19 obs (8,024t read) | 71,763t work | 89% savings
+Stats: 26 obs (10,097t read) | 104,396t work | 90% savings
 
 ### May 14, 2026
 129 7:56p ✅ SLUGS CLI Banner Visual Refinement
@@ -29,6 +29,13 @@ Stats: 19 obs (8,024t read) | 71,763t work | 89% savings
 154 8:09p ✅ SLUGS orange() Color Function Uses Three-Tier ANSI Fallback Chain
 155 " ⚖️ SLUGS orange() Simplified to Single 256-Color Code 166 After Multi-Tier Approach Abandoned
 158 8:20p 🔵 No Claude Code Stop Hook Found in ClawTerminal Project
+159 8:25p ✅ UI Design Reference Provided for "SLUGS" Component
+160 " 🟣 SLUGS CLI Banner Redesigned with Block-Style ASCII Art
+161 " 🔵 SLUGS CLI Project Structure and Global Install Path Confirmed
+162 8:26p 🔵 slugs Binary Globally Linked but ~/.npm-global/bin Missing from PATH
+163 " 🔴 Added ~/.npm-global/bin to PATH in .zshrc
+164 " 🔵 slugs Still Not Found via `zsh -lc` After PATH Fix
+165 " 🔴 slugs Global Command Confirmed Working via Interactive Shell
 
-Access 72k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 104k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>
