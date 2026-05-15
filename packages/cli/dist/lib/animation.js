@@ -1,23 +1,17 @@
-import chalk from 'chalk';
-import { bannerLines, subtitle } from './branding.js';
-const orange = chalk.hex('#e05c00');
+import { bannerLines, logoLine, subtitleLine, welcomeLine } from './branding.js';
 export function runStartupAnimation() {
     return new Promise((resolve) => {
         // Respect skip flag
         if (process.env.SLUGS_NO_ANIMATION) {
             console.log();
             for (const line of bannerLines) {
-                console.log(orange(line));
+                console.log(logoLine(line));
             }
             console.log();
-            console.log(chalk.gray('  ' + subtitle));
             console.log();
-            console.log(orange('> ') +
-                chalk.gray('Welcome to ') +
-                orange('SLUGS') +
-                chalk.gray('. Type ') +
-                orange('slugs --help') +
-                chalk.gray(' to get started.'));
+            console.log(subtitleLine());
+            console.log();
+            console.log(welcomeLine());
             console.log();
             resolve();
             return;
@@ -26,17 +20,13 @@ export function runStartupAnimation() {
         if (!process.stdout.isTTY) {
             console.log();
             for (const line of bannerLines) {
-                console.log(orange(line));
+                console.log(logoLine(line));
             }
             console.log();
-            console.log(chalk.gray('  ' + subtitle));
             console.log();
-            console.log(orange('> ') +
-                chalk.gray('Welcome to ') +
-                orange('SLUGS') +
-                chalk.gray('. Type ') +
-                orange('slugs --help') +
-                chalk.gray(' to get started.'));
+            console.log(subtitleLine());
+            console.log();
+            console.log(welcomeLine());
             console.log();
             resolve();
             return;
@@ -49,19 +39,14 @@ export function runStartupAnimation() {
         console.log();
         bannerLines.forEach((line, i) => {
             setTimeout(() => {
-                process.stdout.write(orange(line) + '\n');
+                process.stdout.write(logoLine(line) + '\n');
                 if (i === bannerLines.length - 1) {
                     setTimeout(() => {
                         process.stdout.write('\n');
-                        process.stdout.write(chalk.gray('  ' + subtitle) + '\n');
                         process.stdout.write('\n');
-                        process.stdout.write(orange('> ') +
-                            chalk.gray('Welcome to ') +
-                            orange('SLUGS') +
-                            chalk.gray('. Type ') +
-                            orange('slugs --help') +
-                            chalk.gray(' to get started.') +
-                            '\n');
+                        process.stdout.write(subtitleLine() + '\n');
+                        process.stdout.write('\n');
+                        process.stdout.write(welcomeLine() + '\n');
                         process.stdout.write('\n');
                         process.stdout.write('\x1B[?25h');
                         resolve();
