@@ -1,13 +1,13 @@
 <claude-mem-context>
 # Memory Context
 
-# [cli] recent context, 2026-05-14 9:35pm MDT
+# [cli] recent context, 2026-05-14 9:36pm MDT
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 32 obs (11,644t read) | 114,259t work | 90% savings
+Stats: 35 obs (12,626t read) | 294,052t work | 96% savings
 
 ### May 14, 2026
 129 7:56p ✅ SLUGS CLI Banner Visual Refinement
@@ -42,6 +42,9 @@ Stats: 32 obs (11,644t read) | 114,259t work | 90% savings
 169 " ✅ SLUGS Banner Finalized: All 8 Lines Normalized to 79 Characters
 170 8:29p ✅ SLUGS Banner Reverted to 6-Row Medium-Weight Design
 171 " 🔵 6-Row Medium Banner Verified Live — Line Widths 64–66 Chars
+172 9:36p ✅ SLUGS CLI ASCII Banner Replaced with Compact FIGlet-Style Art
+173 " 🟣 SLUGS CLI npm Publish Preparation — Package Configured and Verified
+174 " 🟣 Standalone slugs-cli Publish Directory Created at /Pentagon/slugs-cli
 
-Access 114k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 294k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>
