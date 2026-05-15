@@ -1,13 +1,13 @@
 <claude-mem-context>
 # Memory Context
 
-# [cli] recent context, 2026-05-14 9:37pm MDT
+# [cli] recent context, 2026-05-14 9:43pm MDT
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 35 obs (12,626t read) | 294,052t work | 96% savings
+Stats: 38 obs (13,418t read) | 299,539t work | 96% savings
 
 ### May 14, 2026
 129 7:56p ✅ SLUGS CLI Banner Visual Refinement
@@ -45,6 +45,9 @@ Stats: 35 obs (12,626t read) | 294,052t work | 96% savings
 172 9:36p ✅ SLUGS CLI ASCII Banner Replaced with Compact FIGlet-Style Art
 173 " 🟣 SLUGS CLI npm Publish Preparation — Package Configured and Verified
 174 " 🟣 Standalone slugs-cli Publish Directory Created at /Pentagon/slugs-cli
+175 9:38p ✅ SLUGS CLI Startup Animation Skipped for Help and Version Flags
+176 " 🔴 Animation Skip Verified Working for Top-Level Help But Broken for Subcommand --help
+177 " 🔴 Animation Suppression Confirmed Working for All Help Cases After Fresh Build
 
-Access 294k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 300k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>
