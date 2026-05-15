@@ -1,3 +1,4 @@
+export declare const orange: (text: string) => string;
 export declare const bannerLines: string[];
 export declare const subtitle = "terminal control center for autonomous trading agents";
 export declare function logoLine(line: string): string;

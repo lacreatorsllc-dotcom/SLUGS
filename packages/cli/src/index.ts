@@ -6,6 +6,7 @@ import { initCommand } from './commands/init.js';
 import { agentCommand } from './commands/agent.js';
 import { statusCommand } from './commands/status.js';
 import { runStartupAnimation } from './lib/animation.js';
+import { orange } from './lib/branding.js';
 
 // Run startup animation before anything else
 (async () => {
@@ -13,7 +14,7 @@ import { runStartupAnimation } from './lib/animation.js';
 
   program
     .name('slugs')
-    .description(chalk.bold('SLUGS CLI') + ' — Terminal control center for autonomous trading agents')
+    .description(orange('SLUGS CLI') + ' — Terminal control center for autonomous trading agents')
     .version('0.1.0', '-v, --version');
 
   // Register commands

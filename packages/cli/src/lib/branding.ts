@@ -1,7 +1,5 @@
-import { Chalk } from 'chalk';
-
-const brandChalk = new Chalk({ level: 3 });
-const orange = brandChalk.hex('#ff5a00');
+export const orange = (text: string) => `\x1b[38;2;255;90;0m${text}\x1b[39m`;
+const gray = (text: string) => `\x1b[90m${text}\x1b[39m`;
 const leftPad = '    ';
 
 export const bannerLines = [
@@ -20,18 +18,18 @@ export function logoLine(line: string): string {
 }
 
 export function subtitleLine(): string {
-  return brandChalk.gray(leftPad + subtitle);
+  return gray(leftPad + subtitle);
 }
 
 export function welcomeLine(): string {
   return (
     leftPad +
     orange('> ') +
-    brandChalk.gray('Welcome to ') +
+    gray('Welcome to ') +
     orange('SLUGS') +
-    brandChalk.gray('. Type ') +
+    gray('. Type ') +
     orange('slugs --help') +
-    brandChalk.gray(' to get started.')
+    gray(' to get started.')
   );
 }
 
