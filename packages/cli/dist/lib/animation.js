@@ -1,4 +1,8 @@
+import chalk from 'chalk';
 import { bannerLines, logoLine, subtitleLine, welcomeLine } from './branding.js';
+// Force truecolor so #ff5a00 renders distinctly (not quantized to 256-color index 208)
+chalk.level = 3;
+const orange = chalk.hex('#ff5a00');
 export function runStartupAnimation() {
     return new Promise((resolve) => {
         // Respect skip flag
