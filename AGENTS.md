@@ -1,13 +1,13 @@
 <claude-mem-context>
 # Memory Context
 
-# [ClawTerminal] recent context, 2026-05-18 11:02am MDT
+# [ClawTerminal] recent context, 2026-05-18 11:08am MDT
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 25 obs (7,180t read) | 158,936t work | 95% savings
+Stats: 28 obs (8,927t read) | 178,915t work | 95% savings
 
 ### Apr 23, 2026
 1 8:26p 🔵 ClawTerminal App Tech Stack and Android Start Command
@@ -48,14 +48,10 @@ S70 CLI tool "slugs" ASCII art banner confirmed working correctly (May 14 at 8:1
 157 8:20p 🔵 CLI Branding Color Defined in branding.ts Using ANSI 256-Color Code 166
 ### May 15, 2026
 S71 User requested context compaction to free up space to continue building (May 15 at 1:44 AM)
-**Investigated**: No specific investigation was performed — the request was to clear conversation context via /compact to make room for continued development work.
+### May 18, 2026
+319 11:03a ⚖️ Experimental AI-Native UI Sandbox Created for SLUGS App
+320 " 🔵 SLUGS App Is Vite + React SPA, Not Next.js — Port 3000 Had Two Conflicting Servers
+321 11:04a 🟣 Experimental AI-Native Route Built as React Router SPA Component, Not Next.js Page
 
-**Learned**: The session has reached a point where conversation context is consuming enough tokens that the user needs to compact before proceeding with further building.
-
-**Completed**: Claude recommended running /compact to compress the conversation context while preserving key decisions and current state.
-
-**Next Steps**: After compaction, the user intends to continue building — the specific feature or work being built was not detailed in this observation window.
-
-
-Access 159k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 179k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>
