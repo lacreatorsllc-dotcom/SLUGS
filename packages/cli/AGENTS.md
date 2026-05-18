@@ -1,13 +1,13 @@
 <claude-mem-context>
 # Memory Context
 
-# [cli] recent context, 2026-05-15 1:45am MDT
+# [cli] recent context, 2026-05-17 11:51pm MDT
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 38 obs (13,418t read) | 299,539t work | 96% savings
+Stats: 48 obs (17,049t read) | 317,502t work | 95% savings
 
 ### May 14, 2026
 129 7:56p ✅ SLUGS CLI Banner Visual Refinement
@@ -48,6 +48,17 @@ Stats: 38 obs (13,418t read) | 299,539t work | 96% savings
 175 9:38p ✅ SLUGS CLI Startup Animation Skipped for Help and Version Flags
 176 " 🔴 Animation Skip Verified Working for Top-Level Help But Broken for Subcommand --help
 177 " 🔴 Animation Suppression Confirmed Working for All Help Cases After Fresh Build
+### May 15, 2026
+178 1:45a 🔵 macOS Disk Near-Full: /System/Volumes/Data at 100% Capacity
+179 1:46a 🔵 Pentagon Project Directory Size Breakdown — Top Space Consumers Identified
+180 " 🔵 node_modules Across Pentagon Projects Total ~12G+ with claw_terminal/app Alone at 2.9G
+181 " 🔵 Hidden Cache Directories Consuming 4.6G: .cache (1.6G), .claude (1.3G), .npm (1.2G), .codex (537M)
+182 " ✅ Disk Cleanup Recovered ~3.5G — Root Volume Dropped from 96% to 72% Capacity
+183 1:47a 🔵 Worktree node_modules Successfully Removed; 10G+ Remains in Live Project node_modules
+184 " 🔵 Home Directory Scan: ~/Library (37G) and ~/Downloads (8G) Are Largest Disk Consumers Outside Pentagon
+185 1:48a 🔵 Large File Scan Found ~5G+ in Stale Installers, Duplicate DMGs, Sparkle Caches, and a 168M Log File
+186 " ✅ Second Cleanup Round Freed ~6G — Disk Now at 96% with 10Gi Available
+187 1:49a 🔵 Post-Cleanup Directory Sizes: Library Reduced to 34G, Downloads to 5.4G; Pentagon Unchanged at 22G
 
-Access 300k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 318k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>
