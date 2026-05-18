@@ -9,6 +9,7 @@ import Showcase from './components/Showcase.jsx'
 import EarlyAccess from './components/EarlyAccess.jsx'
 import Footer from './components/Footer.jsx'
 import ProfilePage from './components/ProfilePage.jsx'
+import ExperimentalAINative from './experimental-ai-native/ExperimentalAINative.jsx'
 
 function Landing() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/experimental-ai-native" element={<ExperimentalAINative />} />
         <Route path="/:username" element={<Profile />} />
       </Routes>
     </BrowserRouter>
