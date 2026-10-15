@@ -1,4 +1,8 @@
 {
+  "framework": "vite",
+  "installCommand": "npm install",
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/((?!assets|avatars|presentation|slugs-logo\\.png|favicon\\.ico|founder\\.).*)", "destination": "/index.html" }
   ]
