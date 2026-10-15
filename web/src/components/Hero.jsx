@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { APP_URL } from '../lib/links.js'
 import Avatar from './Avatar.jsx'
 import { USERS } from '../lib/users.js'
 import { joinWaitlist } from '../lib/firebase.js'
@@ -256,7 +257,7 @@ export default function Hero() {
 
             <motion.a
               variants={itemVariants}
-              href="https://app.slugs.run"
+              href={APP_URL}
               className="flex items-center gap-2 text-sm text-text2 hover:text-white transition-colors mb-6 group"
             >
               <span>Already have an account?</span>

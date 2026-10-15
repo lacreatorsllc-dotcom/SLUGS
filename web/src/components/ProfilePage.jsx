@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { APP_URL } from '../lib/links.js'
 import { PROFILES } from '../lib/users.js'
 
 function InitialAvatar({ name, color, size = 48 }) {
@@ -183,7 +184,7 @@ export default function ProfilePage({ username }) {
             <img src="/slugs-logo.png" alt="SLUGS" className="h-6 w-auto" style={{ imageRendering: 'pixelated' }} />
           </a>
           <a
-            href="https://app.slugs.run"
+            href={APP_URL}
             className="text-sm font-semibold px-4 py-1.5 rounded-lg text-black"
             style={{ background: '#d4683c' }}
           >
@@ -270,7 +271,7 @@ export default function ProfilePage({ username }) {
         >
           <p className="text-sm text-white/40 mb-3">Follow Gabe to see live agent updates in your feed</p>
           <a
-            href="https://app.slugs.run"
+            href={APP_URL}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-black transition-opacity hover:opacity-90"
             style={{ background: '#d4683c' }}
           >

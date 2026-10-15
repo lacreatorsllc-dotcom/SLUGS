@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { APP_URL } from '../lib/links.js'
 
 export default function Nav() {
   const handleWaitlist = (e) => {
@@ -21,7 +22,7 @@ export default function Nav() {
         {/* CTAs */}
         <div className="flex items-center gap-3">
           <a
-            href="https://app.slugs.run"
+            href={APP_URL}
             className="text-sm font-semibold px-5 py-2 rounded-lg border border-glass text-white/70 hover:text-white hover:border-white/20 transition-colors"
           >
             Open App
