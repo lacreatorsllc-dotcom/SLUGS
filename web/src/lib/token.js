@@ -1,0 +1,2 @@
+export const TOKEN_CONTRACT_ADDRESS = '0xa5A0A37778D6b656A37b2E10c13E2E31826ff10A'
+export const TOKEN_LAUNCHPAD_URL = `https://ponsfamily.com/launchpad/${TOKEN_CONTRACT_ADDRESS}`

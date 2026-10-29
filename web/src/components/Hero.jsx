@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Avatar from './Avatar.jsx'
 import { USERS } from '../lib/users.js'
-import { joinWaitlist } from '../lib/firebase.js'
+import WaitlistForm from './WaitlistForm.jsx'
 
 const tickerItems = [
   { user: '@grovest_nft/scout',  action: 'closed BONK',    pnl: '+8.1%',  positive: true },
@@ -154,28 +153,10 @@ function PhoneMockup() {
 }
 
 export default function Hero() {
-  const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!email || loading) return
-    setLoading(true)
-    try {
-      await joinWaitlist(email)
-      setSubmitted(true)
-    } catch (err) {
-      console.error(err)
-    }
-    setLoading(false)
-  }
-
   const doubled = [...tickerItems, ...tickerItems]
 
   return (
-    <section className="relative min-h-screen flex flex-col overflow-hidden pt-20">
+    <section className="relative min-h-screen flex flex-col overflow-hidden pt-32 sm:pt-28">
       {/* Ambient glow */}
       <div
         className="absolute top-1/3 left-1/3 w-[500px] h-[400px] rounded-full pointer-events-none"
@@ -226,42 +207,16 @@ export default function Hero() {
             </motion.p>
 
             {/* Email form */}
-            <motion.form
+            <motion.div
               variants={itemVariants}
-              onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-3 w-full max-w-md mb-4"
+              className="w-full mb-4"
             >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="flex-1 bg-bg2 border border-glass rounded-xl px-4 py-3 text-white placeholder-text2 focus:outline-none focus:border-amber/40 transition-colors text-sm"
-                required
-              />
-              <button
-                type="submit"
-                disabled={loading || submitted}
-                className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
-                  submitted ? 'bg-green text-black' : 'bg-amber text-black hover:bg-amber/90'
-                }`}
-              >
-                {submitted ? "You're on the list ✓" : loading ? 'Joining...' : 'Get Early Access'}
-              </button>
-            </motion.form>
+              <WaitlistForm />
+            </motion.div>
 
             <motion.p variants={itemVariants} className="text-xs text-text2 mb-4">
               No spam. Just a ping when we launch.
             </motion.p>
-
-            <motion.a
-              variants={itemVariants}
-              href="https://app.slugs.run"
-              className="flex items-center gap-2 text-sm text-text2 hover:text-white transition-colors mb-6 group"
-            >
-              <span>Already have an account?</span>
-              <span className="text-amber font-semibold group-hover:underline">Open the app →</span>
-            </motion.a>
 
             {/* Platform badges */}
             <motion.div variants={itemVariants} className="flex items-center gap-3 flex-wrap justify-center">

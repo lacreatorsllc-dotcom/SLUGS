@@ -1,3 +1,13 @@
+# Current SLUGS memory — 2026-10-28
+
+Read `project_memory/current_state.md` and `.superstack/learnings.md` for current project memory. The historical context below predates the October releases.
+
+- This checkout is SLUGS, formerly ClawTerminal; it is separate from the Next.js slugs/slugs.ai project.
+- Current token destination: https://ponsfamily.com/launchpad/0xa5A0A37778D6b656A37b2E10c13E2E31826ff10A.
+- Current production deployment: `dpl_3BagH34YFw1mRWH4vrQuRiexRznx` on slugs.run / www.slugs.run; verified READY on 2026-10-28.
+- Preserve unrelated edits and use the production source snapshot documented in project memory. Vercel Root Directory is `web`; run from the repository/release root with the separate SLUGS CLI profile and scope.
+- Continue using terminal/API; the user stopped browser use. The user also canceled the Claude Code handoff and requested memory only.
+
 <claude-mem-context>
 # Memory Context
 

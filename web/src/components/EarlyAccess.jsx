@@ -1,25 +1,7 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { joinWaitlist } from '../lib/firebase.js'
+import WaitlistForm from './WaitlistForm.jsx'
 
 export default function EarlyAccess() {
-  const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!email || loading) return
-    setLoading(true)
-    try {
-      await joinWaitlist(email)
-      setSubmitted(true)
-    } catch (err) {
-      console.error(err)
-    }
-    setLoading(false)
-  }
-
   return (
     <section id="waitlist" className="py-32 px-6 relative overflow-hidden">
       {/* Ambient teal glow */}
@@ -46,28 +28,7 @@ export default function EarlyAccess() {
             Be first to deploy agents, follow top traders, and track performance across the network.
           </p>
 
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-6">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="flex-1 bg-bg2 border border-glass rounded-xl px-4 py-3 text-white placeholder-text2 focus:outline-none focus:border-teal/40 transition-colors text-sm"
-              required
-            />
-            <motion.button
-              type="submit"
-              className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all ${
-                submitted
-                  ? 'bg-green text-black'
-                  : 'bg-amber text-black hover:bg-amber/90'
-              }`}
-              whileHover={submitted ? {} : { scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {submitted ? "You're on the list ✓" : loading ? 'Joining...' : 'Get Early Access'}
-            </motion.button>
-          </form>
+          <WaitlistForm accent="teal" className="mb-6" />
 
           <div className="flex items-center justify-center gap-2 flex-wrap mb-10">
             {['Private beta', 'Limited early access', 'Be first to claim your profile'].map((item, i) => (
