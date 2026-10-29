@@ -46,6 +46,7 @@ import {
   documentId,
   type DocumentData,
   type Timestamp,
+  deleteField,
 } from 'firebase/firestore'
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -245,6 +246,9 @@ export async function ensureUserProfile(uid: string, email?: string | null, seed
   const normalizedEmail = email?.trim().toLowerCase() ?? null
   const seed = buildProfileSeed(seedInput)
   const providerPatch: Record<string, unknown> = {}
+  // users/{uid} is readable by every signed-in user, so the email never lives there.
+  // Firebase Auth already holds it for the owner; scrub copies written by older builds.
+  const emailScrub: Record<string, unknown> = existing && 'email' in existing ? { email: deleteField() } : {}
 
   if (seed.provider) {
     providerPatch.auth_provider = seed.provider
@@ -273,6 +277,7 @@ export async function ensureUserProfile(uid: string, email?: string | null, seed
       await setProfile(uid, {
         username: reserved,
         ...providerPatch,
+        ...emailScrub,
         updated_at: serverTimestamp(),
       })
       return {
@@ -292,12 +297,10 @@ export async function ensureUserProfile(uid: string, email?: string | null, seed
     }
     const patch: Record<string, unknown> = {
       ...providerPatch,
+      ...emailScrub,
       updated_at: serverTimestamp(),
     }
 
-    if (normalizedEmail && existing.email !== normalizedEmail) {
-      patch.email = normalizedEmail
-    }
     if (!existing.display_name && seed.displayName) {
       patch.display_name = seed.displayName
     }
@@ -305,7 +308,7 @@ export async function ensureUserProfile(uid: string, email?: string | null, seed
       patch.avatar_url = seed.avatarUrl
     }
 
-    if (Object.keys(patch).length > 1 || patch.email) {
+    if (Object.keys(patch).length > 1) {
       await setProfile(uid, patch)
     }
     return {
@@ -321,7 +324,7 @@ export async function ensureUserProfile(uid: string, email?: string | null, seed
   // Email/password users with no preferredUsername must choose their own slug.
   if (!seed.preferredUsername && !seed.provider) {
     await setProfile(uid, {
-      email: normalizedEmail,
+      ...emailScrub,
       display_name: existing?.display_name ?? seed.displayName ?? null,
       avatar_url: existing?.avatar_url ?? seed.avatarUrl ?? null,
       username: null,
@@ -341,7 +344,7 @@ export async function ensureUserProfile(uid: string, email?: string | null, seed
     seed.preferredUsername || usernameFromEmail(normalizedEmail),
   )
   await setProfile(uid, {
-    email: normalizedEmail,
+    ...emailScrub,
     display_name: existing?.display_name ?? seed.displayName ?? null,
     avatar_url: existing?.avatar_url ?? seed.avatarUrl ?? null,
     username: reserved,

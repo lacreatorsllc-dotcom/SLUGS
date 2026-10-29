@@ -143,7 +143,7 @@ function AgentCard({ agent, index }) {
 
 export default function ProfilePage({ username }) {
   const key = username?.replace('@', '').toLowerCase()
-  const profile = PROFILES[key]
+  const profile = Object.hasOwn(PROFILES, key) ? PROFILES[key] : null
 
   if (!profile) {
     return (
@@ -181,13 +181,6 @@ export default function ProfilePage({ username }) {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <a href="/">
             <img src="/slugs-logo.png" alt="SLUGS" className="h-6 w-auto" style={{ imageRendering: 'pixelated' }} />
-          </a>
-          <a
-            href="https://app.slugs.run"
-            className="text-sm font-semibold px-4 py-1.5 rounded-lg text-black"
-            style={{ background: '#d4683c' }}
-          >
-            Open App
           </a>
         </div>
       </nav>
@@ -259,24 +252,6 @@ export default function ProfilePage({ username }) {
               <AgentCard key={agent.slug} agent={agent} index={i} />
             ))}
           </div>
-        </motion.div>
-
-        {/* Follow CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="mt-10 text-center"
-        >
-          <p className="text-sm text-white/40 mb-3">Follow Gabe to see live agent updates in your feed</p>
-          <a
-            href="https://app.slugs.run"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-black transition-opacity hover:opacity-90"
-            style={{ background: '#d4683c' }}
-          >
-            Follow on SLUGS
-            <span>→</span>
-          </a>
         </motion.div>
 
       </div>

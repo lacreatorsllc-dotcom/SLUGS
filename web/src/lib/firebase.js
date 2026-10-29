@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore/lite'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -15,9 +15,16 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 export async function joinWaitlist(email) {
+  const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : ''
+  if (normalizedEmail.length > 254 || !/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(normalizedEmail)) {
+    const error = new Error('Enter a valid email address.')
+    error.code = 'waitlist/invalid-email'
+    throw error
+  }
+
   const ref = collection(db, 'waitlist')
-  await addDoc(ref, {
-    email: email.toLowerCase().trim(),
+  return addDoc(ref, {
+    email: normalizedEmail,
     joinedAt: serverTimestamp(),
     source: 'slugs.run',
   })

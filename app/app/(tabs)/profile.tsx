@@ -279,7 +279,7 @@ export default function ProfileTabScreen() {
       ])
 
       if (isActive && !isActive()) return
-      setEmail((profile?.email as string) ?? user.email ?? null)
+      setEmail(user.email ?? null)
       setAiKey(((profile?.ai_api_key as string) ?? '').trim())
       setAgents(agentRows as AgentRow[])
       setFeed(feedRows as FeedRow[])
@@ -324,7 +324,7 @@ export default function ProfileTabScreen() {
   }, [user?.uid])
 
   const connectedCount = agents.filter((agent) => agent.status === 'connected').length
-  const displayHandle = username ? `@${username}` : user?.email ?? '@you'
+  const displayHandle = username ? `@${username}` : '@you'
   const initials = (username ?? user?.email ?? '?').replace(/[^a-zA-Z0-9]/g, '').slice(0, 2).toUpperCase() || '?'
   const profileTone = aiKey ? 'AI-ready' : 'Setup incomplete'
   const usernameSlug = username ?? 'you'
