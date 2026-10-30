@@ -173,3 +173,84 @@ footer { border-top: 1px solid var(--border); padding: 24px 0; font-size: 13px; 
   .hide-sm { display: none; }
   th, td { padding: 10px 8px; }
 }
+
+/* Invite gate (the front page) */
+.invite {
+  min-height: 100vh;
+  background: #050505;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+}
+.invite-logo { width: 280px; max-width: 70vw; height: auto; margin-bottom: 24px; image-rendering: pixelated; }
+.invite-card {
+  width: 100%;
+  max-width: 560px;
+  background: #0c0c0c;
+  border: 1px solid #262626;
+  border-radius: 16px;
+  padding: 28px;
+}
+.invite-card h1 { font-size: 34px; letter-spacing: -0.02em; margin: 0 0 8px; }
+.invite-card h2 { font-size: 22px; margin: 0 0 6px; }
+.invite-sub { color: var(--text-secondary); font-size: 16px; margin: 0; }
+.invite-card form { margin-top: 24px; }
+.invite-card label { display: block; font-size: 16px; font-weight: 500; margin-bottom: 10px; color: var(--text-primary); }
+.invite-card input {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+.invite-card input:focus { outline: none; border-color: #ff3b1f; }
+.invite-error { margin: 8px 0 0; }
+.invite-continue {
+  width: 100%;
+  margin-top: 12px;
+  background: #ff3b1f;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 14px;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.invite-continue:hover { background: #ff5236; }
+.invite-card hr { border: 0; height: 1px; background: #262626; margin: 24px 0; }
+.raffles { display: grid; gap: 14px; margin-top: 20px; }
+.raffle {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #ff3b1f;
+  border-radius: 8px;
+  padding: 14px 24px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+.raffle:hover { background: rgba(255, 59, 31, 0.08); color: var(--text-primary); }
+.raffle-icon {
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  padding-right: 22px;
+  margin-right: 22px;
+  box-sizing: content-box;
+  border-right: 1px solid #3a3a3a;
+}
+.raffle-icon .flame { color: #ff3b1f; display: flex; }
+.raffle-label { flex: 1; }
+.invite-foot { color: var(--text-secondary); font-size: 15px; text-align: center; margin: 20px 0 0; }
+.invite-login { color: var(--text-muted); font-size: 14px; margin-top: 20px; text-align: center; }
+.invite-login a { color: var(--text-primary); font-weight: 600; }
+.invite-sep { margin: 0 8px; }
