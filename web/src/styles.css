@@ -208,6 +208,7 @@ footer { border-top: 1px solid var(--border); padding: 24px 0; font-size: 13px; 
   font-size: 16px;
   color: var(--text-primary);
 }
+.invite-card input::placeholder { color: var(--text-muted); }
 .invite-card input:focus { outline: none; border-color: var(--slugs-orange); }
 .invite-error { margin: 8px 0 0; }
 .invite-continue {
