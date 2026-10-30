@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { useLocation } from 'react-router-dom'
 import Invite from './pages/Invite'
+import AuthSessionProvider from './components/AuthSessionProvider'
+import RequireAuth from './components/RequireAuth'
 
 // Keep Firebase and the terminal out of the public invite page bundle.
 const Login = lazy(() => import('./pages/Login'))
@@ -13,8 +15,14 @@ const STANDALONE: Record<string, () => React.ReactElement> = {
   '/reset-password': () => <ResetPassword />,
 }
 
-export default function App() {
-  const standalone = STANDALONE[useLocation().pathname.replace(/\/$/, '') || '/']
+function AppRoutes() {
+  const pathname = useLocation().pathname.replace(/\/$/, '') || '/'
+  const standalone = STANDALONE[pathname]
   if (standalone) return <Suspense fallback={<div className="invite-page" />}>{standalone()}</Suspense>
-  return <Suspense fallback={<div className="invite-page" role="status" aria-label="Loading SLUGS" />}><TerminalApp /></Suspense>
+  const terminal = <Suspense fallback={<div className="invite-page" role="status" aria-label="Loading SLUGS" />}><TerminalApp /></Suspense>
+  return pathname === '/burn' ? terminal : <RequireAuth>{terminal}</RequireAuth>
+}
+
+export default function App() {
+  return <AuthSessionProvider><AppRoutes /></AuthSessionProvider>
 }

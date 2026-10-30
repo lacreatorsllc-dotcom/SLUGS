@@ -5,11 +5,13 @@ import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
 import { shortAddress } from '../../lib/terminal-model'
 import { connect } from '../../lib/wallet'
+import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
 import { Callout, IconButton, IconLink } from './ui'
 import { count, money, price } from '../../lib/terminal-format'
 
 export default function TerminalLayout() {
+  const { signOut } = useAuthSession()
   const { snapshot } = useTerminalData()
   const token = snapshot?.token
   const { pathname, search } = useLocation()
@@ -18,6 +20,7 @@ export default function TerminalLayout() {
   const [query, setQuery] = useState(new URLSearchParams(search).get('q') ?? '')
   const [account, setAccount] = useState('')
   const [connecting, setConnecting] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState('')
   useEffect(() => { setQuery(new URLSearchParams(search).get('q') ?? '') }, [pathname, search])
   useEffect(() => {
@@ -33,6 +36,12 @@ export default function TerminalLayout() {
     try { setAccount(await connect()) }
     catch (err) { if ((err as { code?: number }).code !== 4001) setError((err as Error).message) }
     finally { setConnecting(false) }
+  }
+  async function leave() {
+    setSigningOut(true)
+    try { await signOut() }
+    catch { setError('Couldn’t sign out. Check your connection and try again.') }
+    finally { setSigningOut(false) }
   }
   return <>
     <a className="t-skip-link" href="#terminal-main">Skip to content</a>
@@ -50,11 +59,11 @@ export default function TerminalLayout() {
         <button type="button" className="t-wallet t-icon--outline" onClick={connectWallet} disabled={connecting} aria-label={account ? `Connected wallet ${account}` : 'Connect wallet'} title={account ? account : `Connect wallet on ${CHAIN.name}`}><Icon name="wallet" size={14} /><span>{connecting ? 'Connecting…' : account ? shortAddress(account) : 'Connect wallet'}</span></button>
         <IconLink icon="plus" label="Deploy your slug on Baum" href={baumLinks.launch()} variant="primary" />
         <IconButton icon="bell" label="Notifications · coming soon" disabled variant="outline" className="t-secondary-action" />
-        <IconLink icon="user" label="Sign in to SLUGS" to="/login" variant="outline" />
+        <IconButton icon="signout" label={signingOut ? 'Signing out…' : 'Sign out'} variant="outline" onClick={leave} disabled={signingOut} />
       </div>
     </header>
     <main className="t-main" id="terminal-main" tabIndex={-1}>
-      {error && <Callout error>{error}<IconButton icon="close" label="Dismiss wallet error" onClick={() => setError('')} /></Callout>}
+      {error && <Callout error>{error}<IconButton icon="close" label="Dismiss error" onClick={() => setError('')} /></Callout>}
       <Outlet />
     </main>
     <footer className="t-statusbar">

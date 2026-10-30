@@ -1,11 +1,11 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { ACCESS } from '../config'
 import AuthLayout from '../components/AuthLayout'
+import { useAuthSession } from '../lib/auth-context'
 
 // The front door: SLUGS is invite only. Without a code, people enter the access raffle
-// by posting on X or burning the token. Codes aren't checked against a list yet, and
-// there's no platform page to send people to until the new UI lands (not /home).
+// by posting on X or burning the token. Code verification awaits Baum's partner API.
 const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
 
 function XMark() {
@@ -46,6 +46,7 @@ function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: s
 }
 
 export default function Invite() {
+  const { user, ready } = useAuthSession()
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [received, setReceived] = useState<string | null>(null)
@@ -56,6 +57,8 @@ export default function Invite() {
     if (!value) return setError('Enter your invite code')
     setReceived(value)
   }
+
+  if (ready && user) return <Navigate to="/home" replace />
 
   return (
     <AuthLayout

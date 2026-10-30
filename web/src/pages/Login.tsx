@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
-import { authMessage, signIn } from '../lib/auth'
+import { authMessage } from '../lib/auth'
+import { useAuthSession } from '../lib/auth-context'
 
 function EyeToggle({ shown }: { shown: boolean }) {
   return (
@@ -14,13 +15,12 @@ function EyeToggle({ shown }: { shown: boolean }) {
 }
 
 export default function Login() {
+  const { user, ready, signIn } = useAuthSession()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  // No platform page to send people to until the new UI lands (not /home).
-  const [signedInAs, setSignedInAs] = useState<string | null>(null)
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -28,8 +28,7 @@ export default function Login() {
     setBusy(true)
     setError(null)
     try {
-      const { user } = await signIn(email, password)
-      setSignedInAs(user.email ?? email.trim())
+      await signIn(email, password)
     } catch (err) {
       setError(authMessage(err))
     } finally {
@@ -37,11 +36,12 @@ export default function Login() {
     }
   }
 
+  if (ready && user) return <Navigate to="/home" replace />
+
   return (
     <AuthLayout>
       <h1>Login</h1>
       <p className="invite-sub">Sign in to continue</p>
-      {signedInAs && <p className="auth-sent" role="status">Signed in as <strong>{signedInAs}</strong>.</p>}
 
       <form onSubmit={submit} noValidate>
         <label htmlFor="login-email">Email</label>
@@ -52,6 +52,10 @@ export default function Login() {
           onChange={(e) => { setEmail(e.target.value); setError(null) }}
           placeholder="Enter your email"
           autoComplete="email"
+          disabled={busy}
+          required
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? 'login-error' : undefined}
         />
 
         <label htmlFor="login-password" className="auth-label">Password</label>
@@ -63,6 +67,10 @@ export default function Login() {
             onChange={(e) => { setPassword(e.target.value); setError(null) }}
             placeholder="Enter your password"
             autoComplete="current-password"
+            disabled={busy}
+            required
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? 'login-error' : undefined}
           />
           <button
             type="button"
@@ -74,8 +82,8 @@ export default function Login() {
           </button>
         </div>
 
-        {error && <p className="down invite-error" role="alert">{error}</p>}
-        <button type="submit" className="invite-continue" disabled={busy}>{busy ? 'Signing in…' : 'Login'}</button>
+        {error && <p id="login-error" className="down invite-error" role="alert">{error}</p>}
+        <button type="submit" className="invite-continue" disabled={busy} aria-busy={busy}>{busy ? 'Signing in…' : 'Login'}</button>
       </form>
 
       <div className="auth-links">
