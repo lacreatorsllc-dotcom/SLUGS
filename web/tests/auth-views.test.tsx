@@ -48,7 +48,7 @@ test('authenticated login goes to the new home rather than a confirmation messag
 
 test('guests log in through Baum in Telegram, with SLUGS\' referral code', () => {
   const html = render(createElement(Login))
-  assert.match(html, /href="https:\/\/t\.me\/[^"]+\?start=atp-login-MINT-FLASH-38"/)
+  assert.match(html, /href="https:\/\/t\.me\/[^"]+\?start=atp-login-SLUGS"/)
   assert.doesNotMatch(html, /type="password"|data-navigate/)
 })
 

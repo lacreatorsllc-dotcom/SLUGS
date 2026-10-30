@@ -47,9 +47,11 @@ export const CHAIN = {
 export const BAUM = {
   bot: import.meta.env.VITE_BAUM_BOT || 'BaumReviewBot',
   // SLUGS' Baum referral code: every user sent to Baum is attributed to it, and Baum
-  // holds newcomers on it for approval (invite only).
+  // holds newcomers on it for approval (invite only). SLUGS (or GOOBZ) is an alias
+  // Baum resolves to Gabe's code, MINT-FLASH-38, wherever a code arrives, so links
+  // read cleanly and credit him the same.
   // Keep it to 13 characters or fewer, or copy links (atp-copy-<40 hex>-CODE) overflow Telegram's 64.
-  referralCode: import.meta.env.VITE_BAUM_REF || 'MINT-FLASH-38',
+  referralCode: import.meta.env.VITE_BAUM_REF || 'SLUGS',
 }
 
 export const FEES = {

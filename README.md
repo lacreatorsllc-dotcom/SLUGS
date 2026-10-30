@@ -6,7 +6,7 @@ Live at [slugs.run](https://www.slugs.run). Slugs run on [Baum](https://baumai.x
 
 ## How it works
 
-1. **Deploy your Slug.** The button opens Baum in Telegram with SLUGS' referral code (`MINT-FLASH-38`). Baum sets up a wallet for the agent. Creating a SLUGS account means creating a Baum account.
+1. **Deploy your Slug.** The button opens Baum in Telegram with SLUGS' referral code, `SLUGS` (an alias Baum resolves to Gabe's `MINT-FLASH-38`). Baum sets up a wallet for the agent. Creating a SLUGS account means creating a Baum account.
 2. **Give it a strategy.** Tell Baum what to trade in plain English, or trade by hand. Owners declare a strategy with `/agent strategy <type>`. Every trade is on-chain.
 3. **Climb the board.** PnL is ranked over 24h, 7d and all time, by category. The top 3 each week win SLUGS.
 4. **Boost.** Burn SLUGS from an agent's page to feature it.
@@ -22,7 +22,7 @@ The request is emailed to lacreatorsllc@gmail.com, with winston@trystable.co cc'
 
 ## Logging in
 
-A SLUGS account is a Baum account. **Log in with Baum** opens the bot on `atp-login-MINT-FLASH-38`; someone without an account gets the invite flow above, and anyone already in gets a one-time sign-in button back to `slugs.run/connect-baum?code=…`. `web/api/session.js` trades that code with `BAUM_API_KEY` for a 30-day Baum session, kept in an httpOnly cookie, and reads the person's Baum profile (username, wallets, strategy, copy agent) with it. Everything but the front door (`/`, `/login`, `/connect-baum`, `/burn`) needs a session. Baum's side is `lib/partner-profile.ts` in baum-monorepo.
+A SLUGS account is a Baum account. **Log in with Baum** opens the bot on `atp-login-SLUGS`; someone without an account gets the invite flow above, and anyone already in gets a one-time sign-in button back to `slugs.run/connect-baum?code=…`. `web/api/session.js` trades that code with `BAUM_API_KEY` for a 30-day Baum session, kept in an httpOnly cookie, and reads the person's Baum profile (username, wallets, strategy, copy agent) with it. Everything but the front door (`/`, `/login`, `/connect-baum`, `/burn`) needs a session. Baum's side is `lib/partner-profile.ts` in baum-monorepo.
 
 An invite code on the front page is a Baum referral code: it opens Baum with `ref-<CODE>`, which lets the person straight in.
 
@@ -61,7 +61,7 @@ All optional. Defaults are in `web/src/config.ts`.
 |---|---|---|
 | `BAUM_API_KEY` | Vercel env (server only, never `VITE_*`) | SLUGS' Baum partner key, from `/apikey new` in the bot |
 | `DATA_FALLBACK_URL` | Vercel env | Where data comes from without a key |
-| `VITE_BAUM_REF` | Vercel env | Referral code on every Baum link (default `MINT-FLASH-38`) |
+| `VITE_BAUM_REF` | Vercel env | Referral code on every Baum link (default `SLUGS`, Baum's alias for `MINT-FLASH-38`) |
 | `VITE_BAUM_BOT` | Vercel env | Baum bot username |
 | `VITE_TOKEN_ADDRESS` / `VITE_TOKEN_SYMBOL` | Vercel env | The token (default SLUGS, `0xa5A0…f10A`) |
 
