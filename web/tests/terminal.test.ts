@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { assembleAgents, lpBoard, sortedAgents, traderBoard, type TraderRow } from '../src/lib/terminal-model.ts'
+import { assembleAgents, comparisonIds, lpBoard, sortedAgents, traderBoard, type TraderRow } from '../src/lib/terminal-model.ts'
 
 // Fixtures are confined to tests; the application never falls back to sample performance.
 const address = (character: string) => `0x${character.repeat(40)}`
@@ -71,4 +71,14 @@ test('Yield sorts by LP fees rather than unrelated trading PnL', () => {
   ] }) }, classification)
   assert.equal(sortedAgents(agents, 'all', 'pnl', true)[0].id, address('b'))
   assert.equal(sortedAgents(agents, 'all', 'volume', true)[0].id, address('a'))
+})
+
+test('unavailable shared comparisons leave room for replacement agents', () => {
+  const agents = assembleAgents({ all: board(['a', 'b', 'c', 'd', 'e'].map((id) => trader({ wallet: address(id) }))) }, {}, classification)
+  const stale = ['1', '2', '3', '4'].map(address)
+  const selected = comparisonIds(stale, agents)
+  assert.deepEqual(selected, [], 'Unavailable wallets must not occupy invisible comparison slots')
+  assert.deepEqual(comparisonIds([...selected, agents[0].id], agents), [address('a')])
+  assert.deepEqual(comparisonIds([...stale, address('A'), address('a'), address('b')], agents), [address('a'), address('b')])
+  assert.deepEqual(comparisonIds(agents.map((agent) => agent.id), agents), ['a', 'b', 'c', 'd'].map(address))
 })

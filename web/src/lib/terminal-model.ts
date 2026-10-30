@@ -110,6 +110,11 @@ export function assembleAgents(
 
 export const isBoosted = (agent: Agent) => (agent.boostedUntil ?? 0) > Date.now()
 
+export function comparisonIds(requested: string[], available: Agent[]) {
+  const known = new Set(available.map((agent) => agent.id))
+  return [...new Set(requested.map((id) => id.toLowerCase()))].filter((id) => known.has(id)).slice(0, 4)
+}
+
 export function sortedAgents(agents: Agent[], range: Range, sort = 'pnl', yieldOnly = false) {
   const score = (agent: Agent) => {
     if (yieldOnly) {

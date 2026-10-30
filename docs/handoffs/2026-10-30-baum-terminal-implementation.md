@@ -35,6 +35,7 @@ Scope: the owner authorized replacing `/home` with the saved Baum designs on 202
 - Vault creation/deposits, price history, and in-page swap quotes stay visibly unavailable. Preview swap amounts are explicitly not forwarded to Baum.
 - Boost and access burns show the amount, network, and permanent burn before invoking the existing wallet helpers. A returned transaction is described as submitted, with an explorer link, rather than claiming it has confirmed.
 - On-demand PnL cards use the same live snapshot and open only from a chart action. Native dialogs provide modal behavior and Escape dismissal; motion respects reduced-motion preferences.
+- Shared comparisons exclude unavailable wallets from the four-agent limit and offer an action to remove those stale selections from the URL.
 - API responses use `s-maxage=3600`; static asset caching and `vercel.json` remain unchanged.
 
 ## Verification

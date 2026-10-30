@@ -5,7 +5,7 @@ import { AvatarRing, Callout, CopyButton, EmptyState, FloatingCard, IconButton, 
 import { count, money, tone } from '../lib/terminal-format'
 import { baumLinks } from '../lib/baum'
 import { useTerminalData } from '../lib/terminal-context'
-import { RANGES, rangeLabel, shortAddress, sortedAgents, type Range } from '../lib/terminal-model'
+import { RANGES, comparisonIds, rangeLabel, shortAddress, sortedAgents, type Range } from '../lib/terminal-model'
 
 export default function Compare() {
   const { snapshot, loading, error, refresh } = useTerminalData()
@@ -15,7 +15,8 @@ export default function Compare() {
   const range = RANGES.includes(params.get('range') as Range) ? params.get('range') as Range : '7d'
   const available = snapshot?.agents ?? []
   const ranked = sortedAgents(available.filter((agent) => agent.trading[range]), range)
-  const ids = params.has('ids') ? [...new Set((params.get('ids') ?? '').split(',').map((id) => id.toLowerCase()).filter(Boolean))].slice(0, 4) : ranked.slice(0, 3).map((agent) => agent.id)
+  const requestedIds = params.has('ids') ? (params.get('ids') ?? '').split(',').filter(Boolean) : ranked.slice(0, 3).map((agent) => agent.id)
+  const ids = comparisonIds(requestedIds, available)
   const agents = ids.flatMap((id) => { const agent = available.find((item) => item.id === id); return agent ? [agent] : [] })
   const highlight = params.get('highlight') !== '0'
   function update(key: string, value: string) { setParams((previous) => { const next = new URLSearchParams(previous); if (key === 'range' && !next.has('ids')) next.set('ids', ids.join(',')); next.set(key, value); return next }, { replace: true }) }
@@ -33,7 +34,7 @@ export default function Compare() {
       <IconLink icon="bot" label="Create an agent on Baum" href={baumLinks.launch()} variant="primary" />
     </div></div>
     {loading ? <TableSkeleton /> : error || snapshot?.boardError ? <Callout error onRetry={refresh}>Couldn’t load agents to compare.</Callout> : <>
-      {ids.some((id) => !available.some((agent) => agent.id === id)) && <Callout>One or more selected agents are not on Baum’s current boards. Add another agent or try a different range.</Callout>}
+      {requestedIds.some((id) => !available.some((agent) => agent.id === id.toLowerCase())) && <Callout>Some selected agents are not on Baum’s current boards. Add replacements or remove the unavailable selections. <IconButton icon="close" label="Remove unavailable agents from comparison" onClick={() => update('ids', ids.join(','))} /></Callout>}
       {agents.length === 0 ? <section className="t-panel"><EmptyState title="Choose agents to compare" action={<IconButton icon="plus" label="Add an agent to compare" variant="primary" onClick={() => setAdding(true)} />}>Add up to four agents to compare their reported performance side by side.</EmptyState></section> : <div className="t-compare-scroll"><div className="t-compare-grid" style={{ '--compare-count': agents.length } as React.CSSProperties}>
         {agents.map((agent, index) => <section key={agent.id} className="t-compare-column" aria-label={`Compare ${agent.name}`}>
           <div className="t-compare-agent"><AvatarRing agent={agent} /><div><Link to={`/agents/${agent.id}`}><h2>{agent.name}</h2></Link><div className="t-actions t-fine">{shortAddress(agent.id)}<CopyButton value={agent.id} label={`Copy ${agent.name} wallet address`} /></div></div><IconButton icon="close" label={`Remove ${agent.name} from comparison`} onClick={() => update('ids', ids.filter((id) => id !== agent.id).join(','))} /></div>
