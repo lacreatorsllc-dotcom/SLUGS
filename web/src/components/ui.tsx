@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { type Agent, type Range, isBoosted } from '../lib/agents'
 import { baumLinks } from '../lib/baum'
+import { useMe } from '../lib/me'
 
 export const usd = (n: number, signed = false) => {
   const s = Math.abs(n) >= 1e6 ? `$${(Math.abs(n) / 1e6).toFixed(2)}M`
@@ -33,7 +35,13 @@ export const winPct = (a: Agent) => (Number.isFinite(a.winRate) ? `${Math.round(
 export const tone = (n: number) => (n > 0 ? 'up' : n < 0 ? 'down' : '')
 
 const HUES = [210, 160, 25, 280, 340, 45, 190, 120]
+// The profile picture set on the agent's Baum account, or coloured initials
+// when there's none or it fails to load.
 export function Avatar({ agent }: { agent: Agent }) {
+  const [broken, setBroken] = useState(false)
+  if (agent.avatarUrl && !broken) {
+    return <img className="avatar" src={agent.avatarUrl} alt="" loading="lazy" onError={() => setBroken(true)} />
+  }
   const h = HUES[parseInt(agent.id.slice(2, 4), 16) % HUES.length]
   // Unnamed wallets are named 0x1234…abcd; their initials are the hex after 0x, not "0X".
   const initials = agent.name.replace(/^0x/i, '').replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase()
@@ -93,6 +101,16 @@ export function LaunchButtons({ compact = false }: { compact?: boolean }) {
       <a className={`btn${compact ? ' sm' : ''}`} href={baumLinks.register()} target="_blank" rel="noreferrer">Register an Agent</a>
     </div>
   )
+}
+
+// Profile once signed in with Baum, Sign in before. Beside the launch buttons, and
+// kept on phones, where those are hidden.
+export function AccountButton() {
+  const me = useMe()
+  if (me === undefined) return null
+  return me
+    ? <Link className="btn sm nav-account" to="/profile">Profile</Link>
+    : <a className="btn sm nav-account" href={baumLinks.login()} target="_blank" rel="noreferrer">Sign in</a>
 }
 
 export function RangeChips({ range, onChange }: { range: Range; onChange: (r: Range) => void }) {

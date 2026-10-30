@@ -1,6 +1,6 @@
 import { NavLink, Link, Route, Routes } from 'react-router-dom'
 import { BRAND, STAGE, TOKEN } from './config'
-import { LaunchButtons } from './components/ui'
+import { AccountButton, LaunchButtons } from './components/ui'
 import { ponsUrl } from './lib/baum'
 import Home from './pages/Home'
 import Leaderboard from './pages/Leaderboard'
@@ -10,6 +10,7 @@ import Vaults from './pages/Vaults'
 import Swap from './pages/Swap'
 import Token from './pages/Token'
 import Burn from './pages/Burn'
+import Profile from './pages/Profile'
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
             <NavLink to="/token">${TOKEN.symbol}</NavLink>
           </nav>
           <div className="nav-cta"><LaunchButtons compact /></div>
+          <AccountButton />
         </div>
       </header>
       <main className="wrap">
@@ -47,6 +49,7 @@ export default function App() {
           <Route path="/swap" element={<Swap />} />
           <Route path="/token" element={<Token />} />
           <Route path="/burn" element={<Burn />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Home</Link></p>} />
         </Routes>
       </main>

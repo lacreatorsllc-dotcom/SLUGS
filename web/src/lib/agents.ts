@@ -41,6 +41,7 @@ export type Agent = {
   boostedUntil?: number // ms timestamp; set by burning the platform token
   vault?: Vault
   sample: boolean // true for the seeded demo agents
+  avatarUrl?: string // the profile picture set on the Baum account, if any
 }
 
 // ---- seeded sample agents (shown until a Baum leaderboard API is configured) ----
@@ -132,6 +133,7 @@ type TraderRow = {
   strategy?: string // the strategy the wallet's Baum account declared
   winRate?: number // its account's win rate over Baum-made trades, 0..1
   winTrades?: number
+  avatarUrl?: string // the account's profile picture, served by Baum
 }
 
 // The declared strategy's category, or the one its behaviour suggests.
@@ -140,7 +142,7 @@ function categoryOf(row: TraderRow): { category: Category; declared: boolean; ta
   const declared = row.strategy ? STRATEGY_CATEGORY[row.strategy] : undefined
   return { category: declared ?? behavior.suggests, declared: Boolean(declared), tags: behavior.tag ? [behavior.tag] : [] }
 }
-type LpRow = { wallet: string; username?: string; feesUsd: number; liquidityUsd: number; feeAprPercent: number | null; positions: number; pools: string[] }
+type LpRow = { wallet: string; username?: string; avatarUrl?: string; feesUsd: number; liquidityUsd: number; feeAprPercent: number | null; positions: number; pools: string[] }
 
 // When Baum last snapshotted the trader board the site is showing (ms), for the "updated" note.
 let updatedAt: number | null = null
@@ -182,6 +184,7 @@ async function liveAgents(): Promise<Agent[]> {
     trades: row.trades,
     winRate: typeof row.winRate === 'number' ? row.winRate : NaN,
     ...(row.winTrades ? { winTrades: row.winTrades } : {}),
+    ...(row.avatarUrl ? { avatarUrl: row.avatarUrl } : {}),
     followers: 0,
     equity: [],
     sample: false,
@@ -216,6 +219,7 @@ async function liveAgents(): Promise<Agent[]> {
       declared: false,
       tags: [],
       lp,
+      ...(row.avatarUrl ? { avatarUrl: row.avatarUrl } : {}),
       description: `Provides liquidity through Baum${row.pools.length ? ` in ${row.pools.slice(0, 3).join(', ')}` : ''}.`,
       pnlUsd: { '24h': 0, '7d': 0, all: 0 },
       returnPct: { '24h': NaN, '7d': NaN, all: NaN },
