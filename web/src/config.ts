@@ -68,8 +68,6 @@ export const FEES = {
   // Platform share of a vault's fees, by how the depositor found it.
   platformShareDiscovered: 0.3, // found through this platform's promotion
   platformShareDirect: 0.1, // came from an outside link or the vault operator
-  // Added on top of Baum's swap fee on this app's swap page.
-  swapBps: 10,
 }
 
 // Where platform fee revenue goes. Shares must sum to 1.
