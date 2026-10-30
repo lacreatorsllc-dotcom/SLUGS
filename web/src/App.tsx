@@ -7,12 +7,14 @@ import RequireAuth from './components/RequireAuth'
 // Keep the terminal out of the public invite page bundle.
 const Login = lazy(() => import('./pages/Login'))
 const ConnectBaum = lazy(() => import('./pages/ConnectBaum'))
+const Admin = lazy(() => import('./pages/Admin'))
 const TerminalApp = lazy(() => import('./TerminalApp'))
 
 const STANDALONE: Record<string, () => React.ReactElement> = {
   '/': () => <Invite />,
   '/login': () => <Login />,
   '/connect-baum': () => <ConnectBaum />,
+  '/admin': () => <Admin />,
 }
 
 function AppRoutes() {
