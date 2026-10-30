@@ -9,7 +9,7 @@ import { recordLanding } from '../lib/attribution'
 import { useTerminalData } from '../lib/terminal-context'
 import { RANGES, isBoosted, rangeLabel, shortAddress, type Agent, type Range } from '../lib/terminal-model'
 import { vaultOpenTokens } from '../lib/token'
-import { DEAD, burnBoost, connect, hasWallet, txUrl } from '../lib/wallet'
+import { burnBoost, connect, hasWallet, txUrl } from '../lib/wallet'
 
 export default function AgentPage() {
   const { id = '' } = useParams()
@@ -35,7 +35,7 @@ export default function AgentPage() {
     {!agent.declared && <Callout>Listed under {agent.categories.join(' and ')} from its activity. Own this wallet? Send <code>/agent strategy</code> to Baum in Telegram to choose its category.</Callout>}
     <div className="t-grid-three">
       <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="trade" /></span><h2>Copy this agent</h2></div><p>Baum opens in Telegram with a copy agent set up for this wallet: $25 a buy, inside limits you can change. Once you confirm, it copies their buys and sells on its own.</p><div className="t-actions"><CopyTradeButton agent={agent} range={range} /><IconButton icon="counter" label="Counter trading · coming soon on Baum" variant="outline" disabled /></div></section>
-      <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="vault" /></span><h2>Vault</h2><span className="t-tag">CLOSED</span></div><p>This agent doesn’t take deposits yet. Its operator can open a vault for {count(cost)} {TOKEN.symbol}{token?.priceUsd ? `, about ${money(cost * token.priceUsd)}` : ` or $${FEES.vaultOpenUsd} of it, whichever is less`}.</p><div className="t-actions"><IconLink icon="arrow" label="About vaults" to="/vaults" variant="outline" className="t-wide" /></div></section>
+      <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="vault" /></span><h2>Vault</h2><span className="t-tag">PLANNED</span></div><p>This agent doesn’t take deposits yet. Once vaults open, its operator will be able to open one for {count(cost)} {TOKEN.symbol}{token?.priceUsd ? `, about ${money(cost * token.priceUsd)}` : ` or $${FEES.vaultOpenUsd} of it, whichever is less`}.</p><div className="t-actions"><IconLink icon="arrow" label="About vaults" to="/vaults" variant="outline" className="t-wide" /></div></section>
       <BoostCard key={agent.id} agent={agent} />
     </div>
     <div className="t-page-heading"><p className="t-fine">Performance is reported by Baum. Copying and counter trading can lose funds.</p><AgentActions agent={agent} range={range} /></div>
@@ -61,9 +61,9 @@ function BoostCard({ agent }: { agent: Agent }) {
     <div className="t-segments t-boost-hours" role="group" aria-label="Boost length">{[1, 3, 6, 12, 24].map((value) => <button type="button" key={value} disabled={busy} aria-pressed={hours === value} onClick={() => { setHours(value); setError(''); setTx('') }}>{value}h</button>)}</div>
     <div className="t-key-value"><span>Cost</span><strong>{count(amount)} {TOKEN.symbol}</strong></div>
     <button type="button" className="t-submit" disabled={busy} aria-busy={busy} onClick={() => { setError(''); if (hasWallet()) setConfirm(true); else setError('No wallet found. Open this page in MetaMask or Rabby, or install a browser wallet.') }}><Icon name="flame" />{busy ? 'Confirming in your wallet…' : `Burn ${count(amount)}`}</button>
-    <p className="t-fine">Sent from your wallet on {CHAIN.name} to the dead address. Burns can’t be undone.</p>
+    <p className="t-fine">Burned from your wallet on {CHAIN.name} with {TOKEN.symbol}’s own burn, which lowers its supply. Burns can’t be undone.</p>
     {error && <Callout error>{error}</Callout>}
     {tx && <Callout>Transaction submitted. <a href={txUrl(tx)} target="_blank" rel="noreferrer">View status on the explorer ↗</a>. The boost appears after the next data refresh.</Callout>}
-    {confirm && <FloatingCard title="Confirm boost" onClose={() => setConfirm(false)}><p>Burn <strong>{count(amount)} {TOKEN.symbol}</strong> to boost <strong>{agent.name}</strong> for {hours} {hours === 1 ? 'hour' : 'hours'}.</p><div className="t-key-value"><span>Network</span><strong>{CHAIN.name}</strong></div><p className="t-fine">Agent</p><p className="t-confirm-address">{agent.id}</p><p className="t-fine">Tokens are sent to {DEAD}. This burn is permanent. Your wallet will ask you to confirm.</p><button type="button" className="t-submit" onClick={burn}>Confirm burn in wallet</button></FloatingCard>}
+    {confirm && <FloatingCard title="Confirm boost" onClose={() => setConfirm(false)}><p>Burn <strong>{count(amount)} {TOKEN.symbol}</strong> to boost <strong>{agent.name}</strong> for {hours} {hours === 1 ? 'hour' : 'hours'}.</p><div className="t-key-value"><span>Network</span><strong>{CHAIN.name}</strong></div><p className="t-fine">Agent</p><p className="t-confirm-address">{agent.id}</p><p className="t-fine">Your wallet calls burn on the {TOKEN.symbol} contract, {TOKEN.address}. This burn is permanent. Your wallet will ask you to confirm.</p><button type="button" className="t-submit" onClick={burn}>Confirm burn in wallet</button></FloatingCard>}
   </section>
 }

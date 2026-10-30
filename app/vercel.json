@@ -1,9 +1,0 @@
-{
-  "framework": null,
-  "installCommand": "echo 'app.slugs.run redirects to slugs.run; the Expo app is not built (see the SLUGS issues)'",
-  "buildCommand": "mkdir -p dist",
-  "outputDirectory": "dist",
-  "redirects": [
-    { "source": "/(.*)", "destination": "https://www.slugs.run/", "permanent": false }
-  ]
-}

@@ -9,10 +9,12 @@ const provider = () => (window as unknown as { ethereum?: Eip1193 }).ethereum
 export const hasWallet = () => Boolean(provider())
 
 export const DEAD = '0x000000000000000000000000000000000000dEaD'
-// A boost is a transfer to the dead address with "ATPB" and the agent's wallet
-// appended to the calldata. Token contracts ignore trailing calldata; the Pages
+// A boost is the token's own burn(uint256) (Pons's burn: it destroys the caller's
+// balance and lowers totalSupply) with "ATPB" and the agent's wallet appended to the
+// calldata. The token ignores trailing calldata; the Agent Trading Platform's Pages
 // job (scripts/fetch-token.mjs) reads it back to credit the boost.
 const BOOST_TAG = '41545042'
+const BURN = '0x42966c68'
 
 const pad = (hex: string) => hex.replace(/^0x/, '').padStart(64, '0')
 const chainHex = '0x' + CHAIN.id.toString(16)
@@ -23,8 +25,7 @@ async function request<T>(method: string, params?: unknown[]): Promise<T> {
   return (await eth.request({ method, params })) as T
 }
 
-export async function connect(): Promise<string> {
-  const [account] = await request<string[]>('eth_requestAccounts')
+async function switchChain() {
   try {
     await request('wallet_switchEthereumChain', [{ chainId: chainHex }])
   } catch (err) {
@@ -38,7 +39,21 @@ export async function connect(): Promise<string> {
       blockExplorerUrls: [CHAIN.explorer],
     }])
   }
+}
+
+export async function connect(): Promise<string> {
+  const [account] = await request<string[]>('eth_requestAccounts')
+  await switchChain()
   return account
+}
+
+// Checked again right before every send: the wallet can change networks after
+// connecting, and the same transaction on another chain burns nothing we can see.
+async function onChain() {
+  const current = async () => BigInt(await request<string>('eth_chainId'))
+  if ((await current()) === BigInt(CHAIN.id)) return
+  await switchChain()
+  if ((await current()) !== BigInt(CHAIN.id)) throw new Error(`Switch your wallet to ${CHAIN.name} and try again. Nothing was sent.`)
 }
 
 const call = (token: string, data: string) => request<string>('eth_call', [{ to: token, data }, 'latest']).then(BigInt)
@@ -51,11 +66,11 @@ export async function boostCost(hours: number) {
 
 export const tokenBalance = (account: string, token = TOKEN.address) => call(token, '0x70a08231' + pad(account))
 
-// Sends `amount` of `token` to the dead address, with `tag` appended to the
-// calldata, and resolves with the transaction hash once it's mined.
-async function sendToDead(account: string, token: string, symbol: string, amount: bigint, tag = ''): Promise<string> {
+// Sends `data` to `token` once the wallet is on CHAIN and holds `amount`, and
+// resolves with the transaction hash once it's mined.
+async function send(account: string, token: string, symbol: string, amount: bigint, data: string): Promise<string> {
+  await onChain()
   if ((await tokenBalance(account, token)) < amount) throw new Error(`Not enough ${symbol} in ${account.slice(0, 6)}…${account.slice(-4)}.`)
-  const data = '0xa9059cbb' + pad(DEAD) + pad(amount.toString(16)) + tag
   const hash = await request<string>('eth_sendTransaction', [{ from: account, to: token, data }])
   for (let i = 0; i < 90; i++) {
     const receipt = await request<{ status: string } | null>('eth_getTransactionReceipt', [hash])
@@ -70,12 +85,15 @@ async function sendToDead(account: string, token: string, symbol: string, amount
 
 /** Burns the boost for `hours` and resolves with the transaction hash once it's mined. */
 export async function burnBoost(account: string, agent: string, hours: number): Promise<string> {
-  return sendToDead(account, TOKEN.address, TOKEN.symbol, await boostCost(hours), BOOST_TAG + agent.replace(/^0x/, '').toLowerCase())
+  await onChain()
+  const amount = await boostCost(hours)
+  return send(account, TOKEN.address, TOKEN.symbol, amount, BURN + pad(amount.toString(16)) + BOOST_TAG + agent.replace(/^0x/, '').toLowerCase())
 }
 
 /** Burns whole `tokens` of an 18-decimal token, e.g. to get into Baum (BURN_TO_ENTER). */
 export async function burnTokens(account: string, token: string, symbol: string, tokens: number): Promise<string> {
-  return sendToDead(account, token, symbol, BigInt(tokens) * 10n ** 18n)
+  const amount = BigInt(tokens) * 10n ** 18n
+  return send(account, token, symbol, amount, '0xa9059cbb' + pad(DEAD) + pad(amount.toString(16)))
 }
 
 export const txUrl = (hash: string) => `${CHAIN.explorer}/tx/${hash}`
