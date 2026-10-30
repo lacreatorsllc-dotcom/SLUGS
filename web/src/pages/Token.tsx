@@ -1,106 +1,31 @@
-import { FEES, FEE_SPLIT, TOKEN } from '../config'
-import { Link } from 'react-router-dom'
-import { tokens, usd } from '../components/ui'
-import { buyUrl } from '../lib/baum'
-import { useToken, vaultOpenTokens } from '../lib/token'
+import { FEES, FEE_SPLIT, TOKEN, CHAIN } from '../config'
+import { Callout, CopyButton, IconLink, StatGrid } from '../components/terminal/ui'
+import { compact, count, money, price } from '../lib/terminal-format'
+import Icon, { type IconName } from '../components/terminal/Icon'
+import { useTerminalData } from '../lib/terminal-context'
+import { vaultOpenTokens } from '../lib/token'
 import { tokenUrl, txUrl } from '../lib/wallet'
 
-const COLORS = ['var(--down)', 'var(--boost)', 'var(--accent)', 'var(--text-muted)']
-
-const price = (n: number) => (n >= 0.01 ? usd(n) : `$${n.toPrecision(3)}`)
-
 export default function Token() {
-  const token = useToken()
-  return (
-    <div style={{ maxWidth: 760 }}>
-      <h1 style={{ fontSize: 36 }}>${TOKEN.symbol}</h1>
-      <p>
-        The platform token. You burn it to boost an agent and spend it to open a vault, and platform fees buy it back.
-        {!TOKEN.address && ' It is not launched yet.'}
-      </p>
-
-      {TOKEN.address && (
-        <section className="section">
-          <div className="row" style={{ marginBottom: 14 }}>
-            <a className="btn primary" href={buyUrl()} target="_blank" rel="noreferrer">Buy {TOKEN.symbol} on Baum</a>
-            <a className="btn" href={tokenUrl()} target="_blank" rel="noreferrer">Explorer</a>
-            <button className="btn" onClick={() => navigator.clipboard?.writeText(TOKEN.address)}>Copy address</button>
-          </div>
-          <p className="note num" style={{ wordBreak: 'break-all' }}>{TOKEN.address} · Robinhood Chain</p>
-          {token && (
-            <div className="stats">
-              <div className="card stat"><div className="label">Price</div><div className="value num">{token.priceUsd ? price(token.priceUsd) : '—'}</div></div>
-              <div className="card stat"><div className="label">Market cap</div><div className="value num">{token.marketCapUsd ? usd(token.marketCapUsd) : '—'}</div></div>
-              <div className="card stat"><div className="label">Burned</div><div className="value num">{tokens(Math.round(token.burned))}</div></div>
-            </div>
-          )}
-          {token && token.recentBoosts.length > 0 && (
-            <div className="table-wrap" style={{ marginTop: 14 }}>
-              <table>
-                <thead><tr><th>Recent boosts</th><th className="r">Burned</th><th className="r hide-sm">When</th></tr></thead>
-                <tbody>
-                  {token.recentBoosts.slice(0, 10).map((b) => (
-                    <tr key={b.tx}>
-                      <td><Link to={`/agents/${b.agent}`} className="num">{b.agent.slice(0, 6)}…{b.agent.slice(-4)}</Link></td>
-                      <td className="r num"><a href={txUrl(b.tx)} target="_blank" rel="noreferrer">{tokens(Math.round(b.amount))}</a></td>
-                      <td className="r hide-sm">{new Date(b.at).toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
-      )}
-
-      <section className="section">
-        <h2>Where fees go</h2>
-        <p>Platform revenue (Baum referral fees, vault fee shares, swap fees) is split:</p>
-        <div className="split" aria-hidden="true">
-          {FEE_SPLIT.map((s, i) => <span key={s.key} style={{ width: `${s.share * 100}%`, background: COLORS[i] }} />)}
-        </div>
-        <div className="table-wrap" style={{ marginTop: 14 }}>
-          <table>
-            <tbody>
-              {FEE_SPLIT.map((s, i) => (
-                <tr key={s.key}>
-                  <td><span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 3, background: COLORS[i], marginRight: 8 }} />{s.label}</td>
-                  <td className="r num">{s.share * 100}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="section">
-        <h2>Uses</h2>
-        <div className="table-wrap">
-          <table>
-            <tbody>
-              <tr><td>Boost an agent or vault</td><td className="r num">{tokens(FEES.boostPerHour)} / hour, burned</td></tr>
-              <tr><td>Open a vault</td><td className="r num">{tokens(vaultOpenTokens(token?.priceUsd))}{token?.priceUsd ? ` (min of ${tokens(FEES.vaultOpenTokens)} or $${FEES.vaultOpenUsd})` : ` or $${FEES.vaultOpenUsd}, whichever is less`}</td></tr>
-              <tr><td>Weekly prize</td><td className="r">Top 3 strategies on the 7d leaderboard</td></tr>
-              <tr><td>Staking</td><td className="r">Earn the stakers' share and vote (coming later)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="section">
-        <h2>Platform fees</h2>
-        <div className="table-wrap">
-          <table>
-            <tbody>
-              <tr><td>Vault fees, depositor found it here</td><td className="r num">{FEES.platformShareDiscovered * 100}%</td></tr>
-              <tr><td>Vault fees, depositor came from the operator's link</td><td className="r num">{FEES.platformShareDirect * 100}%</td></tr>
-              <tr><td>Swap page</td><td className="r num">+{FEES.swapBps} bps</td></tr>
-              <tr><td>Baum trading fees from referred users</td><td className="r">Baum's referral share</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="callout" style={{ marginTop: 14 }}>Beta: these numbers can change. Boost burns are on-chain; vaults and the fee split aren't yet.</p>
-      </section>
+  const { snapshot, loading, refresh } = useTerminalData()
+  const token = snapshot?.token
+  const uses: { icon: IconName; title: string; description: string }[] = [
+    { icon: 'flame', title: 'Boost an agent or vault', description: `${count(FEES.boostPerHour)} / hour, burned` },
+    { icon: 'vault', title: 'Open a vault', description: `${count(FEES.vaultOpenTokens)} ${TOKEN.symbol} or $${FEES.vaultOpenUsd}, whichever is less` },
+    { icon: 'star', title: 'Weekly prize', description: 'Top 3 strategies on the 7d leaderboard' },
+    { icon: 'lock', title: 'Staking', description: 'Earn the stakers’ share and vote (coming later)' },
+  ]
+  return <>
+    <div className="t-page-heading"><div><h1>${TOKEN.symbol}</h1><p>The platform token. Burn it to boost an agent, spend it to open a vault, and platform fees buy it back.</p><div className="t-actions t-token-address"><span>{TOKEN.address} · {CHAIN.name}</span><CopyButton value={TOKEN.address} label="Copy token address" /></div></div><div className="t-actions"><IconLink icon="cart" label={`Buy $${TOKEN.symbol}`} to="/swap" variant="primary" /><IconLink icon="flame" label={`Burn $${TOKEN.symbol} to skip the line`} to="/burn" variant="outline" className="t-accent" /><IconLink icon="globe" label="View token on explorer" href={tokenUrl()} variant="outline" /></div></div>
+    <StatGrid stats={[{ label: 'Price', value: loading ? '…' : price(token?.priceUsd) }, { label: 'Market cap', value: loading ? '…' : money(token?.marketCapUsd) }, { label: 'Burned', value: loading ? '…' : count(token?.burned), tone: 't-accent' }, { label: 'Supply', value: loading ? '…' : compact(token?.totalSupply) }]} />
+    {!loading && !token && <Callout onRetry={refresh}>[PLACEHOLDER] Token statistics are unavailable. Retry to load the latest on-chain snapshot.</Callout>}
+    <div className="t-grid-three">
+      <section className="t-panel"><div className="t-panel-head"><div><h2>Where fees go</h2><p>Baum referral fees, vault fee shares and swap fees</p></div></div><div className="t-fee-bar" aria-hidden="true">{FEE_SPLIT.map((split, index) => <span key={split.key} className={`t-split-${index}`} style={{ flex: split.share }} />)}</div><dl className="t-detail-list">{FEE_SPLIT.map((split, index) => <div key={split.key}><dt><span className={`t-fee-dot t-split-${index}`} />{split.label}</dt><dd>{Math.round(split.share * 100)}%</dd></div>)}</dl></section>
+      <section className="t-panel"><div className="t-panel-head"><div><h2>Uses</h2><p>What $SLUGS does on the platform</p></div></div><div className="t-use-list">{uses.map((use) => <div key={use.title}><span className={`t-section-icon${use.icon === 'flame' ? ' t-accent' : ''}`}><Icon name={use.icon} size={14} /></span><div><h3>{use.title}</h3><p>{use.description}</p></div></div>)}</div></section>
+      <section className="t-panel"><div className="t-panel-head"><div><h2>Platform fees</h2><p>What SLUGS earns</p></div></div><dl className="t-detail-list"><div><dt>Vault fees, depositor found it here</dt><dd>{FEES.platformShareDiscovered * 100}%</dd></div><div><dt>Vault fees, depositor came via operator’s link</dt><dd>{FEES.platformShareDirect * 100}%</dd></div><div><dt>Swap page</dt><dd>+{FEES.swapBps} bps</dd></div><div><dt>Baum trading fees from referred users</dt><dd>Baum’s referral share</dd></div></dl></section>
     </div>
-  )
+    <Callout><span className="t-tag">BETA</span> These numbers can change. Boost burns are on-chain; vaults and the fee split aren’t yet.</Callout>
+    {token && <p className="t-fine">Opening a vault would cost {count(vaultOpenTokens(token.priceUsd))} {TOKEN.symbol} at this snapshot. Updated {new Date(token.updatedAt).toLocaleString()}.</p>}
+    {Boolean(token?.recentBoosts.length) && <section className="t-panel"><div className="t-panel-head"><h2>Recent boosts</h2></div><div className="t-recent-boosts">{token?.recentBoosts.slice(0, 10).map((boost) => <div className="t-key-value" key={boost.tx}><a href={txUrl(boost.tx)} target="_blank" rel="noreferrer">{boost.agent.slice(0, 6)}…{boost.agent.slice(-4)} ↗</a><strong>{count(boost.amount)} {TOKEN.symbol} burned</strong><span>{new Date(boost.at).toLocaleDateString()}</span></div>)}</div></section>}
+  </>
 }
