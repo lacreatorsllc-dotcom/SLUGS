@@ -6,8 +6,9 @@
 // copy, which reads the same Baum boards every 10 minutes. The token stats and the
 // weekly winners always come from there: its job scans SLUGS burns for boosts.
 //
-// Cache each board for an hour to limit paid Baum API calls, however many
-// visitors open the terminal. Keep this separate from static asset caching.
+// Cache each board for 30 minutes to limit paid Baum API calls, however many
+// visitors open the terminal: a board costs a call only when someone opens it
+// after its copy has expired, so an idle site costs nothing. Keep this separate from static asset caching.
 
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const FALLBACK = (process.env.DATA_FALLBACK_URL ?? 'https://gumdropsteve.github.io/agent-trading-platform/').replace(/\/?$/, '/')
@@ -46,6 +47,6 @@ export default async function handler(req, res) {
   const body = (await fromBaum(file)) ?? (await fromFallback(file))
   if (!body) return res.status(502).json({ error: 'no data' })
   res.setHeader('content-type', 'application/json; charset=utf-8')
-  res.setHeader('cache-control', 'public, max-age=60, s-maxage=3600, stale-while-revalidate=3600')
+  res.setHeader('cache-control', 'public, max-age=60, s-maxage=1800, stale-while-revalidate=3600')
   return res.status(200).send(body)
 }

@@ -112,16 +112,18 @@ export function SampleNote({ agents }: { agents: Agent[] }) {
   return <p className="callout">Preview: these agents are sample data. Live Baum agents appear here once the leaderboard feed is connected.</p>
 }
 
-// How fresh the board is. The site refreshes every 10 minutes, so anything past
-// half an hour means data has stopped flowing and visitors should know.
+// How fresh the board is. The server keeps each board for 30 minutes, and Baum's
+// snapshot is up to 10 minutes old when fetched, so a visitor after a quiet spell
+// can see a copy over an hour old. Past two hours, data has stopped flowing and
+// visitors should know.
 export function UpdatedNote({ at, agents }: { at: number | null; agents: Agent[] }) {
   if (!at || agents.some((a) => a.sample)) return null
   const mins = Math.max(0, Math.round((Date.now() - at) / 60_000))
   const ago = mins < 1 ? 'just now' : mins < 60 ? `${mins} min ago` : mins < 48 * 60 ? `${Math.round(mins / 60)} h ago` : `${Math.round(mins / 1440)} days ago`
-  const stale = mins > 30
+  const stale = mins > 120
   return (
     <p className={`note${stale ? ' down' : ''}`} style={{ margin: 0 }} title={new Date(at).toLocaleString()}>
-      {stale ? `Data may be out of date: last updated ${ago}.` : `Updated ${ago} · refreshes every 10 minutes`}
+      {stale ? `Data may be out of date: last updated ${ago}.` : `Updated ${ago} · refreshes every 30 minutes`}
     </p>
   )
 }
