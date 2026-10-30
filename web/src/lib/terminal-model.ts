@@ -125,6 +125,26 @@ export function assembleAgents(
   return [...agents.values()]
 }
 
+/**
+ * An AI agent Baum knows that isn't on the boards yet, from api/agent.js: one just
+ * launched or funded that hasn't traded. Null for anything else.
+ */
+export function launchedAgent(body: unknown, categoryOf: (strategy: string) => Category | undefined): Agent | null {
+  if (!record(body) || !wallet(body.wallet) || typeof body.name !== 'string' || !body.name.trim()) return null
+  const strategy = record(body.strategy) && typeof body.strategy.id === 'string' ? categoryOf(body.strategy.id) : undefined
+  return {
+    id: body.wallet.toLowerCase(),
+    name: body.name.trim(),
+    categories: strategy ? [strategy] : [],
+    declared: Boolean(strategy),
+    tags: [],
+    trading: {},
+    liquidity: {},
+    ...(isSlug(body.slug) ? { slug: body.slug } : {}),
+    ...(avatar(body.avatarUrl) ? { avatarUrl: body.avatarUrl } : {}),
+  }
+}
+
 export const isBoosted = (agent: Agent) => (agent.boostedUntil ?? 0) > Date.now()
 
 export function comparisonIds(requested: string[], available: Agent[]) {

@@ -9,6 +9,7 @@ import Burn from './pages/Burn'
 import Compare from './pages/Compare'
 import Home from './pages/Home'
 import Leaderboard from './pages/Leaderboard'
+import Profile from './pages/Profile'
 import Swap from './pages/Swap'
 import Token from './pages/Token'
 import Vaults from './pages/Vaults'
@@ -17,7 +18,7 @@ import './terminal.css'
 export default function TerminalApp() {
   const { pathname } = useLocation()
   useEffect(() => {
-    const title = pathname === '/home' || pathname === '/leaderboard' ? 'Leaderboard' : pathname === '/agents/compare' ? 'Compare agents' : pathname.startsWith('/agents/') ? 'Agent' : pathname === '/agents' ? 'Agents' : pathname === '/token' ? '$SLUGS' : pathname === '/burn' ? 'Skip the line' : pathname === '/vaults' ? 'Vaults' : pathname === '/swap' ? 'Swap' : 'Page not found'
+    const title = pathname === '/home' || pathname === '/leaderboard' ? 'Leaderboard' : pathname === '/agents/compare' ? 'Compare agents' : pathname.startsWith('/agents/') ? 'Agent' : pathname === '/agents' ? 'Agents' : pathname === '/token' ? '$SLUGS' : pathname === '/burn' ? 'Skip the line' : pathname === '/vaults' ? 'Vaults' : pathname === '/swap' ? 'Swap' : pathname === '/profile' ? 'Your profile' : 'Page not found'
     document.title = `${title} · SLUGS`
   }, [pathname])
   return <TerminalDataProvider><div className="terminal"><AgentOverlayProvider><Routes>
@@ -25,7 +26,7 @@ export default function TerminalApp() {
     <Route element={<TerminalLayout />}>
       <Route path="/home" element={<Home />} /><Route path="/leaderboard" element={<Leaderboard />} />
       <Route path="/agents" element={<Browse />} /><Route path="/agents/compare" element={<Compare />} /><Route path="/agents/:id" element={<AgentPage />} />
-      <Route path="/vaults" element={<Vaults />} /><Route path="/swap" element={<Swap />} /><Route path="/token" element={<Token />} />
+      <Route path="/vaults" element={<Vaults />} /><Route path="/swap" element={<Swap />} /><Route path="/token" element={<Token />} /><Route path="/profile" element={<Profile />} />
       <Route path="*" element={<p>Page not found. <Link to="/home">Return to the leaderboard</Link>.</p>} />
     </Route>
   </Routes></AgentOverlayProvider></div></TerminalDataProvider>

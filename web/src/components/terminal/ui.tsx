@@ -31,7 +31,7 @@ export function CopyButton({ value, label = 'Copy wallet address' }: { value: st
   </span>
 }
 
-export function AvatarRing({ agent, large = false }: { agent: Agent; large?: boolean }) {
+export function AvatarRing({ agent, large = false }: { agent: Pick<Agent, 'id' | 'name' | 'avatarUrl'>; large?: boolean }) {
   const hash = [...agent.id].reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 0)
   const initials = agent.name.replace(/^@|^0x/g, '').replace(/[^a-z0-9]/gi, '').slice(0, 2).toUpperCase()
   // Initials until the picture loads, and for good if it won't.

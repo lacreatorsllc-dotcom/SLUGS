@@ -108,3 +108,17 @@ test('AI agents keep their slug and open by it; people have none', () => {
   assert.equal(agentPath(person), `/agents/${address('b')}`)
   assert.equal(odd.slug, undefined)
 })
+
+test('an AI agent that has not traded yet gets a page from what Baum says about it', async () => {
+  const { launchedAgent } = await import('../src/lib/terminal-model.ts')
+  const category = (strategy: string) => strategy === 'spot' ? 'Spot traders' as const : undefined
+  const kyle = launchedAgent({ wallet: '0xABCDEFabcdef0123456789abcdef0123456789AB', slug: 'winston-kyle', name: 'kyle', strategy: { id: 'spot', name: 'Spot' }, avatarUrl: 'https://baumai.xyz/api/avatar/0xabc?v=1' }, category)
+  assert.deepEqual(kyle, {
+    id: '0xabcdefabcdef0123456789abcdef0123456789ab', name: 'kyle', categories: ['Spot traders'], declared: true,
+    tags: [], trading: {}, liquidity: {}, slug: 'winston-kyle', avatarUrl: 'https://baumai.xyz/api/avatar/0xabc?v=1',
+  })
+  assert.equal(agentPath(kyle!), '/agents/winston-kyle')
+  assert.equal(launchedAgent({ wallet: 'nope', name: 'kyle' }, category), null)
+  assert.equal(launchedAgent({ reason: 'not-found' }, category), null)
+  assert.deepEqual(launchedAgent({ wallet: '0x' + '1'.repeat(40), name: 'x', slug: 'Bad Slug', strategy: null }, category)?.categories, [])
+})
