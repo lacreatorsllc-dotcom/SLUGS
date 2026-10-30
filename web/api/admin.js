@@ -38,9 +38,11 @@ function clientOf(req) {
   }
 }
 
-function siteOf(req) {
-  const host = String(req.headers['x-forwarded-host'] ?? req.headers.host ?? 'www.slugs.run')
-  return { name: SITE_NAME, adminUrl: `https://${host}/admin` }
+// Links in Baum's emails (password resets) always point at SLUGS' own address, never at
+// the request's Host, which a caller could set.
+const SITE_ORIGIN = 'https://www.slugs.run'
+function siteOf() {
+  return { name: SITE_NAME, adminUrl: `${SITE_ORIGIN}/admin` }
 }
 
 async function baum(method, path, { body, admin, session } = {}) {
@@ -73,7 +75,7 @@ export default async function handler(req, res) {
   if (!process.env.BAUM_API_KEY) return res.status(503).json({ reason: 'not-configured' })
   const admin = cookieOf(req, ADMIN)
   const client = clientOf(req)
-  const site = siteOf(req)
+  const site = siteOf()
 
   if (req.method === 'GET') {
     const action = String(req.query.action ?? 'me')
