@@ -1,10 +1,19 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { ACCESS, BRAND } from '../config'
 
-// The front door: SLUGS is invite only. A code goes on to account creation in the app;
+// The front door: SLUGS is invite only. A code lets you into the platform (/home);
 // without one, people enter the access raffle by posting on X or burning the token.
-const APP_AUTH = 'https://app.slugs.run/auth'
+// Codes aren't checked against a list yet. Once in, a visitor skips this page.
+const ENTERED = 'slugs.invite'
+
+function remembered() {
+  try { return localStorage.getItem(ENTERED) } catch { return null }
+}
+
+function remember(code: string) {
+  try { localStorage.setItem(ENTERED, code) } catch { /* private mode: they'll see the gate again */ }
+}
 const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
 
 function XMark() {
@@ -47,12 +56,20 @@ function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: s
 export default function Invite() {
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  if (remembered()) return <Navigate to="/home" replace />
+
+  function enter(value: string) {
+    remember(value)
+    navigate('/home')
+  }
 
   function submit(e: FormEvent) {
     e.preventDefault()
     const value = code.trim().toUpperCase()
     if (!value) return setError('Enter your invite code')
-    window.location.href = `${APP_AUTH}?invite=${encodeURIComponent(value)}`
+    enter(value)
   }
 
   return (
@@ -92,9 +109,7 @@ export default function Invite() {
       </div>
 
       <p className="invite-login">
-        Already have an account? <a href={`${APP_AUTH}?login=1`}>Log in</a>
-        <span className="invite-sep">·</span>
-        <Link to="/home">Explore SLUGS</Link>
+        Already have an account? <a href="/home" onClick={(e) => { e.preventDefault(); enter('member') }}>Log in</a>
       </p>
     </div>
   )
