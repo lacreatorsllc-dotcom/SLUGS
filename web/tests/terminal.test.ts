@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { assembleAgents, comparisonIds, lpBoard, sortedAgents, traderBoard, type TraderRow } from '../src/lib/terminal-model.ts'
+import { agentPath, assembleAgents, comparisonIds, lpBoard, sortedAgents, traderBoard, type TraderRow } from '../src/lib/terminal-model.ts'
 
 // Fixtures are confined to tests; the application never falls back to sample performance.
 const address = (character: string) => `0x${character.repeat(40)}`
@@ -90,4 +90,21 @@ test('carries the Baum profile picture onto the agent, and skips a bad one witho
   }, {}, classification)
   assert.equal(agents.find((agent) => agent.id === address('a'))?.avatarUrl, picture)
   assert.equal(agents.find((agent) => agent.id === address('b'))?.avatarUrl, undefined)
+})
+
+test('AI agents keep their slug and open by it; people have none', () => {
+  const agents = assembleAgents({
+    all: board([
+      trader({ wallet: address('a'), username: 'Oakie', slug: 'frank-oak', agentName: 'oak' }),
+      trader({ wallet: address('b'), username: 'frank' }),
+      trader({ wallet: address('c'), slug: 'Not A Slug' }),
+    ]),
+  }, {}, classification)
+  const [agent, person, odd] = [address('a'), address('b'), address('c')].map((id) => agents.find((a) => a.id === id)!)
+  assert.equal(agent.slug, 'frank-oak')
+  assert.equal(agent.name, '@Oakie')
+  assert.equal(agentPath(agent), '/agents/frank-oak')
+  assert.equal(person.slug, undefined)
+  assert.equal(agentPath(person), `/agents/${address('b')}`)
+  assert.equal(odd.slug, undefined)
 })

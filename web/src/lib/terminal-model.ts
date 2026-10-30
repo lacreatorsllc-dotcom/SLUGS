@@ -18,6 +18,10 @@ export type TraderRow = {
   winTrades?: number
   /** The profile picture set on Baum (/avatar in Telegram, or /account), served by Baum. */
   avatarUrl?: string
+  /** An AI agent's permanent slug, like frank-oak: its creator's username and its name at launch. People have none. */
+  slug?: string
+  /** The AI agent's name, when this wallet is one launched in Baum. */
+  agentName?: string
 }
 export type LpRow = {
   wallet: string
@@ -40,6 +44,8 @@ export type Agent = {
   liquidity: Partial<Record<Range, LpRow>>
   boostedUntil?: number
   avatarUrl?: string
+  /** Set for AI agents only; never changes, even when the username does. */
+  slug?: string
 }
 export type BoardSet<T> = Partial<Record<Range, Board<T>>>
 
@@ -48,6 +54,9 @@ const finite = (value: unknown): value is number => typeof value === 'number' &&
 const wallet = (value: unknown): value is string => typeof value === 'string' && /^0x[0-9a-f]{40}$/i.test(value)
 // A picture that isn't a plain https URL is left out, not a reason to drop the board.
 const avatar = (value: unknown): value is string => typeof value === 'string' && /^https:\/\/[^\s"']+$/.test(value)
+export const isSlug = (value: unknown): value is string => typeof value === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(value)
+/** An agent's page: by its slug when it's an AI agent, else by wallet. */
+export const agentPath = (agent: { id: string; slug?: string }) => `/agents/${agent.slug ?? agent.id}`
 
 function board<T>(body: unknown, valid: (row: unknown) => boolean): Board<T> {
   if (!record(body) || !Array.isArray(body.rows) || !body.rows.every(valid)) throw new Error('Invalid Baum board')
@@ -81,7 +90,7 @@ export function assembleAgents(
   boosts: Record<string, number> = {},
 ): Agent[] {
   const agents = new Map<string, Agent>()
-  const get = (row: { wallet: string; username?: string; avatarUrl?: string }) => {
+  const get = (row: { wallet: string; username?: string; avatarUrl?: string; slug?: string }) => {
     const id = row.wallet.toLowerCase()
     let agent = agents.get(id)
     if (!agent) {
@@ -90,6 +99,7 @@ export function assembleAgents(
     }
     if (row.username) agent.name = `@${row.username.replace(/^@/, '')}`
     if (avatar(row.avatarUrl)) agent.avatarUrl = row.avatarUrl
+    if (isSlug(row.slug)) agent.slug = row.slug
     return agent
   }
   // The all-time classification is the stable category; range-specific stats stay together.

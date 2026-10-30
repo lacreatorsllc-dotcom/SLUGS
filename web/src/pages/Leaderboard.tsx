@@ -19,7 +19,8 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
   function update(key: string, value: string) { setParams((previous) => { const next = new URLSearchParams(previous); if (value) next.set(key, value); else next.delete(key); return next }, { replace: true }) }
   const members = (snapshot?.agents ?? []).filter((agent) => (yieldOnly ? agent.liquidity[range] : agent.trading[range])
     && (category === 'All' || agent.categories.includes(category))
-    && (!query || `${agent.name} ${agent.id} ${agent.tags.join(' ')}`.toLowerCase().includes(query)))
+    // People by @username, AI agents by username or slug, anyone by wallet.
+    && (!query || `${agent.name} ${agent.slug ?? ''} ${agent.id} ${agent.tags.join(' ')}`.toLowerCase().includes(query.replace(/^@/, ''))))
   const agents = sortedAgents(members, range, sort, yieldOnly)
   const boosted = (snapshot?.agents ?? []).filter(isBoosted)
   const board = yieldOnly ? snapshot?.lps[range] : snapshot?.traders[range]

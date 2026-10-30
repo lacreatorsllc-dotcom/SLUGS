@@ -56,7 +56,7 @@ export default function TerminalLayout() {
         <NavLink to="/agents">Agents</NavLink><NavLink to="/vaults">Vaults</NavLink><NavLink to="/token" className={pathname === '/token' || pathname === '/swap' ? 'active' : ''}>${TOKEN.symbol}</NavLink>
       </nav>
       <form className="t-search" role="search" onSubmit={(event) => { event.preventDefault(); navigate(`/agents${query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''}`); input.current?.blur() }}>
-        <Icon name="search" size={14} /><input ref={input} type="search" aria-label="Search agents and wallet addresses" placeholder="Search agents, @usernames, wallets" value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘K</kbd>
+        <Icon name="search" size={14} /><input ref={input} type="search" aria-label="Search agents and wallet addresses" placeholder="Search agents, slugs, @usernames, wallets" value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘K</kbd>
       </form>
       <div className="t-top-actions">
         <IconButton icon="star" label="Watchlist · coming soon" disabled className="t-secondary-action" variant="outline" />

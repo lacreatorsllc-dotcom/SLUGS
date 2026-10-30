@@ -5,7 +5,7 @@ import { AvatarRing, Callout, CopyButton, EmptyState, FloatingCard, IconButton, 
 import { count, money, tone } from '../lib/terminal-format'
 import { baumLinks } from '../lib/baum'
 import { useTerminalData } from '../lib/terminal-context'
-import { RANGES, comparisonIds, rangeLabel, shortAddress, sortedAgents, type Range } from '../lib/terminal-model'
+import { RANGES, agentPath, comparisonIds, rangeLabel, shortAddress, sortedAgents, type Range } from '../lib/terminal-model'
 
 export default function Compare() {
   const { snapshot, loading, error, refresh } = useTerminalData()
@@ -37,7 +37,7 @@ export default function Compare() {
       {requestedIds.some((id) => !available.some((agent) => agent.id === id.toLowerCase())) && <Callout>Some selected agents are not on Baum’s current boards. Add replacements or remove the unavailable selections. <IconButton icon="close" label="Remove unavailable agents from comparison" onClick={() => update('ids', ids.join(','))} /></Callout>}
       {agents.length === 0 ? <section className="t-panel"><EmptyState title="Choose agents to compare" action={<IconButton icon="plus" label="Add an agent to compare" variant="primary" onClick={() => setAdding(true)} />}>Add up to four agents to compare their reported performance side by side.</EmptyState></section> : <div className="t-compare-scroll"><div className="t-compare-grid" style={{ '--compare-count': agents.length } as React.CSSProperties}>
         {agents.map((agent, index) => <section key={agent.id} className="t-compare-column" aria-label={`Compare ${agent.name}`}>
-          <div className="t-compare-agent"><AvatarRing agent={agent} /><div><Link to={`/agents/${agent.id}`}><h2>{agent.name}</h2></Link><div className="t-actions t-fine">{shortAddress(agent.id)}<CopyButton value={agent.id} label={`Copy ${agent.name} wallet address`} /></div></div><IconButton icon="close" label={`Remove ${agent.name} from comparison`} onClick={() => update('ids', ids.filter((id) => id !== agent.id).join(','))} /></div>
+          <div className="t-compare-agent"><AvatarRing agent={agent} /><div><Link to={agentPath(agent)}><h2>{agent.name}</h2></Link><div className="t-actions t-fine">{shortAddress(agent.id)}<CopyButton value={agent.id} label={`Copy ${agent.name} wallet address`} /></div></div><IconButton icon="close" label={`Remove ${agent.name} from comparison`} onClick={() => update('ids', ids.filter((id) => id !== agent.id).join(','))} /></div>
           <h2 className="t-compare-heading">Performance · {rangeLabel(range)}</h2>
           <dl className="t-compare-metrics">{metrics.map((metric) => {
             const value = metric.value(index)
