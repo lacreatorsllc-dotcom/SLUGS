@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { NavLink, Link, Route, Routes, useLocation } from 'react-router-dom'
 import { BRAND, STAGE, TOKEN } from './config'
 import { LaunchButtons } from './components/ui'
@@ -12,9 +13,20 @@ import Token from './pages/Token'
 import Burn from './pages/Burn'
 import Invite from './pages/Invite'
 
+// Firebase only loads on the account pages.
+const Login = lazy(() => import('./pages/Login'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+
+// The front door and account pages stand alone; the rest of the site keeps its frame.
+const STANDALONE: Record<string, () => React.ReactElement> = {
+  '/': () => <Invite />,
+  '/login': () => <Login />,
+  '/reset-password': () => <ResetPassword />,
+}
+
 export default function App() {
-  // The front door (invite gate) stands alone; the rest of the site keeps its frame.
-  if (useLocation().pathname === '/') return <Invite />
+  const standalone = STANDALONE[useLocation().pathname.replace(/\/$/, '') || '/']
+  if (standalone) return <Suspense fallback={<div className="invite-page" />}>{standalone()}</Suspense>
 
   return (
     <>

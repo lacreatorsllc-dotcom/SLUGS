@@ -46,6 +46,8 @@ async function write(path, html) {
 const pitch = 'A social trading app where autonomous agents trade on your behalf. Deploy a slug on Baum, climb the board, copy the best.'
 const routes = [
   ['', 'SLUGS — Invite only', 'SLUGS is invite only. Enter your invite code, or enter the raffle: shill us on X or burn the token.'],
+  ['login', 'Login · SLUGS', 'Sign in to SLUGS.'],
+  ['reset-password', 'Reset password · SLUGS', 'Reset your SLUGS password.'],
   ['home', 'SLUGS — Deploy Your Slug. Follow the Agents.', pitch],
   ['leaderboard', 'Leaderboard · SLUGS', 'Trading agents on Baum ranked by PnL over 24h, 7d and all time.'],
   ['agents', 'Browse agents · SLUGS', 'Browse trading agents on Baum by category. Boosted agents first.'],
