@@ -1,0 +1,53 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-30T19:05:00Z" },
+  "title": "SLUGS Terminal",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 1100, "title": "Leaderboard (home) · hover card", "expand": "fill" },
+    "Onboarding.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 1100, "title": "Onboarding · first login", "expand": "fill" },
+    "Search.dc.html": { "x": 0, "y": 1220, "w": 1440, "h": 900, "title": "⌘K search · copy @usernames", "expand": "fill" },
+    "Chat.dc.html": { "x": 1520, "y": 1220, "w": 1440, "h": 900, "title": "Chat with Baum", "expand": "fill" },
+    "Compare.dc.html": { "x": 0, "y": 2240, "w": 1440, "h": 1040, "title": "Create & compare agents", "expand": "fill" },
+    "Vaults.dc.html": { "x": 1520, "y": 2240, "w": 1440, "h": 1040, "title": "Vaults · allocate, copy, counter", "expand": "fill" },
+    "Token.dc.html": { "x": 0, "y": 3400, "w": 1440, "h": 1040, "title": "$SLUGS · burn, fees, staking, yield", "expand": "fill" },
+    "Profile.dc.html": { "x": 1520, "y": 3400, "w": 1440, "h": 1040, "title": "Profile · press Play, tap the chart icon for the PnL card", "expand": "fill", "is_interactive": true },
+    "Treasury.dc.html": { "x": 0, "y": 4740, "w": 1440, "h": 1040, "title": "Treasury · route funds to agents", "expand": "fill" },
+    "Settings.dc.html": { "x": 1520, "y": 4740, "w": 1440, "h": 1040, "title": "Settings", "expand": "fill" },
+    "Activity.dc.html": { "x": 0, "y": 5900, "w": 1440, "h": 1040, "title": "Agent page · public activity", "expand": "fill" },
+    "Follows.dc.html": { "x": 1520, "y": 5900, "w": 1440, "h": 900, "title": "Followers / following (floating) · press Play to switch tabs", "expand": "fill", "is_interactive": true },
+    "EditUsername.dc.html": { "x": 0, "y": 7060, "w": 1440, "h": 800, "title": "Edit username (floating)", "expand": "fill" },
+    "EditName.dc.html": { "x": 1520, "y": 7060, "w": 1440, "h": 800, "title": "Edit display name (floating)", "expand": "fill" },
+    "ConnectAgent.dc.html": { "x": 0, "y": 7980, "w": 1440, "h": 800, "title": "Connect an agent · Claude Code (floating)", "expand": "fill" },
+    "Agent.dc.html": { "x": 0, "y": 9240, "w": 1440, "h": 1040, "title": "Baum agent · copy, vault, boost (press Play to pick hours)", "expand": "fill", "is_interactive": true },
+    "Swap.dc.html": { "x": 1520, "y": 9240, "w": 1440, "h": 1040, "title": "Swap · SLUGS, BAUM, ETH via Baum", "expand": "fill" },
+    "Burn.dc.html": { "x": 0, "y": 10400, "w": 1440, "h": 900, "title": "Skip the line · burn to get in", "expand": "fill" }
+  },
+  "order": [
+    "Main.dc.html",
+    "Onboarding.dc.html",
+    "Search.dc.html",
+    "Chat.dc.html",
+    "Compare.dc.html",
+    "Vaults.dc.html",
+    "Token.dc.html",
+    "Profile.dc.html",
+    "Treasury.dc.html",
+    "Settings.dc.html",
+    "Activity.dc.html",
+    "Follows.dc.html",
+    "EditUsername.dc.html",
+    "EditName.dc.html",
+    "ConnectAgent.dc.html",
+    "Agent.dc.html",
+    "Swap.dc.html",
+    "Burn.dc.html"
+  ],
+  "notes": {
+    "title": { "x": 0, "y": -300, "text": "SLUGS Terminal — mockups", "kind": "title1", "maxW": 2960 },
+    "account": { "x": 0, "y": 4460, "text": "Account, wallets & agents — redesigned for desktop", "kind": "title1", "maxW": 2960 },
+    "baum": { "x": 0, "y": 8960, "text": "Baum features — agent, swap, skip the line (leaderboard, vaults & $SLUGS rebuilt above)", "kind": "title1", "maxW": 2960 }
+  },
+  "designSystems": []
+}

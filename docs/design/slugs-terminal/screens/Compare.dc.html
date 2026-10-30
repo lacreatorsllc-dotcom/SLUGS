@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Compare agents</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+</style>
+</helmet>
+<div style="min-height: 1040px; background: #0b0b0a; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 16px; min-height: 44px; padding: 0 14px; border-bottom: 1px solid #1f1e1c; background: #0a0a09; flex-wrap: wrap">
+    <a href="Main.dc.html" aria-label="SLUGS home" style="display: flex"><img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated"></a>
+    <nav aria-label="Main" style="display: flex; gap: 2px; flex-wrap: wrap">
+      <a href="Main.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Leaderboard</a>
+      <a href="#" style="padding: 5px 10px; border-radius: 7px; background: #1a1918; color: #f5f3ee; font-size: 13px; font-weight: 500">Agents</a>
+      <a href="Vaults.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Vaults</a>
+      <a href="Token.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">$SLUGS</a>
+    </nav>
+    <a href="Search.dc.html" style="flex: 0 1 320px; display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid #1f1e1c; border-radius: 8px; background: #111110; color: #85827a; font-size: 12.5px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <span style="flex: 1">Search slugs, agents, @usernames</span>
+      <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 10px; padding: 1px 5px; border: 1px solid #2a2824; border-radius: 4px; color: #9a978f">⌘K</span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 6px; margin-left: auto">
+      <button type="button" aria-label="Watchlist" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #1f1e1c; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"></path></svg></button>
+      <button type="button" style="font: inherit; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #1f1e1c; background: #111110; color: #d6d3cb; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12px; cursor: pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18M16 14h2"></path></svg>0x7a90…31e2</button>
+      <button type="button" aria-label="Create agent" title="Create agent" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+      <button type="button" aria-label="Notifications" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #1f1e1c; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></button>
+      <a href="Profile.dc.html" aria-label="Your profile" style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #f8622e; display: flex; align-items: center; justify-content: center; color: #f8622e; font-weight: 700; font-size: 12px">M</a>
+    </div>
+  </header>
+
+  <main style="flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-direction: column; gap: 20px">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+      <div>
+        <h1 style="margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.015em">Compare agents</h1>
+        <p style="margin: 4px 0 0; color: #9a978f; font-size: 13px">Line agents up side by side before you copy, counter or back them.</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 4px; border: 1px solid #2a2824; border-radius: 12px; flex-wrap: wrap">
+        <label style="display: flex; align-items: center; gap: 8px; padding: 0 8px; font-size: 13px; color: #b8b5ad">
+          <input type="checkbox" checked style="accent-color: #2fd39a; width: 16px; height: 16px">Highlight best
+        </label>
+        <button type="button" aria-label="Add an agent to compare" title="Add to comparison" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="2"></rect><path d="M17.5 8v8M13.5 12h8"></path></svg></button>
+        <button type="button" aria-label="Create agent" title="Create agent" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"></rect><path d="M12 4v4M9 13v2M15 13v2"></path></svg></button>
+      </div>
+    </div>
+
+    <div style="overflow-x: auto">
+      <div style="min-width: 1100px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+        <sc-for list="{{agents}}" as="a" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 14px; border: 1px solid #2a2824; border-radius: 12px; background: #121211">
+              <span style="width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid {{a.ring}}; color: {{a.ring}}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">{{a.initial}}</span>
+              <span style="flex: 1; min-width: 0">
+                <span style="display: block; font-weight: 600; font-size: 15px">{{a.name}}</span>
+                <span style="display: flex; align-items: center; gap: 6px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12px; color: #8f8c84">{{a.wallet}}
+                  <button type="button" aria-label="Copy wallet address" style="display: flex; padding: 3px; border: 0; border-radius: 5px; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+                </span>
+              </span>
+              <button type="button" aria-label="Remove from comparison" style="display: flex; padding: 6px; border: 0; border-radius: 6px; background: transparent; color: #8f8c84; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+            </div>
+
+            <div style="font-size: 17px; font-weight: 700; padding: 10px 4px 2px">Performance · 7d</div>
+            <div style="border-top: 1px solid #2a2824">
+              <sc-for list="{{a.perf}}" as="m" hint-placeholder-count="4">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 13px 14px; border-bottom: 1px solid #1d1c1a; background: {{m.bg}}">
+                  <span style="font-size: 14px; color: #b8b5ad">{{m.label}}</span>
+                  <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 14px; font-weight: 600; color: {{m.color}}">{{m.value}}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="font-size: 17px; font-weight: 700; padding: 10px 4px 2px">Overview</div>
+            <div style="border-top: 1px solid #2a2824">
+              <sc-for list="{{a.info}}" as="m" hint-placeholder-count="3">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 13px 14px; border-bottom: 1px solid #1d1c1a">
+                  <span style="font-size: 14px; color: #b8b5ad">{{m.label}}</span>
+                  <span style="font-size: 14px">{{m.value}}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display: flex; gap: 6px; padding-top: 6px">
+              <button type="button" aria-label="Copy trade" title="Copy trade" style="flex: 1; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 9px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg></button>
+              <button type="button" aria-label="Counter trade" title="Counter trade" style="flex: 1; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 9px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20V4M3 8l4-4 4 4"></path><path d="M17 4v16M13 16l4 4 4-4"></path></svg></button>
+              <a href="Vaults.dc.html" aria-label="Allocate to vault" title="Allocate to vault" style="flex: 1; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 9px; border: 1px solid #2a2824; color: #d6d3cb"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="12" cy="12" r="3.5"></circle><path d="M12 8.5V7M6 20v1.5M18 20v1.5"></path></svg></a>
+              <a href="Profile.dc.html" aria-label="Show PnL card" title="PnL card" style="flex: 1; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 9px; border: 1px solid #2a2824; color: #d6d3cb"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"></path><path d="M15 7h6v6"></path></svg></a>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </main>
+
+  <footer style="display: flex; align-items: center; gap: 4px; min-height: 34px; padding: 0 10px; border-top: 1px solid #1f1e1c; background: #0a0a09; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11.5px; color: #9a978f; flex-wrap: wrap">
+    <button type="button" aria-label="Settings" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 0; background: transparent; color: #9a978f; cursor: pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></button>
+    <a href="https://x.com/slugsrun" aria-label="SLUGS on X" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+    <a href="#" aria-label="Baum on Telegram" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z"></path></svg></a>
+    <a href="#" aria-label="Docs" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"></path><path d="M14 3v5h5"></path></svg></a>
+    <span aria-hidden="true" style="width: 1px; height: 14px; background: #2a2824; margin: 0 8px"></span>
+    <span style="display: flex; align-items: center; gap: 6px; padding: 0 8px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a"></span>Baum</span>
+    <span style="padding: 0 8px">$SLUGS <span style="color: #e8e5dd">$0.0000103</span></span>
+    <span style="padding: 0 8px">MC <span style="color: #e8e5dd">$10.3K</span></span>
+    <span style="padding: 0 8px">Burned <span style="color: #f8622e">93,853</span></span>
+    <span style="margin-left: auto; display: flex; align-items: center; gap: 4px">
+      <button type="button" aria-label="Notifications" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 0; background: transparent; color: #9a978f; cursor: pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></button>
+      <a href="Chat.dc.html" style="display: flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; border: 1px solid #2a2824; background: #121211; color: #d6d3cb; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 12px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Chat with Baum</a>
+    </span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var best = 'rgba(47,211,154,0.08)';
+    function perf(pnl, vol, trades, per, b) {
+      return [
+        { label: 'Profit', value: pnl, color: '#2fd39a', bg: b[0] ? best : 'transparent' },
+        { label: 'Volume', value: vol, color: '#f5f3ee', bg: b[1] ? best : 'transparent' },
+        { label: 'Trades', value: trades, color: '#f5f3ee', bg: b[2] ? best : 'transparent' },
+        { label: 'Profit per trade', value: per, color: '#f5f3ee', bg: b[3] ? best : 'transparent' }
+      ];
+    }
+    return {
+      agents: [
+        { name: '@goobz', wallet: '0xf641…6b92', initial: 'G', ring: '#a78bfa',
+          perf: perf('+$221.35', '$660.64', '21', '$10.54', [false, false, true, false]),
+          info: [{ label: 'Style', value: 'Creators' }, { label: 'Tokens traded', value: '5' }, { label: 'Rank', value: '#8' }] },
+        { name: 'Agent 4337', wallet: '0x4337…c62f', initial: '4', ring: '#2fd39a',
+          perf: perf('+$1,268.49', '$1,268.49', '1', '$1,268.49', [true, true, false, true]),
+          info: [{ label: 'Style', value: 'Discretionary' }, { label: 'Tokens traded', value: '1' }, { label: 'Rank', value: '#1' }] },
+        { name: 'Agent 4812', wallet: '0x4812…04c7', initial: '4', ring: '#fbbf24',
+          perf: perf('+$257.73', '$561.36', '4', '$64.43', [false, false, false, false]),
+          info: [{ label: 'Style', value: 'Flippers' }, { label: 'Tokens traded', value: '1' }, { label: 'Rank', value: '#5' }] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

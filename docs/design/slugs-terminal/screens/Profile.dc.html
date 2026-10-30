@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Your profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+@keyframes pnlBackdrop{from{opacity:0}to{opacity:1}}
+@keyframes pnlCardIn{0%{opacity:0;transform:translateY(28px) scale(0.94)}60%{opacity:1;transform:translateY(-4px) scale(1.01)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes pnlNumber{from{opacity:0;letter-spacing:0.08em}to{opacity:1;letter-spacing:-0.02em}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 1040px; background: #0b0b0a; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 16px; min-height: 44px; padding: 0 14px; border-bottom: 1px solid #1f1e1c; background: #0a0a09; flex-wrap: wrap">
+    <a href="Main.dc.html" aria-label="SLUGS home" style="display: flex"><img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated"></a>
+    <nav aria-label="Main" style="display: flex; gap: 2px; flex-wrap: wrap">
+      <a href="Main.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Leaderboard</a>
+      <a href="Compare.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Agents</a>
+      <a href="Vaults.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Vaults</a>
+      <a href="Token.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">$SLUGS</a>
+    </nav>
+    <a href="Search.dc.html" style="flex: 0 1 320px; display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid #1f1e1c; border-radius: 8px; background: #111110; color: #85827a; font-size: 12.5px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <span style="flex: 1">Search slugs, agents, @usernames</span>
+      <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 10px; padding: 1px 5px; border: 1px solid #2a2824; border-radius: 4px; color: #9a978f">⌘K</span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 6px; margin-left: auto">
+      <button type="button" aria-label="Watchlist" title="Watchlist" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #1f1e1c; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"></path></svg></button>
+      <button type="button" style="font: inherit; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #1f1e1c; background: #111110; color: #d6d3cb; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12px; cursor: pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18M16 14h2"></path></svg>0x7a90…31e2</button>
+      <button type="button" aria-label="Create agent" title="Create agent" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+      <button type="button" aria-label="Notifications" title="Notifications" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #1f1e1c; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></button>
+      <span style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #f8622e; background: rgba(248,98,46,0.1); display: flex; align-items: center; justify-content: center; color: #f8622e; font-weight: 700; font-size: 12px">M</span>
+    </div>
+  </header>
+
+  <main style="flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start">
+    <section style="flex: 1 1 360px; max-width: 440px; box-sizing: border-box; border: 1px solid #1f1e1c; border-radius: 14px; background: #111110; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; align-items: center; gap: 14px">
+        <span style="width: 52px; height: 52px; border-radius: 50%; border: 2px solid #f8622e; color: #f8622e; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px">M</span>
+        <div style="flex: 1">
+          <div style="font-size: 18px; font-weight: 600">@marketer</div>
+          <div style="font-size: 12.5px; color: #9a978f; margin-top: 2px"><span style="color: #f5f3ee; font-weight: 600">[N]</span> followers · <span style="color: #f5f3ee; font-weight: 600">[N]</span> following</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 6px">
+        <button type="button" onClick="{{openPnl}}" aria-label="Show PnL card" title="PnL card" style="flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"></path><path d="M15 7h6v6"></path></svg></button>
+        <button type="button" aria-label="Share profile" title="Share profile" style="flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"></path><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path></svg></button>
+        <a href="Chat.dc.html" aria-label="Messages" title="Messages" style="flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; color: #d6d3cb"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg></a>
+        <button type="button" aria-label="Edit profile" title="Edit profile" style="flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg></button>
+      </div>
+      <div style="border: 1px solid #1f1e1c; border-radius: 10px">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #1f1e1c">
+          <span style="font-size: 12.5px; color: #9a978f">User ID</span>
+          <span style="display: flex; align-items: center; gap: 6px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12.5px">@marketer
+            <button type="button" aria-label="Copy user ID" title="Copy" style="display: flex; padding: 4px; border: 0; border-radius: 6px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+          </span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px">
+          <span style="font-size: 12.5px; color: #9a978f">Connected wallet</span>
+          <span style="display: flex; align-items: center; gap: 6px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12.5px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a"></span>0x7a90…31e2
+            <button type="button" aria-label="Copy wallet address" title="Copy" style="display: flex; padding: 4px; border: 0; border-radius: 6px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+      <section style="border: 1px solid #1f1e1c; border-radius: 14px; background: #0f0f0e; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #1f1e1c">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 600">Agent wallets</h2>
+          <button type="button" aria-label="Create agent" title="Create agent" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"></rect><path d="M12 4v4M9 13v2M15 13v2"></path></svg></button>
+        </div>
+        <sc-for list="{{agents}}" as="g" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #1a1918; flex-wrap: wrap">
+            <span style="width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid {{g.ring}}; color: {{g.ring}}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">{{g.initial}}</span>
+            <span style="flex: 1; min-width: 180px">
+              <span style="display: block; font-weight: 600; font-size: 14px">{{g.name}}</span>
+              <span style="display: block; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12px; color: #85827a">@marketer/{{g.slug}} · [WALLET]</span>
+            </span>
+            <span style="display: flex; align-items: center; gap: 6px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; color: #2fd39a; padding-right: 8px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a"></span>ACTIVE</span>
+            <span style="display: flex; gap: 2px">
+              <button type="button" onClick="{{openPnl}}" aria-label="Show PnL card" title="PnL card" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 6-6 4 4 8-8"></path><path d="M15 7h6v6"></path></svg></button>
+              <button type="button" aria-label="Fund agent wallet" title="Fund" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5"></path><path d="M5 20h14"></path></svg></button>
+              <button type="button" aria-label="Agent settings" title="Settings" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></button>
+              <button type="button" aria-label="Copy agent wallet" title="Copy" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+            </span>
+          </div>
+        </sc-for>
+      </section>
+
+      <section style="border: 1px solid #1f1e1c; border-radius: 14px; background: #0f0f0e">
+        <div role="tablist" aria-label="Settings" style="display: flex; gap: 2px; padding: 8px 10px; border-bottom: 1px solid #1f1e1c; flex-wrap: wrap">
+          <button type="button" role="tab" aria-selected="true" style="font: inherit; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 7px; border: 0; background: #1a1918; color: #f5f3ee; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>Profile</button>
+          <button type="button" role="tab" aria-selected="false" style="font: inherit; font-size: 12.5px; display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 7px; border: 0; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18"></path></svg>Wallets</button>
+          <button type="button" role="tab" aria-selected="false" style="font: inherit; font-size: 12.5px; display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 7px; border: 0; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path></svg>Notifications</button>
+          <button type="button" role="tab" aria-selected="false" style="font: inherit; font-size: 12.5px; display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 7px; border: 0; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"></path></svg>Security</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 16px">
+          <div><label for="set-user" style="display: block; font-size: 12.5px; color: #b8b5ad; margin-bottom: 6px">Username</label><input id="set-user" value="marketer" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 13.5px; padding: 10px 12px; border-radius: 9px; border: 1px solid #1f1e1c; background: #111110; color: #f5f3ee"></div>
+          <div><label for="set-name" style="display: block; font-size: 12.5px; color: #b8b5ad; margin-bottom: 6px">Display name</label><input id="set-name" placeholder="[Your name]" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 13.5px; padding: 10px 12px; border-radius: 9px; border: 1px solid #1f1e1c; background: #111110; color: #f5f3ee"></div>
+          <label style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid #1f1e1c; border-radius: 10px; font-size: 13.5px">
+            <span><span style="display: block; font-weight: 600">Public profile</span><span style="display: block; font-size: 12.5px; color: #9a978f; margin-top: 2px">Show your agents and PnL on the leaderboard</span></span>
+            <input type="checkbox" checked style="accent-color: #ece9e2; width: 18px; height: 18px">
+          </label>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-top: 1px solid #1f1e1c">
+          <button type="button" aria-label="Sign out" title="Sign out" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #2a2824; background: transparent; color: #9a978f; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 17l5-5-5-5M15 12H4"></path></svg></button>
+          <button type="button" aria-label="Save settings" title="Save" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer style="display: flex; align-items: center; gap: 4px; min-height: 34px; padding: 0 10px; border-top: 1px solid #1f1e1c; background: #0a0a09; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11.5px; color: #9a978f; flex-wrap: wrap">
+    <button type="button" aria-label="Settings" title="Settings" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 0; background: transparent; color: #9a978f; cursor: pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></button>
+    <a href="https://x.com/slugsrun" aria-label="SLUGS on X" title="X" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+    <a href="#" aria-label="Baum on Telegram" title="Telegram" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z"></path></svg></a>
+    <a href="#" aria-label="Docs" title="Docs" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"></path><path d="M14 3v5h5"></path></svg></a>
+    <span aria-hidden="true" style="width: 1px; height: 14px; background: #2a2824; margin: 0 8px"></span>
+    <span style="display: flex; align-items: center; gap: 6px; padding: 0 8px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a"></span>Baum</span>
+    <span style="padding: 0 8px">$SLUGS <span style="color: #e8e5dd">$0.0000103</span></span>
+    <span style="padding: 0 8px">MC <span style="color: #e8e5dd">$10.3K</span></span>
+    <span style="padding: 0 8px">Burned <span style="color: #f8622e">93,853</span></span>
+    <span style="margin-left: auto; display: flex; align-items: center; gap: 4px">
+      <button type="button" aria-label="Notifications" title="Notifications" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 0; background: transparent; color: #9a978f; cursor: pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></button>
+      <a href="Chat.dc.html" aria-label="Chat with Baum" title="Chat with Baum" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #d6d3cb"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg></a>
+    </span>
+  </footer>
+
+  <sc-if value="{{showPnl}}" hint-placeholder-val="{{ true }}">
+    <div style="position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(4,4,4,0.72); backdrop-filter: blur(6px); animation: pnlBackdrop 0.25s ease-out both">
+      <div role="dialog" aria-label="PnL card" style="width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 12px; animation: pnlCardIn 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <div style="position: relative; overflow: hidden; border: 1px solid #2f2d29; border-radius: 20px; padding: 26px; background: radial-gradient(circle at 88% 12%, rgba(47,211,154,0.16), transparent 50%), radial-gradient(circle at 0% 100%, rgba(248,98,46,0.10), transparent 55%), #0d0d0c; box-shadow: 0 40px 100px rgba(0,0,0,0.75)">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated">
+            <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 10.5px; letter-spacing: 0.14em; color: #85827a">PNL · 7D</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 26px">
+            <span style="width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #2fd39a; color: #2fd39a; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px">G</span>
+            <span style="font-size: 14px; font-weight: 600">Grid Trader Agent</span>
+            <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12px; color: #85827a">@marketer</span>
+          </div>
+          <div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 46px; font-weight: 600; color: #2fd39a; margin-top: 14px; animation: pnlNumber 0.8s 0.15s ease-out both">[+$PNL]</div>
+          <div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 14px; color: #2fd39a; margin-top: 2px">[+ROI%]</div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 22px; border-top: 1px solid #1f1e1c; padding-top: 14px">
+            <div><div style="font-size: 10.5px; letter-spacing: 0.1em; color: #85827a; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums">VOLUME</div><div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 14px; margin-top: 4px">[VOL]</div></div>
+            <div><div style="font-size: 10.5px; letter-spacing: 0.1em; color: #85827a; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums">TRADES</div><div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 14px; margin-top: 4px">[N]</div></div>
+            <div><div style="font-size: 10.5px; letter-spacing: 0.1em; color: #85827a; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums">RANK</div><div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 14px; margin-top: 4px">[#]</div></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11px; color: #6f6c65"><span>slugs.run/@marketer</span><span>Robinhood Chain</span></div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 8px">
+          <button type="button" aria-label="Share on X" title="Share on X" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></button>
+          <button type="button" aria-label="Copy image" title="Copy image" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2f2d29; background: #121211; color: #d6d3cb; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+          <button type="button" aria-label="Download image" title="Download" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2f2d29; background: #121211; color: #d6d3cb; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5"></path><path d="M5 20h14"></path></svg></button>
+          <button type="button" aria-label="Copy link" title="Copy link" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2f2d29; background: #121211; color: #d6d3cb; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></button>
+          <button type="button" onClick="{{closePnl}}" aria-label="Close PnL card" title="Close" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2f2d29; background: #121211; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { showPnl: true };
+  }
+  renderVals() {
+    var self = this;
+    return {
+      showPnl: this.state.showPnl,
+      openPnl: function () { self.setState({ showPnl: true }); },
+      closePnl: function () { self.setState({ showPnl: false }); },
+      agents: [
+        { name: 'Grid Trader Agent', slug: 'grid-trader-agent', initial: 'G', ring: '#2fd39a' },
+        { name: 'Blue Chip', slug: 'blue-chip', initial: 'B', ring: '#a78bfa' },
+        { name: 'Cascade', slug: 'cascade', initial: 'C', ring: '#2fd39a' },
+        { name: 'Tide', slug: 'tide', initial: 'T', ring: '#fbbf24' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

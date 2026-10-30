@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Connect an agent</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#060606}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+@keyframes cardIn{0%{opacity:0;transform:translateY(24px) scale(0.96)}60%{opacity:1;transform:translateY(-3px) scale(1.005)}100%{opacity:1;transform:none}}
+@keyframes waitPulse{0%,100%{opacity:1}50%{opacity:0.25}}
+</style>
+</helmet>
+<div style="min-height: 800px; background: #060606; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 16px; min-height: 44px; padding: 0 14px; border-bottom: 1px solid #141413; opacity: 0.35">
+    <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated">
+    <span style="font-size: 13px; color: #9a978f">Settings</span>
+  </header>
+
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 16px">
+    <div role="dialog" aria-labelledby="ca-title" style="width: 100%; max-width: 620px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 22px; display: flex; flex-direction: column; gap: 16px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+        <div>
+          <h1 id="ca-title" style="margin: 0; font-size: 18px; font-weight: 600">Connect an agent</h1>
+          <p style="margin: 4px 0 0; font-size: 13px; color: #9a978f">Run this in a terminal inside your agent's environment.</p>
+        </div>
+        <a href="Settings.dc.html" aria-label="Close" title="Close" style="width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #1a1918; color: #b8b5ad"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></a>
+      </div>
+
+      <div role="tablist" aria-label="Agent" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+        <button type="button" role="tab" aria-selected="true" style="font: inherit; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; height: 38px; border-radius: 10px; border: 1px solid #5a564f; background: #1c1b19; color: #f5f3ee; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="#d97757" aria-hidden="true"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"></path></svg>Claude Code</button>
+        <button type="button" role="tab" aria-selected="false" style="font: inherit; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; height: 38px; border-radius: 10px; border: 1px solid #1f1e1c; background: transparent; color: #b8b5ad; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"></path></svg>Codex</button>
+        <button type="button" role="tab" aria-selected="false" style="font: inherit; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; height: 38px; border-radius: 10px; border: 1px solid #1f1e1c; background: transparent; color: #b8b5ad; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 17 6-6-6-6M12 19h8"></path></svg>Any terminal</button>
+      </div>
+
+      <div style="border: 1px solid #2a2824; border-radius: 12px; background: #070707; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 10px 8px 12px; border-bottom: 1px solid #1a1918">
+          <span aria-hidden="true" style="display: flex; gap: 6px"><span style="width: 9px; height: 9px; border-radius: 50%; background: #3a3732"></span><span style="width: 9px; height: 9px; border-radius: 50%; background: #3a3732"></span><span style="width: 9px; height: 9px; border-radius: 50%; background: #3a3732"></span></span>
+          <button type="button" aria-label="Copy command" title="Copy" style="display: flex; padding: 5px; border: 0; border-radius: 6px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+        </div>
+        <div style="padding: 14px 14px 16px; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-break: break-all"><span style="color: #6f6c65">$ </span><span style="color: #2fd39a">npx slugs-connector connect --token [YOUR_TOKEN]</span></div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 2px">
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #9a978f"><span style="width: 7px; height: 7px; border-radius: 50%; background: #fbbf24; animation: waitPulse 1.4s ease-in-out infinite"></span>Waiting for your agent…</span>
+        <span style="display: flex; gap: 6px">
+          <a href="Settings.dc.html" aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; color: #d6d3cb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></a>
+          <button type="button" aria-label="I ran it, connect" title="I ran it, connect" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

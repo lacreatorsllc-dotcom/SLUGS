@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Swap</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+</style>
+</helmet>
+<div style="min-height: 1040px; background: #0b0b0a; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 16px; min-height: 44px; padding: 0 14px; border-bottom: 1px solid #1f1e1c; background: #0a0a09; flex-wrap: wrap">
+    <a href="Main.dc.html" aria-label="SLUGS home" style="display: flex"><img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated"></a>
+    <nav aria-label="Main" style="display: flex; gap: 2px; flex-wrap: wrap">
+      <a href="Main.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Leaderboard</a>
+      <a href="Compare.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Agents</a>
+      <a href="Vaults.dc.html" style="padding: 5px 10px; border-radius: 7px; color: #9a978f; font-size: 13px; font-weight: 500">Vaults</a>
+      <a href="Token.dc.html" style="padding: 5px 10px; border-radius: 7px; background: #1a1918; color: #f5f3ee; font-size: 13px; font-weight: 500">$SLUGS</a>
+    </nav>
+    <a href="Search.dc.html" style="flex: 0 1 320px; display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid #1f1e1c; border-radius: 8px; background: #111110; color: #85827a; font-size: 12.5px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <span style="flex: 1">Search slugs, agents, @usernames</span>
+      <span style="font-size: 10px; padding: 1px 5px; border: 1px solid #2a2824; border-radius: 4px; color: #9a978f">⌘K</span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 6px; margin-left: auto">
+      <a href="Treasury.dc.html" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #1f1e1c; background: #111110; color: #d6d3cb; font-size: 12px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18M16 14h2"></path></svg>Treasury</a>
+      <a href="Profile.dc.html" aria-label="Your profile" style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #f8622e; display: flex; align-items: center; justify-content: center; color: #f8622e; font-weight: 700; font-size: 12px">M</a>
+    </div>
+  </header>
+
+  <main style="flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box; padding: 24px; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start">
+    <div style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 16px; border: 1px solid #1f1e1c; border-radius: 12px; background: #0f0f0e; font-variant-numeric: tabular-nums">
+        <img src="../../../../web/public/slugs-logo-orange.png" alt="" style="height: 12px; width: auto; image-rendering: pixelated">
+        <span style="font-size: 15px; font-weight: 600">SLUGS <span style="color: #85827a; font-weight: 400">/ ETH</span></span>
+        <span style="font-size: 20px; font-weight: 600; margin-left: 6px">$0.0000103</span>
+        <span style="display: flex; gap: 22px; margin-left: auto; font-size: 12px; color: #85827a">
+          <span>Market cap<span style="display: block; color: #f5f3ee; font-size: 13px; font-weight: 500">$10.3K</span></span>
+          <span>Supply<span style="display: block; color: #f5f3ee; font-size: 13px; font-weight: 500">999.9M</span></span>
+          <span>Burned<span style="display: block; color: #f8622e; font-size: 13px; font-weight: 500">93,853</span></span>
+          <span>Chain<span style="display: block; color: #f5f3ee; font-size: 13px; font-weight: 500">Robinhood</span></span>
+        </span>
+      </div>
+      <div aria-label="Price chart placeholder" style="height: 480px; border: 1px solid #1f1e1c; border-radius: 12px; background-color: #0d0d0c; background-image: linear-gradient(#171615 1px, transparent 1px), linear-gradient(90deg, #171615 1px, transparent 1px); background-size: 64px 48px; display: flex; align-items: center; justify-content: center; color: #6f6c65; font-size: 13px">[Price chart · from Baum's market data]</div>
+    </div>
+
+    <aside aria-label="Swap" style="flex: 1 1 340px; max-width: 380px; box-sizing: border-box; border: 1px solid #1f1e1c; border-radius: 14px; background: #0f0f0e; padding: 14px; display: flex; flex-direction: column; gap: 12px; font-variant-numeric: tabular-nums">
+      <div role="tablist" aria-label="Side" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 3px; border-radius: 10px; background: #0b0b0a; border: 1px solid #1f1e1c">
+        <button type="button" role="tab" aria-selected="true" style="font: inherit; font-size: 13px; font-weight: 600; padding: 8px 0; border-radius: 8px; border: 0; background: rgba(47,211,154,0.14); color: #2fd39a; cursor: pointer">Buy</button>
+        <button type="button" role="tab" aria-selected="false" style="font: inherit; font-size: 13px; font-weight: 600; padding: 8px 0; border-radius: 8px; border: 0; background: transparent; color: #9a978f; cursor: pointer">Sell</button>
+      </div>
+
+      <div style="border: 1px solid #1f1e1c; border-radius: 12px; background: #0b0b0a; padding: 12px">
+        <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #85827a"><span>You pay</span><span>Balance [BAL]</span></div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px">
+          <input aria-label="Amount to pay" value="0.1" style="flex: 1; min-width: 0; font: inherit; font-size: 22px; font-weight: 600; border: 0; outline: 0; background: transparent; color: #f5f3ee">
+          <button type="button" aria-label="Choose token to pay with" style="font: inherit; display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 999px; border: 1px solid #2a2824; background: #151514; color: #f5f3ee; font-size: 13px; font-weight: 600; cursor: pointer"><span style="width: 16px; height: 16px; border-radius: 50%; background: #8b93a7"></span>ETH<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; margin: -8px 0">
+        <button type="button" aria-label="Flip tokens" title="Flip" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 9px; border: 1px solid #2a2824; background: #151514; color: #d6d3cb; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20V4M3 8l4-4 4 4"></path><path d="M17 4v16M13 16l4 4 4-4"></path></svg></button>
+      </div>
+
+      <div style="border: 1px solid #1f1e1c; border-radius: 12px; background: #0b0b0a; padding: 12px">
+        <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #85827a"><span>You get</span><span>[QUOTE]</span></div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px">
+          <span style="flex: 1; font-size: 22px; font-weight: 600; color: #85827a">[AMOUNT]</span>
+          <button type="button" aria-label="Choose token to receive" style="font: inherit; display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 999px; border: 1px solid #2a2824; background: #151514; color: #f5f3ee; font-size: 13px; font-weight: 600; cursor: pointer"><span style="width: 16px; height: 16px; border-radius: 50%; background: #f8622e"></span>SLUGS<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px">
+        <button type="button" style="font: inherit; font-size: 12px; padding: 7px 0; border-radius: 8px; border: 1px solid #1f1e1c; background: transparent; color: #b8b5ad; cursor: pointer">0.01</button>
+        <button type="button" style="font: inherit; font-size: 12px; padding: 7px 0; border-radius: 8px; border: 1px solid #5a564f; background: #1c1b19; color: #f5f3ee; cursor: pointer">0.1</button>
+        <button type="button" style="font: inherit; font-size: 12px; padding: 7px 0; border-radius: 8px; border: 1px solid #1f1e1c; background: transparent; color: #b8b5ad; cursor: pointer">0.5</button>
+        <button type="button" style="font: inherit; font-size: 12px; padding: 7px 0; border-radius: 8px; border: 1px solid #1f1e1c; background: transparent; color: #b8b5ad; cursor: pointer">Max</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12.5px">
+        <div style="display: flex; justify-content: space-between"><span style="color: #85827a">Route</span><span>Baum</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #85827a">Platform fee</span><span>10 bps</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #85827a">Pairs</span><span>SLUGS · BAUM · ETH · USDC</span></div>
+      </div>
+
+      <a href="#" style="height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 11px; background: #ece9e2; color: #0b0b0a; font-size: 14px; font-weight: 600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>Trade SLUGS on Baum</a>
+      <p style="margin: 0; display: flex; gap: 8px; font-size: 11.5px; line-height: 1.5; color: #85827a"><span style="width: 6px; height: 6px; flex: none; margin-top: 5px; border-radius: 50%; background: #fbbf24"></span>In-page swaps turn on when Baum's partner swap API is ready. Until then this opens Baum's site, or use <a href="#" style="color: #d6d3cb; text-decoration: underline">Baum on Telegram</a>.</p>
+    </aside>
+  </main>
+
+  <footer style="display: flex; align-items: center; gap: 4px; min-height: 34px; padding: 0 10px; border-top: 1px solid #1f1e1c; background: #0a0a09; font-size: 11.5px; color: #9a978f; flex-wrap: wrap; font-variant-numeric: tabular-nums">
+    <a href="Settings.dc.html" aria-label="Settings" title="Settings" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></a>
+    <a href="https://x.com/slugsrun" aria-label="SLUGS on X" title="X" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #9a978f"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+    <span aria-hidden="true" style="width: 1px; height: 14px; background: #2a2824; margin: 0 8px"></span>
+    <span style="display: flex; align-items: center; gap: 6px; padding: 0 8px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a"></span>Baum</span>
+    <span style="padding: 0 8px">$SLUGS <span style="color: #e8e5dd">$0.0000103</span></span>
+    <span style="padding: 0 8px">Burned <span style="color: #f8622e">93,853</span></span>
+    <span style="margin-left: auto; padding: 0 8px; color: #6f6c65">Not financial advice.</span>
+    <a href="Chat.dc.html" aria-label="Chat with Baum" title="Chat with Baum" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #d6d3cb"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg></a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
