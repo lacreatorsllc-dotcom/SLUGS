@@ -21,14 +21,15 @@ export const ACCESS = {
   linkWallet: 'https://baumai.xyz/account',
 }
 
-// Burning either of these from a wallet linked to the Baum account skips the
-// invite line. Baum checks the linked wallet's burns, all time; the amounts must
-// match Baum's (lib/burn-to-enter-view.ts and SLUGS' partner config there).
-// Both tokens are on Robinhood Chain with 18 decimals.
-export const BURN_TO_ENTER = [
-  { symbol: 'SLUGS', address: import.meta.env.VITE_TOKEN_ADDRESS || '0xa5A0A37778D6b656A37b2E10c13E2E31826ff10A', amount: 3_000_000 },
-  { symbol: 'BAUM', address: '0xc17FBa7484bdB276C2b5A7593E14fcAF21155C45', amount: 750_000 },
-] as const
+// Burning this from a wallet linked to the Baum account skips the invite line.
+// Baum checks the linked wallet's burns, all time; the amount must match Baum's
+// (SLUGS' partner config there). Baum also lets anyone in for 750,000 BAUM, but
+// this is the SLUGS app, so it offers SLUGS. Robinhood Chain, 18 decimals.
+export const BURN_TO_ENTER = {
+  symbol: 'SLUGS',
+  address: import.meta.env.VITE_TOKEN_ADDRESS || '0xa5A0A37778D6b656A37b2E10c13E2E31826ff10A',
+  amount: 3_000_000,
+} as const
 
 export const TOKEN = {
   symbol: import.meta.env.VITE_TOKEN_SYMBOL || 'SLUGS',
