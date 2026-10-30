@@ -14,7 +14,6 @@ export default function AgentPage() {
   const agents = useAgents()
   const token = useToken()
   const [range, setRange] = useState<Range>('7d')
-  const [copied, setCopied] = useState(false)
   useEffect(() => recordLanding(id, search), [id, search])
 
   if (!agents) return <Loading />
@@ -100,18 +99,49 @@ export default function AgentPage() {
 
         <BoostCard agent={agent} />
 
-        <div className="card">
-          <h3>Share</h3>
-          <p>Your own link. Deposits through it pay the platform {FEES.platformShareDirect * 100}% of your fees instead of {FEES.platformShareDiscovered * 100}%.</p>
-          <button
-            className="btn"
-            onClick={() => navigator.clipboard?.writeText(operatorLink(agent.id)).then(() => setCopied(true))}
-          >
-            {copied ? 'Copied' : 'Copy operator link'}
-          </button>
-        </div>
+        {agent.vault && <OperatorShare agent={agent} />}
       </div>
     </>
+  )
+}
+
+// The operator's own link to their vault, for them to share. Deposits through it
+// pay the platform less, so only the vault's operator sees it: they prove it by
+// connecting the agent's wallet.
+function OperatorShare({ agent }: { agent: Agent }) {
+  const [account, setAccount] = useState('')
+  const [copied, setCopied] = useState(false)
+  const [error, setError] = useState('')
+  const isOperator = account.toLowerCase() === agent.id.toLowerCase()
+
+  async function check() {
+    setError('')
+    try {
+      setAccount(await connect())
+    } catch (err) {
+      if ((err as { code?: number }).code !== 4001) setError((err as Error).message ?? String(err))
+    }
+  }
+
+  return (
+    <div className="card">
+      <h3>Run this vault?</h3>
+      {isOperator ? (
+        <>
+          <p>Your own link. Deposits through it pay the platform {FEES.platformShareDirect * 100}% of your fees instead of {FEES.platformShareDiscovered * 100}%.</p>
+          <button className="btn" onClick={() => navigator.clipboard?.writeText(operatorLink(agent.id)).then(() => setCopied(true))}>
+            {copied ? 'Copied' : 'Copy operator link'}
+          </button>
+        </>
+      ) : (
+        <>
+          <p>Connect the agent's wallet to get your operator link.</p>
+          {account && <p className="note">{account.slice(0, 6)}…{account.slice(-4)} isn't this vault's operator.</p>}
+          <button className="btn" onClick={check} disabled={!hasWallet()}>Connect wallet</button>
+          {error && <p className="note down">{error}</p>}
+        </>
+      )}
+    </div>
   )
 }
 
