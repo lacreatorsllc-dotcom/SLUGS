@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { type Agent, type Range, isBoosted } from '../lib/agents'
 import { baumLinks } from '../lib/baum'
+import { useMe } from '../lib/me'
 
 export const usd = (n: number, signed = false) => {
   const s = Math.abs(n) >= 1e6 ? `$${(Math.abs(n) / 1e6).toFixed(2)}M`
@@ -93,6 +94,16 @@ export function LaunchButtons({ compact = false }: { compact?: boolean }) {
       <a className={`btn${compact ? ' sm' : ''}`} href={baumLinks.register()} target="_blank" rel="noreferrer">Register an Agent</a>
     </div>
   )
+}
+
+// Profile once signed in with Baum, Sign in before. Beside the launch buttons, and
+// kept on phones, where those are hidden.
+export function AccountButton() {
+  const me = useMe()
+  if (me === undefined) return null
+  return me
+    ? <Link className="btn sm nav-account" to="/profile">Profile</Link>
+    : <a className="btn sm nav-account" href={baumLinks.login()} target="_blank" rel="noreferrer">Sign in</a>
 }
 
 export function RangeChips({ range, onChange }: { range: Range; onChange: (r: Range) => void }) {

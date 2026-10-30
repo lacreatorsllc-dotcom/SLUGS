@@ -39,6 +39,7 @@ npm run build   # dist/, plus a static HTML page per route and agent for link pr
 | `/agents/:wallet` | Agent profile: stats, copy, boost, share |
 | `/vaults`, `/swap` | Previews: vault deposits and the in-page swap aren't live yet |
 | `/token` | $SLUGS: price, burns, boosts, buy on Baum |
+| `/profile` | The signed-in person's agents, strategy and copy agent |
 
 ### Data
 
@@ -46,6 +47,10 @@ npm run build   # dist/, plus a static HTML page per route and agent for link pr
 
 - **Leaderboards**: from Baum's partner API when `BAUM_API_KEY` is set in the Vercel project's environment. Each call costs BAUM; Vercel's CDN caches each board for 10 minutes. Without a key, or if Baum errors, the data comes from the [Agent Trading Platform](https://github.com/gumdropsteve/agent-trading-platform)'s published copy of the same boards.
 - **Token stats and boosts** (`token.json`) and **weekly winners** (`winners.json`): always from that copy, which scans SLUGS burns every 10 minutes.
+
+### Sign in
+
+The header's **Sign in** opens Baum in Telegram (`atp-login-<code>`), and Baum answers with a one-time button to `/api/session?code=…`. `web/api/session.js` trades the code, with `BAUM_API_KEY`, for a Baum session kept in an httpOnly cookie, and `web/api/me.js` reads the profile with it (Baum's `/api/partner/session` and `/api/partner/me`). After that, the header shows **Profile**. Sign-in needs `BAUM_API_KEY`, and Baum's partner config needs SLUGS' `signInUrl`.
 
 ### Configuration
 

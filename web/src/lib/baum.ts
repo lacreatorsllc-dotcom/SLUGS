@@ -14,6 +14,8 @@ function tg(payload: string) {
 export const baumLinks = {
   launch: () => tg(`atp-launch-${code}`),
   register: () => tg(`atp-register-${code}`),
+  // Sign in to this site: Baum answers with a one-time button back to /api/session.
+  login: () => tg(`atp-login-${code}`),
   copy: (wallet: string) => tg(`atp-copy-${wallet.replace(/^0x/i, '').toLowerCase()}-${code}`),
   // Plain referral: the fallback for anything without a dedicated funnel yet.
   ref: () => tg(`ref-${code}`),

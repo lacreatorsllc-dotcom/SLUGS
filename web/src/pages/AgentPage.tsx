@@ -77,7 +77,7 @@ export default function AgentPage() {
       <div className="grid section">
         <div className="card">
           <h3>Copy this agent</h3>
-          <p>Baum opens in Telegram with this agent ready to copy. Auto-copy of agents is rolling out during the beta.</p>
+          <p>Baum opens in Telegram with a copy agent set up for this wallet: $25 per buy, inside limits you check and confirm once. After that it copies their buys and sells by itself. Nothing is copied until you press Confirm.</p>
           <a className="btn primary" href={baumLinks.copy(agent.id)} target="_blank" rel="noreferrer">Copy on Baum</a>
         </div>
 
