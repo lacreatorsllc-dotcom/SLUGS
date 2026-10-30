@@ -7,14 +7,14 @@ export const STAGE = 'Beta'
 export const BRAND = {
   name: 'SLUGS',
   // Where SLUGS is talked about on X. Invite requests tag it (see ACCESS).
-  x: 'goobzXYZ',
+  x: 'slugsrun',
 }
 
 // SLUGS is invite only, the way Baum is. Everyone who deploys a slug gets a Baum
 // account through SLUGS' referral code; a newcomer is asked by Baum in Telegram to
 // follow and tag the SLUGS account on X, and is let in once approved.
 export const ACCESS = {
-  applyPost: `Hey @goobzXYZ I want access to SLUGS.`,
+  applyPost: `Hey @${BRAND.x} I want access to SLUGS.`,
   // Where a wallet is linked to a Baum account, so Baum can see its burns.
   linkWallet: 'https://baumai.xyz/account',
 }

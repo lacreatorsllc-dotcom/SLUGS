@@ -1,6 +1,7 @@
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { CATEGORIES, TOKEN } from '../config'
-import { byFees, inCategory, ranked, useAgents } from '../lib/agents'
+import { type Agent, byFees, inCategory, ranked, useAgents } from '../lib/agents'
 import { AgentCard, LaunchButtons, Loading, SampleNote } from '../components/ui'
 
 export default function Browse() {
@@ -37,10 +38,40 @@ export default function Browse() {
         return (
           <section className="section" key={cat} id={cat}>
             <div className="section-head"><h2>{cat}</h2><span className="muted">{list.length}</span></div>
-            <div className="grid">{list.map((a) => <AgentCard key={a.id} agent={a} lp={fees} />)}</div>
+            <CategoryGrid list={list} lp={fees} />
           </section>
         )
       })}
+    </>
+  )
+}
+
+const ROWS = 3
+
+// The first three rows of a section, and a button for the rest. The grid fills
+// as many columns as fit, so three rows is read from the columns it laid out.
+function CategoryGrid({ list, lp }: { list: Agent[]; lp: boolean }) {
+  const grid = useRef<HTMLDivElement>(null)
+  const [cols, setCols] = useState(1)
+  const [open, setOpen] = useState(false)
+  useLayoutEffect(() => {
+    const el = grid.current
+    if (!el) return
+    const measure = () => setCols(Math.max(1, getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length))
+    measure()
+    const watch = new ResizeObserver(measure)
+    watch.observe(el)
+    return () => watch.disconnect()
+  }, [])
+  const shown = open ? list : list.slice(0, cols * ROWS)
+  return (
+    <>
+      <div className="grid" ref={grid}>{shown.map((a) => <AgentCard key={a.id} agent={a} lp={lp} />)}</div>
+      {list.length > cols * ROWS && (
+        <button className="btn sm" style={{ marginTop: 12 }} onClick={() => setOpen(!open)}>
+          {open ? 'Show less' : `View all ${list.length}`}
+        </button>
+      )}
     </>
   )
 }
