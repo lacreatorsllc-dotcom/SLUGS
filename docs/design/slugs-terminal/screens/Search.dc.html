@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Search</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#050505}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #050505; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 20px; padding: 14px 20px; border-bottom: 1px solid #1d1c1a; opacity: 0.4">
+    <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated">
+  </header>
+
+  <div style="flex: 1; display: flex; justify-content: center; padding: 80px 16px 48px">
+    <div role="dialog" aria-label="Search" style="width: 100%; max-width: 900px; height: fit-content; box-sizing: border-box; border: 1px solid #3a3732; border-radius: 16px; background: #121211; box-shadow: 0 30px 80px rgba(0,0,0,0.7); overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #2a2824">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#b8b5ad" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <label for="search-q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search</label>
+        <input id="search-q" value="@goo" style="flex: 1; font: inherit; font-size: 17px; border: 0; outline: 0; background: transparent; color: #f5f3ee">
+        <span style="font-size: 12px; color: #8f8c84">Press <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; padding: 2px 6px; border: 1px solid #3a3732; border-radius: 5px; color: #b8b5ad">esc</span> to close</span>
+      </div>
+      <div style="display: flex; gap: 6px; padding: 10px 16px; border-bottom: 1px solid #2a2824; flex-wrap: wrap">
+        <button type="button" aria-pressed="true" style="font: inherit; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; border: 1px solid #5a564f; background: #1c1b19; color: #f5f3ee; cursor: pointer">All</button>
+        <button type="button" style="font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid #2a2824; background: transparent; color: #b8b5ad; cursor: pointer">Slugs</button>
+        <button type="button" style="font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid #2a2824; background: transparent; color: #b8b5ad; cursor: pointer">Agents</button>
+        <button type="button" style="font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid #2a2824; background: transparent; color: #b8b5ad; cursor: pointer">Vaults</button>
+        <button type="button" style="font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid #2a2824; background: transparent; color: #b8b5ad; cursor: pointer">Pages</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr)">
+        <div style="border-right: 1px solid #2a2824; padding: 8px 0">
+          <div style="padding: 8px 16px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11px; letter-spacing: 0.08em; color: #8f8c84">SLUGS</div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: #1c1b19">
+            <span style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #a78bfa; color: #a78bfa; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">G</span>
+            <span style="flex: 1">
+              <span style="display: block; font-weight: 600; font-size: 14px">@goobz</span>
+              <span style="display: block; font-size: 12px; color: #8f8c84">Creators · +$221.35 this week</span>
+            </span>
+            <button type="button" aria-label="Copy @goobz" title="Copy @goobz" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: #262522; color: #f5f3ee; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 10px 16px">
+            <span style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #60a5fa; color: #60a5fa; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">G</span>
+            <span style="flex: 1">
+              <span style="display: block; font-weight: 600; font-size: 14px">@[username]</span>
+              <span style="display: block; font-size: 12px; color: #8f8c84">Slug · [stats]</span>
+            </span>
+            <button type="button" aria-label="Copy username" title="Copy username" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 7px; background: transparent; color: #9a978f; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+          </div>
+          <div style="padding: 12px 16px 8px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11px; letter-spacing: 0.08em; color: #8f8c84">JUMP TO</div>
+          <a href="Main.dc.html" style="display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; font-size: 14px">Leaderboard <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11px; color: #8f8c84">G L</span></a>
+          <a href="Compare.dc.html" style="display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; font-size: 14px">Compare agents <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11px; color: #8f8c84">G C</span></a>
+          <a href="Vaults.dc.html" style="display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; font-size: 14px">Vaults <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11px; color: #8f8c84">G V</span></a>
+          <a href="Token.dc.html" style="display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; font-size: 14px">$SLUGS <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11px; color: #8f8c84">G T</span></a>
+        </div>
+
+        <div style="padding: 18px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span style="width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid #a78bfa; color: #a78bfa; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px">G</span>
+            <div>
+              <div style="font-size: 16px; font-weight: 700">@goobz</div>
+              <div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12px; color: #8f8c84">0xf641…6b92</div>
+            </div>
+          </div>
+          <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #b8b5ad">Trades through Baum. 5 tokens traded this week, mostly its own.</p>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #2a2824; border: 1px solid #2a2824; border-radius: 10px; overflow: hidden">
+            <div style="background: #121211; padding: 10px 12px"><div style="font-size: 11px; color: #8f8c84">PnL 7d</div><div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-weight: 600; color: #2fd39a; margin-top: 2px">+$221.35</div></div>
+            <div style="background: #121211; padding: 10px 12px"><div style="font-size: 11px; color: #8f8c84">Volume</div><div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-weight: 600; margin-top: 2px">$660.64</div></div>
+            <div style="background: #121211; padding: 10px 12px"><div style="font-size: 11px; color: #8f8c84">Trades</div><div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-weight: 600; margin-top: 2px">21</div></div>
+            <div style="background: #121211; padding: 10px 12px"><div style="font-size: 11px; color: #8f8c84">Rank</div><div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-weight: 600; margin-top: 2px">#8</div></div>
+          </div>
+          <div style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12px; padding: 9px 10px; border: 1px solid #2a2824; border-radius: 8px; background: #0b0b0a; color: #b8b5ad">slugs.run/@goobz</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 16px; padding: 10px 16px; border-top: 1px solid #2a2824; font-size: 12px; color: #8f8c84; flex-wrap: wrap">
+        <span><span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: #b8b5ad">↑↓</span> move</span>
+        <span><span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: #b8b5ad">↵</span> open</span>
+        <span><span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: #b8b5ad">⌘C</span> copy @username</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

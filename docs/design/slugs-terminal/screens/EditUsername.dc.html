@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Edit username</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#060606}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+@keyframes cardIn{0%{opacity:0;transform:translateY(24px) scale(0.96)}60%{opacity:1;transform:translateY(-3px) scale(1.005)}100%{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="min-height: 800px; background: #060606; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 16px; min-height: 44px; padding: 0 14px; border-bottom: 1px solid #141413; opacity: 0.35">
+    <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated">
+    <span style="font-size: 13px; color: #9a978f">Settings</span>
+  </header>
+
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 16px">
+    <form role="dialog" aria-labelledby="eu-title" style="width: 100%; max-width: 440px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 22px; display: flex; flex-direction: column; gap: 14px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+        <div>
+          <h1 id="eu-title" style="margin: 0; font-size: 18px; font-weight: 600">Username</h1>
+          <p style="margin: 4px 0 0; font-size: 13px; color: #9a978f">The handle people use to find and copy you.</p>
+        </div>
+        <a href="Settings.dc.html" aria-label="Close" title="Close" style="width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #1a1918; color: #b8b5ad"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></a>
+      </div>
+      <label for="eu-input" style="display: flex; align-items: center; gap: 4px; height: 44px; padding: 0 12px; border: 1px solid #3a3732; border-radius: 10px; background: #0b0b0a">
+        <span style="font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 15px; color: #85827a">@</span>
+        <input id="eu-input" value="marketer" aria-label="Username" style="flex: 1; min-width: 0; font: inherit; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 15px; border: 0; outline: 0; background: transparent; color: #f5f3ee">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2fd39a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Available"><path d="M20 6 9 17l-5-5"></path></svg>
+      </label>
+      <div style="display: flex; justify-content: space-between; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 11.5px; color: #85827a">
+        <span>a–z · 0–9 · _</span><span>8 / 20</span>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid #1f1e1c; border-radius: 10px; font-family: Inter, -apple-system, system-ui, sans-serif; font-variant-numeric: tabular-nums; font-size: 12.5px; color: #b8b5ad">
+        slugs.run/@marketer
+        <button type="button" aria-label="Copy profile link" title="Copy link" style="display: flex; padding: 4px; border: 0; border-radius: 6px; background: transparent; color: #9a978f; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></button>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 6px">
+        <a href="Settings.dc.html" aria-label="Cancel" title="Cancel" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; color: #d6d3cb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></a>
+        <button type="submit" aria-label="Save username" title="Save" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></button>
+      </div>
+    </form>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
