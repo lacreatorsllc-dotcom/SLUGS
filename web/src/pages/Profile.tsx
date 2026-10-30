@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ACCESS, BAUM } from '../config'
+import { BAUM } from '../config'
 import Icon from '../components/terminal/Icon'
 import { AvatarRing, Callout, CopyButton, EmptyState, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
@@ -51,8 +51,8 @@ export default function Profile() {
         <div className="t-key-value"><span>Username</span><strong>{user.username ? `@${user.username}` : '—'}</strong></div>
         <div className="t-key-value"><span>Strategy</span><strong>{user.strategy?.name ?? '—'}</strong></div>
         <div className="t-key-value"><span>Copy trading</span><strong>{user.copy ? `${user.copy.status} · ${count(user.copy.sources.length)} ${user.copy.sources.length === 1 ? 'trader' : 'traders'}` : 'Off'}</strong></div>
-        <p className="t-fine">Your SLUGS account is your Baum account. Change your username with <code>/username</code> and your picture by sending Baum a photo captioned <code>/avatar</code>, or on <a href={ACCESS.linkWallet} target="_blank" rel="noreferrer">baumai.xyz/account</a>.</p>
-        <div className="t-actions"><a className="t-submit t-submit--secondary" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" />Open Baum in Telegram</a></div>
+        <p className="t-fine">Your SLUGS account is your Baum account. Change your username, picture, email and your agents’ usernames in Settings, or in Telegram with <code>/username</code> and <code>/avatar</code>.</p>
+        <div className="t-actions"><Link className="t-submit t-submit--secondary" to="/settings"><Icon name="settings" />Settings</Link><a className="t-submit t-submit--secondary" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" />Open Baum</a></div>
       </section>
       <section className="t-feature-card">
         <div className="t-section-title"><span className="t-section-icon"><Icon name="star" /></span><h2>Invite friends</h2></div>
