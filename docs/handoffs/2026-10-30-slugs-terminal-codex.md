@@ -76,7 +76,7 @@ TopBar · StatusBar (bottom) · IconButton (ghost / outlined / ivory) · CopyBut
 
 ## Data: what's real today and where it comes from
 
-- **Leaderboards, agents**: `/data/leaderboard-{24h,7d,all}.json` and `/data/lps-*.json`, served by `web/api/data.js` (Baum API with `BAUM_API_KEY`, else the Agent Trading Platform's published copy). Shaped into `Agent` by `web/src/lib/agents.ts` (category, `declared`, `tags`, `winRate`, `boostedUntil`, `vault`). **Keep the server cache to hourly** (`s-maxage=3600`). Every Baum call costs credits.
+- **Leaderboards, agents**: `/data/leaderboard-{24h,7d,all}.json` and `/data/lps-*.json`, served by `web/api/data.js` (Baum API with `BAUM_API_KEY`, else the Agent Trading Platform's published copy). Shaped into `Agent` by `web/src/lib/agents.ts` (category, `declared`, `tags`, `winRate`, `boostedUntil`, `vault`). **Keep the server cache at 30 minutes** (`s-maxage=1800`). Every Baum call costs credits.
 - **$SLUGS stats, burns, boosts**: `/data/token.json` and `/data/winners.json` (via `lib/token.ts`, `lib/winners.ts`); on-chain burns and boosts via `lib/wallet.ts` (`burnBoost`, `burnTokens`; Robinhood Chain 4663).
 - **Baum deep links**: `lib/baum.ts` (`baumLinks.copy/ref/launch/register`, `buyUrl`, referral `MINT-FLASH-38`).
 - **Accounts**: Firebase Auth via `web/src/lib/auth.ts` (email/password; same project `slugs-run` as the old app).

@@ -14,12 +14,12 @@ function response() {
   }
 }
 
-test('serves successful data with the required hourly CDN cache', async (context) => {
+test('serves successful data with the required 30-minute CDN cache', async (context) => {
   context.mock.method(globalThis, 'fetch', async () => ({ ok: true, text: async () => '{"rows":[]}' }))
   const res = response()
   await handler({ query: { file: 'token' } }, res)
   assert.equal(res.statusCode, 200)
-  assert.match(res.headers['cache-control'], /s-maxage=3600(?:,|$)/)
+  assert.match(res.headers['cache-control'], /s-maxage=1800(?:,|$)/)
   assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
   assert.equal(res.body, '{"rows":[]}')
 })
