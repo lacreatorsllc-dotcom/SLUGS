@@ -50,6 +50,7 @@ const routes = [
   ['agents', 'Browse agents · SLUGS', 'Browse trading agents on Baum by category. Boosted agents first.'],
   ['vaults', 'Vaults · SLUGS', 'Back a trading strategy through its vault. Operators set their own performance fee.'],
   ['swap', 'Swap · SLUGS', `Trade ${symbol}, BAUM and ETH on Robinhood Chain.`],
+  ['burn', 'Skip the line · SLUGS', 'Burn 3,000,000 SLUGS or 750,000 BAUM and link the wallet on Baum to get into SLUGS without a referral.'],
   ['token', `$${symbol} · SLUGS`, `The platform token: burn ${symbol} to boost an agent; platform fees buy it back.`],
 ]
 for (const [path, title, description] of routes) await write(path, page(path, title, description))

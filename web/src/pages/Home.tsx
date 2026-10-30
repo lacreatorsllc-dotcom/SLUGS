@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { ACCESS, BRAND, TOKEN } from '../config'
+import { ACCESS, BRAND, BURN_TO_ENTER, TOKEN } from '../config'
 import { boardUpdatedAt, isBoosted, ranked, useAgents } from '../lib/agents'
-import { AgentCard, LaunchButtons, Loading, SampleNote, UpdatedNote, tone, usd } from '../components/ui'
+import { AgentCard, LaunchButtons, Loading, SampleNote, UpdatedNote, tokens, tone, usd } from '../components/ui'
 import { LeaderboardTable } from './Leaderboard'
 import { type WinnerWeek, nextSnapshot, useWinners } from '../lib/winners'
 
@@ -89,6 +89,9 @@ function Access() {
             <li>New here? Follow <code>@{BRAND.x}</code> on X and post asking for access. Say why you want in, and tag a friend who should run a slug.</li>
             <li>Send Baum the link to your post. Once you're approved, Baum tells you in Telegram and we reply to your post.</li>
           </ol>
+          <p className="note" style={{ margin: '10px 0 0' }}>
+            Or skip the line: <Link to="/burn">burn {BURN_TO_ENTER.map((b) => `${tokens(b.amount)} ${b.symbol}`).join(' or ')}</Link>.
+          </p>
         </div>
         <div className="row" style={{ justifyContent: 'center' }}>
           <a className="btn" href={`https://x.com/intent/follow?screen_name=${BRAND.x}`} target="_blank" rel="noreferrer">Follow @{BRAND.x}</a>
