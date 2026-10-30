@@ -27,7 +27,7 @@ The designs are done. Your job is to build them.
 | `Vaults` | `/vaults` | Terms, empty state, "Open a vault" panel (locked until deposits ship) |
 | `Token` | `/token` | Price/MC/burned/supply, fee split, uses, platform fees, beta note |
 | `Swap` | `/swap` | Buy/sell panel routed through Baum (+10 bps); chart placeholder |
-| `Burn` | `/burn` (public) | Skip the line: burn 3M SLUGS or 750k BAUM → link wallet on Baum |
+| `Burn` | `/burn` (public) | Skip the line: burn 3M SLUGS → link wallet on Baum |
 | `Onboarding` | first sign-in (modal) | Meet your slug, the 3 feature groups, How it works, SLUGS ID, connect wallet |
 | `Search` | ⌘K palette (global) | Search slugs/agents/pages, copy @usernames |
 | `Chat` | floating panel (global) | Chats, with Baum pinned; Baum replies with confirmable trade cards |
