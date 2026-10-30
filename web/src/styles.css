@@ -254,39 +254,3 @@ footer { border-top: 1px solid var(--border); padding: 24px 0; font-size: 13px; 
 .invite-login { color: var(--text-muted); font-size: 14px; margin-top: 20px; text-align: center; }
 .invite-login a { color: var(--text-primary); font-weight: 600; }
 .invite-sep { margin: 0 8px; }
-
-/* SLUGS × Baum announcement */
-.partner {
-  width: 100%;
-  max-width: 560px;
-  margin-bottom: 36px;
-  padding: 22px 24px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(248, 98, 46, 0.35);
-  border-radius: 16px;
-  background:
-    repeating-radial-gradient(circle at 88% 50%, rgba(248, 98, 46, 0.22) 0 1px, transparent 1.5px 13px),
-    radial-gradient(ellipse at 88% 50%, rgba(248, 98, 46, 0.18), transparent 65%),
-    #0a0a0a;
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: border-color 0.15s;
-}
-a.partner:hover { border-color: var(--slugs-orange); color: var(--text-primary); }
-.partner-eyebrow {
-  font: 600 11px/1 var(--mono);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--slugs-orange);
-}
-.partner-lockup { display: flex; align-items: center; gap: 16px; }
-.partner-lockup img { height: 34px; width: auto; display: block; }
-.partner-lockup img:first-child { image-rendering: pixelated; }
-.partner-lockup .partner-baum { height: 30px; }
-.partner-x { color: var(--slugs-orange); font-size: 26px; font-weight: 300; line-height: 1; }
-.partner-caption { font-size: 11px; letter-spacing: 0.42em; text-transform: uppercase; color: var(--text-secondary); padding-left: 0.42em; }
-.partner-more { font-size: 13px; color: var(--text-muted); }
-a.partner .partner-more { color: var(--slugs-orange); font-weight: 500; }
