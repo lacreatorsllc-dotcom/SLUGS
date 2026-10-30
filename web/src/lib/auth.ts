@@ -42,6 +42,18 @@ export async function endSession() {
   if (!response.ok) throw new SignInError(await reasonOf(response))
 }
 
+/**
+ * The one-time code in a sign-in link from Baum (…/connect-baum?code=…), or a bare
+ * code; null for anything else, like an invite code. Telegram opens Baum's Sign in
+ * button in its own browser on phones, so people paste the link into their usual one.
+ */
+export function signInCodeFrom(input: string): string | null {
+  const text = input.trim()
+  const fromLink = /[?&]code=([A-Za-z0-9_-]{20,100})(?:[&#]|$)/.exec(text)?.[1]
+  if (fromLink) return fromLink
+  return /^[A-Za-z0-9_-]{20,100}$/.test(text) ? text : null
+}
+
 /** Sign-in failures in plain words. */
 export function signInMessage(err: unknown) {
   switch ((err as { reason?: string } | null)?.reason) {

@@ -4,10 +4,12 @@ import { ACCESS } from '../config'
 import AuthLayout from '../components/AuthLayout'
 import { baumLinks } from '../lib/baum'
 import { useAuthSession } from '../lib/auth-context'
+import { signInCodeFrom, signInMessage } from '../lib/auth'
 
 // The front door: SLUGS is invite only. Without a code, people enter the access raffle
 // by posting on X or burning the token. An invite code is a Baum referral code: Baum
-// checks it and lets them in, then they come back and log in with Baum.
+// checks it and lets them in, then they come back and log in with Baum. The same box
+// takes a sign-in link from Baum, pasted, which signs this browser in.
 const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
 
 function XMark() {
@@ -48,13 +50,27 @@ function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: s
 }
 
 export default function Invite() {
-  const { user, ready } = useAuthSession()
+  const { user, ready, signIn } = useAuthSession()
   const [code, setCode] = useState('')
+  const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [received, setReceived] = useState<string | null>(null)
 
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault()
+    const signInCode = signInCodeFrom(code)
+    if (signInCode) {
+      setBusy(true)
+      setError(null)
+      try {
+        await signIn(signInCode)
+      } catch (err) {
+        setError(signInMessage(err))
+      } finally {
+        setBusy(false)
+      }
+      return
+    }
     const value = code.trim().toUpperCase()
     if (!value) return setError('Enter your invite code')
     if (!/^[A-Z0-9-]{3,40}$/.test(value)) return setError('That doesn’t look like an invite code')
@@ -88,7 +104,7 @@ export default function Invite() {
         />
         {error && <p className="down invite-error">{error}</p>}
         {received && <p className="auth-sent" role="status">Baum is opening in Telegram with <strong>{received}</strong>. Once you're in, come back and <Link to="/login">log in with Baum</Link>.</p>}
-        <button type="submit" className="invite-continue">Continue</button>
+        <button type="submit" className="invite-continue" disabled={busy}>{busy ? 'Signing in…' : 'Continue'}</button>
       </form>
 
       <hr />

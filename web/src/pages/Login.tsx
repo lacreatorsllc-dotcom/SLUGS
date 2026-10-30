@@ -17,7 +17,7 @@ export default function Login() {
       <a className="invite-continue auth-baum" href={baumLinks.login()} target="_blank" rel="noreferrer">Log in with Baum</a>
       <div className="auth-links">
         <span>No Baum account yet? Opening Baum gets you in line.</span>
-        <span>Have an invite code? <Link to="/" className="auth-strong">Enter it</Link></span>
+        <span>Have an invite code, or Baum's sign-in link open in Telegram's browser? <Link to="/" className="auth-strong">Paste it here</Link></span>
       </div>
     </AuthLayout>
   )
