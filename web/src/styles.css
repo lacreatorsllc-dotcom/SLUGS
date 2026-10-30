@@ -278,3 +278,5 @@ footer { border-top: 1px solid var(--border); padding: 24px 0; font-size: 13px; 
 .auth-sent strong { color: var(--text-primary); }
 .invite-card .auth-baum { display: block; margin-top: 24px; text-align: center; text-decoration: none; }
 .auth-links span { color: var(--text-muted); }
+
+.link-button { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
