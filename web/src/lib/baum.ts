@@ -22,6 +22,9 @@ export const baumLinks = {
   login: () => tg(`atp-login-${code}`),
   // A friend's invite code is their Baum referral code, which lets them straight in.
   invite: (friend: string) => tg(`ref-${friend.toUpperCase()}`),
+  // A guest from a friend's invite link makes their account: Baum lets them in on the
+  // friend's code, credits the friend, and sends SLUGS' sign-in button back.
+  join: (friend: string) => tg(`slug-join-${friend.toUpperCase()}`),
 }
 
 // The token's page on Baum's launchpad, where anyone can buy or sell it. Carries the
