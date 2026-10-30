@@ -1,20 +1,11 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { ACCESS, BRAND } from '../config'
-import TokenBar from '../components/TokenBar'
+import { Link } from 'react-router-dom'
+import { ACCESS } from '../config'
+import AuthLayout from '../components/AuthLayout'
 
-// The front door: SLUGS is invite only. A code lets you into the platform (/home);
-// without one, people enter the access raffle by posting on X or burning the token.
-// Codes aren't checked against a list yet. Once in, a visitor skips this page.
-const ENTERED = 'slugs.invite'
-
-function remembered() {
-  try { return localStorage.getItem(ENTERED) } catch { return null }
-}
-
-function remember(code: string) {
-  try { localStorage.setItem(ENTERED, code) } catch { /* private mode: they'll see the gate again */ }
-}
+// The front door: SLUGS is invite only. Without a code, people enter the access raffle
+// by posting on X or burning the token. Codes aren't checked against a list yet, and
+// there's no platform page to send people to until the new UI lands (not /home).
 const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
 
 function XMark() {
@@ -57,64 +48,53 @@ function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: s
 export default function Invite() {
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate()
-
-  if (remembered()) return <Navigate to="/home" replace />
-
-  function enter(value: string) {
-    remember(value)
-    navigate('/home')
-  }
+  const [received, setReceived] = useState<string | null>(null)
 
   function submit(e: FormEvent) {
     e.preventDefault()
     const value = code.trim().toUpperCase()
     if (!value) return setError('Enter your invite code')
-    enter(value)
+    setReceived(value)
   }
 
   return (
-    <div className="invite-page">
-      <TokenBar />
-      <div className="invite">
-        <img className="invite-logo" src={`${import.meta.env.BASE_URL}slugs-logo-orange.png`} alt={BRAND.name} />
-
-        <div className="invite-card">
-          <h1>Create Account</h1>
-          <p className="invite-sub">Enter your invite code to get access to SLUGS.</p>
-
-          <form onSubmit={submit}>
-            <label htmlFor="invite-code">Invite Code</label>
-            <input
-              id="invite-code"
-              value={code}
-              onChange={(e) => { setCode(e.target.value); setError(null) }}
-              placeholder="e.g. SLUGS-A3X7K2B9"
-              autoCapitalize="characters"
-              autoComplete="off"
-              spellCheck={false}
-            />
-            {error && <p className="down invite-error">{error}</p>}
-            <button type="submit" className="invite-continue">Continue</button>
-          </form>
-
-          <hr />
-
-          <h2>Don't have an invite code?</h2>
-          <p className="invite-sub">Enter our raffle for a chance to win access.</p>
-
-          <div className="raffles">
-            <RaffleLink icon={<XMark />} label="Shill us on X" href={shillUrl} />
-            <RaffleLink icon={<span className="flame"><Flame /></span>} label="Burn our token" href="/burn" internal />
-          </div>
-
-          <p className="invite-foot">or you know... if we like you enough... go fuck yourself.</p>
-        </div>
-
+    <AuthLayout
+      below={
         <p className="invite-login">
-          Already have an account? <a href="/home" onClick={(e) => { e.preventDefault(); enter('member') }}>Log in</a>
+          Already have an account? <Link to="/login">Log in</Link>
         </p>
+      }
+    >
+      <h1>Create Account</h1>
+      <p className="invite-sub">Enter your invite code to get access to SLUGS.</p>
+
+      <form onSubmit={submit}>
+        <label htmlFor="invite-code">Invite Code</label>
+        <input
+          id="invite-code"
+          value={code}
+          onChange={(e) => { setCode(e.target.value); setError(null) }}
+          placeholder="e.g. SLUGS-A3X7K2B9"
+          autoCapitalize="characters"
+          autoComplete="off"
+          spellCheck={false}
+        />
+        {error && <p className="down invite-error">{error}</p>}
+        {received && <p className="auth-sent" role="status">Got it: <strong>{received}</strong>. We'll let you in when SLUGS opens.</p>}
+        <button type="submit" className="invite-continue">Continue</button>
+      </form>
+
+      <hr />
+
+      <h2>Don't have an invite code?</h2>
+      <p className="invite-sub">Enter our raffle for a chance to win access.</p>
+
+      <div className="raffles">
+        <RaffleLink icon={<XMark />} label="Shill us on X" href={shillUrl} />
+        <RaffleLink icon={<span className="flame"><Flame /></span>} label="Burn our token" href="/burn" internal />
       </div>
-    </div>
+
+      <p className="invite-foot">or you know... if we like you enough... go fuck yourself.</p>
+    </AuthLayout>
   )
 }

@@ -28,6 +28,15 @@ export const BURN_TO_ENTER = [
   { symbol: 'BAUM', address: '0xc17FBa7484bdB276C2b5A7593E14fcAF21155C45', amount: 750_000 },
 ] as const
 
+// SLUGS accounts (Firebase Auth, the same project the app used). This web config is
+// public by design; access is enforced by Firebase, not by keeping it secret.
+export const FIREBASE = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyAZeMHmCG1fM8JnjZUBZp8-dHUVY_g9lmU',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'slugs-run.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'slugs-run',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:1094657124615:web:6d030b4fd11a4b33f13da2',
+}
+
 export const TOKEN = {
   symbol: import.meta.env.VITE_TOKEN_SYMBOL || 'SLUGS',
   // SLUGS on Baum's launchpad (Pons, Robinhood Chain).
