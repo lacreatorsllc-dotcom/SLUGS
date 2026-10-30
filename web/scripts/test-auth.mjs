@@ -14,7 +14,7 @@ try {
     platform: 'node',
     format: 'esm',
     jsx: 'automatic',
-    external: ['react', 'react/*', 'react-dom/*', 'firebase/*'],
+    external: ['react', 'react/*', 'react-dom/*'],
     define: { 'import.meta.env': JSON.stringify({ BASE_URL: '/' }) },
     plugins: [{
       name: 'observe-auth-navigation',

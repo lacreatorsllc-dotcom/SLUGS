@@ -20,6 +20,12 @@ SLUGS is private, the way Baum is. Someone who arrives through SLUGS without a B
 
 The request is emailed to lacreatorsllc@gmail.com, with winston@trystable.co cc'd, and either can approve it. One approved person is let in each day. Existing Baum users, and anyone with a friend's referral code, get straight in. This logic lives in Baum (baum-monorepo, `lib/invite-*`), not in this repo.
 
+## Logging in
+
+A SLUGS account is a Baum account. **Log in with Baum** opens the bot on `atp-login-MINT-FLASH-38`; someone without an account gets the invite flow above, and anyone already in gets a one-time sign-in button back to `slugs.run/connect-baum?code=…`. `web/api/session.js` trades that code with `BAUM_API_KEY` for a 30-day Baum session, kept in an httpOnly cookie, and reads the person's Baum profile (username, wallets, strategy, copy agent) with it. Everything but the front door (`/`, `/login`, `/connect-baum`, `/burn`) needs a session. Baum's side is `lib/partner-profile.ts` in baum-monorepo.
+
+An invite code on the front page is a Baum referral code: it opens Baum with `ref-<CODE>`, which lets the person straight in.
+
 ## The site (`web/`)
 
 A Vite + React + TypeScript SPA, deployed on Vercel from `web/`.

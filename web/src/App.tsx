@@ -4,15 +4,15 @@ import Invite from './pages/Invite'
 import AuthSessionProvider from './components/AuthSessionProvider'
 import RequireAuth from './components/RequireAuth'
 
-// Keep Firebase and the terminal out of the public invite page bundle.
+// Keep the terminal out of the public invite page bundle.
 const Login = lazy(() => import('./pages/Login'))
-const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+const ConnectBaum = lazy(() => import('./pages/ConnectBaum'))
 const TerminalApp = lazy(() => import('./TerminalApp'))
 
 const STANDALONE: Record<string, () => React.ReactElement> = {
   '/': () => <Invite />,
   '/login': () => <Login />,
-  '/reset-password': () => <ResetPassword />,
+  '/connect-baum': () => <ConnectBaum />,
 }
 
 function AppRoutes() {

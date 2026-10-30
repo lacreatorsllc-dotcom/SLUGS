@@ -2,12 +2,11 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createElement, type ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import type { User } from 'firebase/auth'
 import RequireAuth from '../src/components/RequireAuth'
 import Login from '../src/pages/Login'
 import Invite from '../src/pages/Invite'
-import { AuthContext, type AuthSession } from '../src/lib/auth-context'
-import { authMessage } from '../src/lib/auth'
+import { AuthContext, type AuthSession, type BaumProfile } from '../src/lib/auth-context'
+import { signInMessage } from '../src/lib/auth'
 
 function render(children: ReactNode, session: Partial<AuthSession> = {}) {
   const value: AuthSession = { user: null, ready: true, error: false, retry() {}, signIn: async () => {}, signOut: async () => {}, ...session }
@@ -15,7 +14,7 @@ function render(children: ReactNode, session: Partial<AuthSession> = {}) {
 }
 const privateContent = createElement('div', null, 'PRIVATE TERMINAL')
 const guard = () => createElement(RequireAuth, { children: privateContent })
-const user = { uid: 'test-user' } as User
+const user: BaumProfile = { username: 'slug', wallets: ['0x0000000000000000000000000000000000000001'], strategy: null, copy: null }
 
 test('terminal content stays hidden while the persisted session is restoring', () => {
   const html = render(guard(), { ready: false })
@@ -47,12 +46,10 @@ test('authenticated login goes to the new home rather than a confirmation messag
   assert.doesNotMatch(html, /Signed in as|login-password/)
 })
 
-test('login keeps the email/password form for guests', () => {
+test('guests log in through Baum in Telegram, with SLUGS\' referral code', () => {
   const html = render(createElement(Login))
-  assert.match(html, /autoComplete="email"/)
-  assert.match(html, /autoComplete="current-password"/)
-  assert.match(html, /type="password"/)
-  assert.doesNotMatch(html, /data-navigate/)
+  assert.match(html, /href="https:\/\/t\.me\/[^"]+\?start=atp-login-MINT-FLASH-38"/)
+  assert.doesNotMatch(html, /type="password"|data-navigate/)
 })
 
 test('returning users on the invite page go directly to the new home', () => {
@@ -67,8 +64,8 @@ test('signed-out visitors keep the existing invite form', () => {
   assert.doesNotMatch(html, /data-navigate/)
 })
 
-test('auth failures have recoverable messages without exposing raw provider errors', () => {
-  assert.equal(authMessage({ code: 'auth/invalid-credential', message: 'provider detail' }), 'Wrong email or password.')
-  assert.match(authMessage({ code: 'auth/network-request-failed' }), /connection/)
-  assert.equal(authMessage(null), 'Something went wrong. Try again.')
+test('sign-in failures have plain messages without exposing raw errors', () => {
+  assert.match(signInMessage({ reason: 'expired-code' }), /expired/)
+  assert.match(signInMessage({ reason: 'baum-unavailable' }), /reach Baum/)
+  assert.equal(signInMessage(null), 'Something went wrong. Try again.')
 })

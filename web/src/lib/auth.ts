@@ -1,59 +1,57 @@
-import { getApp, getApps, initializeApp } from 'firebase/app'
-import {
-  browserLocalPersistence,
-  getAuth as existingAuth,
-  indexedDBLocalPersistence,
-  initializeAuth,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signOut,
-  type Auth,
-  type User,
-} from 'firebase/auth'
-import { FIREBASE } from '../config'
+import type { BaumProfile } from './auth-context'
 
-// SLUGS accounts, shared with the old app (same Firebase project). Email and password
-// only, so no popup/redirect resolver: that would load Firebase's iframe, which the CSP blocks.
-let auth: Auth | null = null
-function getAuth() {
-  if (auth) return auth
-  const app = getApps().length ? getApp() : initializeApp(FIREBASE)
-  try {
-    auth = initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] })
-  } catch (error) {
-    if ((error as { code?: string }).code !== 'auth/already-initialized') throw error
-    auth = existingAuth(app)
+// SLUGS accounts sit on Baum accounts. The session lives in an httpOnly cookie set by
+// api/session.js; these calls only ask it who's signed in. See api/session.js for the flow.
+const url = `${import.meta.env.BASE_URL}api/session`
+
+export class SignInError extends Error {
+  readonly reason: string
+  constructor(reason: string) {
+    super(reason)
+    this.reason = reason
   }
-  return auth
 }
 
-export const signIn = (email: string, password: string) =>
-  signInWithEmailAndPassword(getAuth(), email.trim(), password)
+async function reasonOf(response: Response) {
+  const body = (await response.json().catch(() => null)) as { reason?: string } | null
+  return body?.reason ?? `http-${response.status}`
+}
 
-export const sendReset = (email: string) => sendPasswordResetEmail(getAuth(), email.trim())
+/** Who is signed in, or null. Throws when it can't tell (offline, Baum down). */
+export async function currentProfile(): Promise<BaumProfile | null> {
+  const response = await fetch(url, { credentials: 'same-origin' })
+  if (response.status === 401) return null
+  if (!response.ok) throw new SignInError(await reasonOf(response))
+  return response.json()
+}
 
-export const observeAuth = (onChange: (user: User | null) => void, onError: (error: Error) => void) =>
-  onAuthStateChanged(getAuth(), onChange, onError)
+/** Trades the one-time code from Baum's sign-in button for a session. */
+export async function redeem(code: string): Promise<BaumProfile> {
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ code }),
+  })
+  if (!response.ok) throw new SignInError(await reasonOf(response))
+  return response.json()
+}
 
-export const endSession = () => signOut(getAuth())
+export async function endSession() {
+  const response = await fetch(url, { method: 'DELETE', credentials: 'same-origin' })
+  if (!response.ok) throw new SignInError(await reasonOf(response))
+}
 
-/** Firebase error codes in plain words. */
-export function authMessage(err: unknown) {
-  const code = (err as { code?: string } | null)?.code ?? ''
-  switch (code) {
-    case 'auth/invalid-email':
-      return 'That email address doesn’t look right.'
-    case 'auth/invalid-credential':
-    case 'auth/wrong-password':
-    case 'auth/user-not-found':
-      return 'Wrong email or password.'
-    case 'auth/too-many-requests':
-      return 'Too many tries. Wait a few minutes and try again.'
-    case 'auth/user-disabled':
-      return 'This account has been disabled.'
-    case 'auth/network-request-failed':
-      return 'Couldn’t reach the server. Check your connection.'
+/** Sign-in failures in plain words. */
+export function signInMessage(err: unknown) {
+  switch ((err as { reason?: string } | null)?.reason) {
+    case 'bad-code':
+    case 'expired-code':
+      return 'That sign-in link has expired or was already used. Get a new one from Baum.'
+    case 'not-configured':
+      return 'Sign-in isn’t set up on this site yet.'
+    case 'baum-unavailable':
+      return 'Couldn’t reach Baum. Try again in a minute.'
     default:
       return 'Something went wrong. Try again.'
   }
