@@ -6,7 +6,7 @@ import RequireAuth from '../src/components/RequireAuth'
 import Login from '../src/pages/Login'
 import Invite from '../src/pages/Invite'
 import { AuthContext, type AuthSession, type BaumProfile } from '../src/lib/auth-context'
-import { signInMessage } from '../src/lib/auth'
+import { signInCodeFrom, signInMessage } from '../src/lib/auth'
 
 function render(children: ReactNode, session: Partial<AuthSession> = {}) {
   const value: AuthSession = { user: null, ready: true, error: false, retry() {}, signIn: async () => {}, signOut: async () => {}, ...session }
@@ -68,4 +68,14 @@ test('sign-in failures have plain messages without exposing raw errors', () => {
   assert.match(signInMessage({ reason: 'expired-code' }), /expired/)
   assert.match(signInMessage({ reason: 'baum-unavailable' }), /reach Baum/)
   assert.equal(signInMessage(null), 'Something went wrong. Try again.')
+})
+
+test('the code box tells a pasted Baum sign-in link from an invite code', () => {
+  const code = 'aB3_-'.repeat(8) + 'xyz'
+  assert.equal(signInCodeFrom(`https://www.slugs.run/connect-baum?code=${code}`), code)
+  assert.equal(signInCodeFrom(`  slugs.run/connect-baum?code=${code}&utm=tg  `), code)
+  assert.equal(signInCodeFrom(code), code)
+  assert.equal(signInCodeFrom('MINT-FLASH-38'), null)
+  assert.equal(signInCodeFrom('SLUGS-A3X7K2B9'), null)
+  assert.equal(signInCodeFrom('https://example.com/?code=short'), null)
 })
