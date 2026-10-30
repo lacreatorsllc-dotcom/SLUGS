@@ -8,6 +8,7 @@ import { connect } from '../../lib/wallet'
 import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
 import { Callout, CopyButton, IconButton, IconLink } from './ui'
+import WelcomeTour from './WelcomeTour'
 import { timeLeft } from '../../lib/invite'
 import { count, money, price } from '../../lib/terminal-format'
 
@@ -78,6 +79,7 @@ export default function TerminalLayout() {
       {error && <Callout error>{error}<IconButton icon="close" label="Dismiss error" onClick={() => setError('')} /></Callout>}
       <Outlet />
     </main>
+    <WelcomeTour />
     <footer className="t-statusbar">
       <IconLink icon="x" label={`${BRAND.name} on X`} href={`https://x.com/${BRAND.x}`} />
       <IconLink icon="telegram" label={`${BRAND.name} on Telegram`} href={BRAND.telegram} />

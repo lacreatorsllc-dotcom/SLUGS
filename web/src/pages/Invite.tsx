@@ -117,14 +117,12 @@ export default function Invite() {
       <hr />
 
       <h2>Don't have an invite code?</h2>
-      <p className="invite-sub">Enter our raffle for a chance to win access.</p>
+      <p className="invite-sub">Enter a raffle for a chance to win access</p>
 
       <div className="raffles">
         <RaffleLink icon={<XMark />} label="Shill us on X" href={shillUrl} />
         <RaffleLink icon={<span className="flame"><Flame /></span>} label="Burn our token" href="/burn" internal />
       </div>
-
-      <p className="invite-foot">or you know... if we like you enough... go fuck yourself.</p>
     </AuthLayout>
   )
 }
