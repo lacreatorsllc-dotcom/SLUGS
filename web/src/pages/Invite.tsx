@@ -2,13 +2,13 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { ACCESS } from '../config'
 import AuthLayout from '../components/AuthLayout'
-import { baumLinks } from '../lib/baum'
 import { useAuthSession } from '../lib/auth-context'
 import { signInCodeFrom, signInMessage } from '../lib/auth'
+import { inviteMessage } from '../lib/invite'
 
 // The front door: SLUGS is invite only. Without a code, people enter the access raffle
-// by posting on X or burning the token. An invite code is a Baum referral code: Baum
-// checks it and lets them in, then they come back and log in with Baum. The same box
+// by posting on X or burning the token. An invite code is a Baum referral code: a real
+// one lets them in as a guest for 7 days, and they make their account on Baum to stay. The same box
 // takes a sign-in link from Baum, pasted, which signs this browser in.
 const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
 
@@ -50,11 +50,10 @@ function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: s
 }
 
 export default function Invite() {
-  const { user, ready, signIn } = useAuthSession()
+  const { user, guest, ready, signIn, acceptInvite } = useAuthSession()
   const [code, setCode] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [received, setReceived] = useState<string | null>(null)
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -74,11 +73,20 @@ export default function Invite() {
     const value = code.trim().toUpperCase()
     if (!value) return setError('Enter your invite code')
     if (!/^[A-Z0-9-]{3,40}$/.test(value)) return setError('That doesn’t look like an invite code')
-    window.open(baumLinks.invite(value), '_blank', 'noreferrer')
-    setReceived(value)
+    // A real code lets this browser in as a guest for 7 days; the site then asks them
+    // to make their account on Baum (lib/invite.ts).
+    setBusy(true)
+    setError(null)
+    try {
+      await acceptInvite(value)
+    } catch (err) {
+      setError(inviteMessage(err))
+    } finally {
+      setBusy(false)
+    }
   }
 
-  if (ready && user) return <Navigate to="/home" replace />
+  if (ready && (user || guest)) return <Navigate to="/home" replace />
 
   return (
     <AuthLayout
@@ -103,7 +111,6 @@ export default function Invite() {
           spellCheck={false}
         />
         {error && <p className="down invite-error">{error}</p>}
-        {received && <p className="auth-sent" role="status">Baum is opening in Telegram with <strong>{received}</strong>. Once you're in, come back and <Link to="/login">log in with Baum</Link>.</p>}
         <button type="submit" className="invite-continue" disabled={busy}>{busy ? 'Signing in…' : 'Continue'}</button>
       </form>
 

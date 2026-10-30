@@ -143,3 +143,5 @@
 .t-token-chips .t-chip { display: inline-flex; align-items: center; gap: 6px; padding-left: 6px; }
 .t-token-chips .t-token-logo { width: 16px; height: 16px; }
 .t-swap-out { font-size: 18px; font-variant-numeric: tabular-nums; color: var(--t-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+.t-guest { margin-bottom: 14px; }.t-guest .t-callout { color: var(--t-secondary); }.t-guest strong { color: var(--t-text); }.t-guest-cta { display: inline-block; margin-left: 8px; padding: 4px 10px; border-radius: 8px; background: #ece9e2; color: #141413; font-weight: 600; text-decoration: none; white-space: nowrap; }

@@ -7,11 +7,15 @@ import { shortAddress } from '../../lib/terminal-model'
 import { connect } from '../../lib/wallet'
 import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
-import { Callout, IconButton, IconLink } from './ui'
+import { Callout, CopyButton, IconButton, IconLink } from './ui'
+import { timeLeft } from '../../lib/invite'
 import { count, money, price } from '../../lib/terminal-format'
 
 export default function TerminalLayout() {
-  const { signOut } = useAuthSession()
+  const { user, guest, signOut } = useAuthSession()
+  // Their own invite link, slugs.run/<code>: the short name when the code has one.
+  const invite = user?.invites?.[0]
+  const inviteLink = invite ? `${location.origin}/${invite.aliases[0] ?? invite.code}` : null
   const { snapshot } = useTerminalData()
   const token = snapshot?.token
   const { pathname, search } = useLocation()
@@ -59,10 +63,18 @@ export default function TerminalLayout() {
         <button type="button" className="t-wallet t-icon--outline" onClick={connectWallet} disabled={connecting} aria-label={account ? `Connected wallet ${account}` : 'Connect wallet'} title={account ? account : `Connect wallet on ${CHAIN.name}`}><Icon name="wallet" size={14} /><span>{connecting ? 'Connecting…' : account ? shortAddress(account) : 'Connect wallet'}</span></button>
         <IconLink icon="plus" label="Deploy your slug on Baum" href={baumLinks.launch()} variant="primary" />
         <IconButton icon="bell" label="Notifications · coming soon" disabled variant="outline" className="t-secondary-action" />
-        <IconButton icon="signout" label={signingOut ? 'Signing out…' : 'Sign out'} variant="outline" onClick={leave} disabled={signingOut} />
+        {inviteLink && <CopyButton value={inviteLink} label={`Copy your invite link, ${inviteLink.replace(/^https?:\/\//, '')}`} />}
+        {user
+          ? <IconButton icon="signout" label={signingOut ? 'Signing out…' : 'Sign out'} variant="outline" onClick={leave} disabled={signingOut} />
+          : <IconLink icon="user" label="Log in with Baum" to="/login" variant="outline" />}
       </div>
     </header>
     <main className="t-main" id="terminal-main" tabIndex={-1}>
+      {!user && guest && <div className="t-guest"><Callout>
+        {guest.from ? <><strong>{guest.from}</strong> invited you. </> : 'You’re in on an invite. '}
+        You have {timeLeft(guest)} to make your SLUGS account, or you’ll need an invite code again. Your account is your Baum account, made in Telegram.
+        <a className="t-guest-cta" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer">Create my account on Baum</a>
+      </Callout></div>}
       {error && <Callout error>{error}<IconButton icon="close" label="Dismiss error" onClick={() => setError('')} /></Callout>}
       <Outlet />
     </main>
