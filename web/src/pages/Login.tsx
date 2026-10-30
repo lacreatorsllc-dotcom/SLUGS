@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
 import { authMessage, signIn } from '../lib/auth'
 
@@ -14,12 +14,13 @@ function EyeToggle({ shown }: { shown: boolean }) {
 }
 
 export default function Login() {
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // No platform page to send people to until the new UI lands (not /home).
+  const [signedInAs, setSignedInAs] = useState<string | null>(null)
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -27,8 +28,8 @@ export default function Login() {
     setBusy(true)
     setError(null)
     try {
-      await signIn(email, password)
-      navigate('/home')
+      const { user } = await signIn(email, password)
+      setSignedInAs(user.email ?? email.trim())
     } catch (err) {
       setError(authMessage(err))
     } finally {
@@ -40,6 +41,7 @@ export default function Login() {
     <AuthLayout>
       <h1>Login</h1>
       <p className="invite-sub">Sign in to continue</p>
+      {signedInAs && <p className="auth-sent" role="status">Signed in as <strong>{signedInAs}</strong>.</p>}
 
       <form onSubmit={submit} noValidate>
         <label htmlFor="login-email">Email</label>

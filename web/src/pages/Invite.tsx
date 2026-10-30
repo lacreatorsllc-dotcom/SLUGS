@@ -1,11 +1,11 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ACCESS } from '../config'
 import AuthLayout from '../components/AuthLayout'
 
-// The front door: SLUGS is invite only. A code lets you into the platform (/home);
-// without one, people enter the access raffle by posting on X or burning the token.
-// Codes aren't checked against a list yet.
+// The front door: SLUGS is invite only. Without a code, people enter the access raffle
+// by posting on X or burning the token. Codes aren't checked against a list yet, and
+// there's no platform page to send people to until the new UI lands (not /home).
 const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
 
 function XMark() {
@@ -48,13 +48,13 @@ function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: s
 export default function Invite() {
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate()
+  const [received, setReceived] = useState<string | null>(null)
 
   function submit(e: FormEvent) {
     e.preventDefault()
     const value = code.trim().toUpperCase()
     if (!value) return setError('Enter your invite code')
-    navigate('/home')
+    setReceived(value)
   }
 
   return (
@@ -80,6 +80,7 @@ export default function Invite() {
           spellCheck={false}
         />
         {error && <p className="down invite-error">{error}</p>}
+        {received && <p className="auth-sent" role="status">Got it: <strong>{received}</strong>. We'll let you in when SLUGS opens.</p>}
         <button type="submit" className="invite-continue">Continue</button>
       </form>
 
