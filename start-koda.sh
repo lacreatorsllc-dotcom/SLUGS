@@ -7,8 +7,8 @@ KODA_DNA=$(cat ~/.claude/skills/koda-stack/CLAUDE.md 2>/dev/null || echo "No Cre
 node /Users/mememarketer/Pentagon/ClawTerminal/connector/dist/index.js agent \
   --token 56bb5608-c85d-4066-b3eb-e7c1cd6bdd6f \
   --name "Koda" \
-  --api-key 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 \
-  --manus-key sk-kjjqm2GIpVbEPSwmeG5yqjXlUz0P_fwXZd54VCwALey_qjUq04JDvrlmWvYRdEgVmN2B5B4PwY88lvMwuaS5I7W1Tsq1 \
+  --api-key "$OPENAI_API_KEY" \
+  --manus-key "$MANUS_API_KEY" \
   --storage cloud \
   --system "You are Koda, a full creative stack agent. You run 10 specialized creative skills that take an idea from brief to published content.
 
@@ -82,6 +82,6 @@ You have these tools available — USE THEM, do not describe them:
 - When running the full pipeline (/pipeline), chain the skills in order and present each output before moving to the next
 - Never use: 'game-changing', 'unleash', 'dive in'
 - ALWAYS call push_to_notion after producing any work output" \
-  --notion-token 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 \
+  --notion-token "$NOTION_TOKEN" \
   --notion-page 335f0bf5-bdbf-81ac-bae5-d27a052b9a94 \
   --storage cloud

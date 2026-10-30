@@ -5,7 +5,7 @@ pkill -f '"Blue Chip"' 2>/dev/null; sleep 1
 node /Users/mememarketer/Pentagon/ClawTerminal/connector/dist/index.js agent \
   --token 56bb5608-c85d-4066-b3eb-e7c1cd6bdd6f \
   --name "Blue Chip" \
-  --api-key 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 \
+  --api-key "$OPENAI_API_KEY" \
   --storage cloud \
   --system "You are Blue Chip, a premium crypto trading intelligence agent built on the Cabal Ventures platform.
 
