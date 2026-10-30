@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { ACCESS, BRAND, PARTNERSHIP } from '../config'
+import { ACCESS, BRAND } from '../config'
 import TokenBar from '../components/TokenBar'
 
 // The front door: SLUGS is invite only. A code lets you into the platform (/home);
@@ -41,26 +41,6 @@ function Arrow() {
   )
 }
 
-// SLUGS × Baum, after the X announcement. Links to the article once it's published.
-function Partnership() {
-  const base = import.meta.env.BASE_URL
-  const body = (
-    <>
-      <span className="partner-eyebrow">Announcement</span>
-      <span className="partner-lockup">
-        <img src={`${base}slugs-logo-orange.png`} alt="SLUGS" />
-        <span className="partner-x" aria-hidden="true">×</span>
-        <img src={`${base}baum-logo.png`} alt="Baum" className="partner-baum" />
-      </span>
-      <span className="partner-caption">Strategic partnership</span>
-      <span className="partner-more">{PARTNERSHIP.articleUrl ? 'Read the announcement →' : 'Full announcement coming soon'}</span>
-    </>
-  )
-  return PARTNERSHIP.articleUrl
-    ? <a className="partner" href={PARTNERSHIP.articleUrl} target="_blank" rel="noreferrer">{body}</a>
-    : <div className="partner">{body}</div>
-}
-
 function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: string; href: string; internal?: boolean }) {
   const body = (
     <>
@@ -97,8 +77,6 @@ export default function Invite() {
     <div className="invite-page">
       <TokenBar />
       <div className="invite">
-        <Partnership />
-
         <img className="invite-logo" src={`${import.meta.env.BASE_URL}slugs-logo-orange.png`} alt={BRAND.name} />
 
         <div className="invite-card">
