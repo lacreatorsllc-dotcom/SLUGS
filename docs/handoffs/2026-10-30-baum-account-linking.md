@@ -2,14 +2,13 @@
 
 The "supported Baum account-linking flow" asked for in `2026-10-30-baum-terminal-implementation.md`. Baum's side is Stable-Finance/baum-monorepo#376. Until that deploys, none of the endpoints below exist.
 
-A SLUGS account stays the Firebase login. Connecting Baum adds the person's Baum agents, strategy and copy agent to it. Every Baum account lives in Telegram, so that is where the person proves it is theirs.
+**Update (PR #27):** Baum is the login, not something connected to a Firebase login. A SLUGS account is a Baum account; anything SLUGS-only (display name, follows, chat) gets stored later, keyed to the Baum account. Firebase is gone from `web/`. Every Baum account lives in Telegram, so that is where people log in.
 
-## Flow
+## Flow (built: `web/api/session.js`, `web/src/pages/Login.tsx`, `web/src/pages/ConnectBaum.tsx`)
 
-1. A signed-in SLUGS user presses **Connect Baum** (Settings or Profile). It opens `https://t.me/<VITE_BAUM_BOT>?start=atp-login-MINT-FLASH-38`.
+1. `/login` has one button, **Log in with Baum**: `baumLinks.login()`, which is `https://t.me/<VITE_BAUM_BOT>?start=atp-login-MINT-FLASH-38`.
 2. Baum replies in Telegram with a **Sign in** button to `https://www.slugs.run/connect-baum?code=<one-time code>`. The code works once, for 10 minutes. Someone Baum hasn't let in yet gets the invite-apply message instead and no button.
-3. `/connect-baum` is a signed-in route. If the browser Telegram opened isn't signed in to SLUGS, log in first and keep `code` through the redirect. Then the page sends the code and the user's Firebase ID token to a SLUGS server function.
-4. That function verifies the ID token (Firebase Admin), then trades the code for a Baum session:
+3. `/connect-baum` is public. It posts the code to `POST /api/session`, which trades it for a Baum session:
 
    ```
    POST https://baumai.xyz/api/partner/session
@@ -19,17 +18,11 @@ A SLUGS account stays the Firebase login. Connecting Baum adds the person's Baum
    → 400 bad-code · 410 expired-code (used or older than 10 minutes) · 401 bad key
    ```
 
-   Store `session` server-side only, against the Firebase uid (not in `users/{uid}`, which signed-in users can read). It lasts 30 days and only works with SLUGS' key.
-5. Reading the profile later:
+   The session goes into the `slugs_session` cookie (httpOnly, Secure, SameSite=Lax, 30 days), so page scripts never see it or the key.
+4. `GET /api/session` returns the profile (Baum's `GET /api/partner/me` with `X-Baum-Session`), or 401 when signed out. `useAuthSession().user` is that profile; `RequireAuth` gates the terminal on it.
+5. `DELETE /api/session` signs out (Baum's `DELETE /api/partner/session`) and clears the cookie.
 
-   ```
-   GET https://baumai.xyz/api/partner/me
-   Authorization: Bearer <BAUM_API_KEY>
-   X-Baum-Session: <token>
-   → 200 Profile · 401 signed-out (ended, expired, or another partner's session): show Connect Baum again
-   ```
-
-6. Disconnecting: `DELETE https://baumai.xyz/api/partner/session` with the same two headers, then forget the token.
+An invite code on `/` is a Baum referral code: Continue opens Baum with `ref-<CODE>`, which lets the person straight in, then they log in as above.
 
 These calls are free. They don't spend SLUGS' Baum credits.
 
