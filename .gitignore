@@ -13,3 +13,21 @@ supabase/.temp/
 
 # Project memory (local only)
 project_memory/
+
+# Secrets: keys come from the environment, never from files in git
+.env*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist
+service-account*.json
+
+# Dependencies and build output
+node_modules/
+dist/
+.vercel/
+.expo/

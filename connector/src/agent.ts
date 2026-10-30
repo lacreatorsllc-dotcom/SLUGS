@@ -8,8 +8,7 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 
 const SUPABASE_URL = 'https://davonrtdydhdgbwnpuxy.supabase.co';
-const SUPABASE_SERVICE_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhdm9ucnRkeWRoZGdid25wdXh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDIyMjg2OCwiZXhwIjoyMDg5Nzk4ODY4fQ.3LNbwLYn0zLmck-nRG-VclmKAFggLU0BV0HsZz3MyfQ';
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? '';
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const HISTORY_LIMIT = 50;
 const PROJECT_ROOT = '/Users/mememarketer/Pentagon/ClawTerminal';
