@@ -82,3 +82,12 @@ test('unavailable shared comparisons leave room for replacement agents', () => {
   assert.deepEqual(comparisonIds([...stale, address('A'), address('a'), address('b')], agents), [address('a'), address('b')])
   assert.deepEqual(comparisonIds(agents.map((agent) => agent.id), agents), ['a', 'b', 'c', 'd'].map(address))
 })
+
+test('carries the Baum profile picture onto the agent, and skips a bad one without dropping the board', () => {
+  const picture = 'https://baumai.xyz/api/avatar/0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa?v=2'
+  const agents = assembleAgents({
+    all: board([trader({ avatarUrl: picture }), trader({ wallet: address('b'), avatarUrl: 'javascript:alert(1)' })]),
+  }, {}, classification)
+  assert.equal(agents.find((agent) => agent.id === address('a'))?.avatarUrl, picture)
+  assert.equal(agents.find((agent) => agent.id === address('b'))?.avatarUrl, undefined)
+})

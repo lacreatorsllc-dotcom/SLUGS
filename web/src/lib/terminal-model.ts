@@ -16,6 +16,8 @@ export type TraderRow = {
   tokens: number
   winRate?: number | null
   winTrades?: number
+  /** The profile picture set on Baum (/avatar in Telegram, or /account), served by Baum. */
+  avatarUrl?: string
 }
 export type LpRow = {
   wallet: string
@@ -25,6 +27,7 @@ export type LpRow = {
   feeAprPercent: number | null
   positions: number
   pools: string[]
+  avatarUrl?: string
 }
 export type Board<T> = { rows: T[]; updatedAt: number | null }
 export type Agent = {
@@ -36,12 +39,15 @@ export type Agent = {
   trading: Partial<Record<Range, TraderRow>>
   liquidity: Partial<Record<Range, LpRow>>
   boostedUntil?: number
+  avatarUrl?: string
 }
 export type BoardSet<T> = Partial<Record<Range, Board<T>>>
 
 const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
 const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value)
 const wallet = (value: unknown): value is string => typeof value === 'string' && /^0x[0-9a-f]{40}$/i.test(value)
+// A picture that isn't a plain https URL is left out, not a reason to drop the board.
+const avatar = (value: unknown): value is string => typeof value === 'string' && /^https:\/\/[^\s"']+$/.test(value)
 
 function board<T>(body: unknown, valid: (row: unknown) => boolean): Board<T> {
   if (!record(body) || !Array.isArray(body.rows) || !body.rows.every(valid)) throw new Error('Invalid Baum board')
@@ -75,7 +81,7 @@ export function assembleAgents(
   boosts: Record<string, number> = {},
 ): Agent[] {
   const agents = new Map<string, Agent>()
-  const get = (row: { wallet: string; username?: string }) => {
+  const get = (row: { wallet: string; username?: string; avatarUrl?: string }) => {
     const id = row.wallet.toLowerCase()
     let agent = agents.get(id)
     if (!agent) {
@@ -83,6 +89,7 @@ export function assembleAgents(
       agents.set(id, agent)
     }
     if (row.username) agent.name = `@${row.username.replace(/^@/, '')}`
+    if (avatar(row.avatarUrl)) agent.avatarUrl = row.avatarUrl
     return agent
   }
   // The all-time classification is the stable category; range-specific stats stay together.

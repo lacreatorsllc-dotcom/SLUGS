@@ -34,7 +34,12 @@ export function CopyButton({ value, label = 'Copy wallet address' }: { value: st
 export function AvatarRing({ agent, large = false }: { agent: Agent; large?: boolean }) {
   const hash = [...agent.id].reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 0)
   const initials = agent.name.replace(/^@|^0x/g, '').replace(/[^a-z0-9]/gi, '').slice(0, 2).toUpperCase()
-  return <span className={`t-avatar t-ring-${hash % 7}${large ? ' t-avatar--large' : ''}`} aria-hidden="true">{initials}</span>
+  // Initials until the picture loads, and for good if it won't.
+  const [broken, setBroken] = useState(false)
+  const picture = agent.avatarUrl && !broken
+  return <span className={`t-avatar t-ring-${hash % 7}${large ? ' t-avatar--large' : ''}`} aria-hidden="true">
+    {picture ? <img src={agent.avatarUrl} alt="" loading="lazy" onError={() => setBroken(true)} /> : initials}
+  </span>
 }
 
 export function RangeControl({ value, onChange }: { value: Range; onChange: (range: Range) => void }) {
