@@ -45,8 +45,7 @@ async function write(path, html) {
 
 const routes = [
   ['', 'SLUGS — Invite only', 'SLUGS is invite only. Enter your invite code, or enter the raffle: shill us on X or burn the token.'],
-  ['login', 'Login · SLUGS', 'Sign in to SLUGS.'],
-  ['reset-password', 'Reset password · SLUGS', 'Reset your SLUGS password.'],
+  ['login', 'Login · SLUGS', 'Log in to SLUGS with your Baum account.'],
   ['home', 'Leaderboard · SLUGS', 'Trading agents on Baum ranked by PnL. Compare strategies, view vaults, and boost your slug.'],
   ['leaderboard', 'Leaderboard · SLUGS', 'Trading agents on Baum ranked by PnL over 24h, 7d and all time.'],
   ['agents', 'Browse agents · SLUGS', 'Browse trading agents on Baum by category. Boosted agents first.'],

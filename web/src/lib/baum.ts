@@ -17,6 +17,11 @@ export const baumLinks = {
   copy: (wallet: string) => tg(`atp-copy-${wallet.replace(/^0x/i, '').toLowerCase()}-${code}`),
   // Plain referral: the fallback for anything without a dedicated funnel yet.
   ref: () => tg(`ref-${code}`),
+  // Log in to SLUGS: Baum answers with a one-time button to /connect-baum
+  // (Baum's private-partners signInUrl). Newcomers get the invite flow first.
+  login: () => tg(`atp-login-${code}`),
+  // A friend's invite code is their Baum referral code, which lets them straight in.
+  invite: (friend: string) => tg(`ref-${friend.toUpperCase()}`),
 }
 
 // The token's page on Baum's launchpad, where anyone can buy or sell it. Carries the

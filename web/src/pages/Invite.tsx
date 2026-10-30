@@ -2,10 +2,12 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { ACCESS } from '../config'
 import AuthLayout from '../components/AuthLayout'
+import { baumLinks } from '../lib/baum'
 import { useAuthSession } from '../lib/auth-context'
 
 // The front door: SLUGS is invite only. Without a code, people enter the access raffle
-// by posting on X or burning the token. Code verification awaits Baum's partner API.
+// by posting on X or burning the token. An invite code is a Baum referral code: Baum
+// checks it and lets them in, then they come back and log in with Baum.
 const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
 
 function XMark() {
@@ -55,6 +57,8 @@ export default function Invite() {
     e.preventDefault()
     const value = code.trim().toUpperCase()
     if (!value) return setError('Enter your invite code')
+    if (!/^[A-Z0-9-]{3,40}$/.test(value)) return setError('That doesn’t look like an invite code')
+    window.open(baumLinks.invite(value), '_blank', 'noreferrer')
     setReceived(value)
   }
 
@@ -83,7 +87,7 @@ export default function Invite() {
           spellCheck={false}
         />
         {error && <p className="down invite-error">{error}</p>}
-        {received && <p className="auth-sent" role="status">Got it: <strong>{received}</strong>. We'll let you in when SLUGS opens.</p>}
+        {received && <p className="auth-sent" role="status">Baum is opening in Telegram with <strong>{received}</strong>. Once you're in, come back and <Link to="/login">log in with Baum</Link>.</p>}
         <button type="submit" className="invite-continue">Continue</button>
       </form>
 

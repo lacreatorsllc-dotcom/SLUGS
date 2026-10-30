@@ -258,21 +258,6 @@ footer { border-top: 1px solid var(--border); padding: 24px 0; font-size: 13px; 
 
 /* Login and password reset (same card as the invite gate) */
 .invite-card .auth-label { margin-top: 18px; }
-.auth-password { position: relative; }
-.auth-password input { padding-right: 48px; }
-.auth-eye {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: 0;
-  padding: 8px;
-  color: var(--text-muted);
-  cursor: pointer;
-  display: flex;
-}
-.auth-eye:hover { color: var(--text-primary); }
 .invite-continue:disabled { opacity: 0.7; cursor: default; }
 .invite-card form .invite-continue { margin-top: 16px; }
 .auth-links {
@@ -291,3 +276,5 @@ footer { border-top: 1px solid var(--border); padding: 24px 0; font-size: 13px; 
 .auth-back a { text-decoration: none; }
 .auth-sent { margin: 12px 0 0; line-height: 1.6; }
 .auth-sent strong { color: var(--text-primary); }
+.invite-card .auth-baum { display: block; margin-top: 24px; text-align: center; text-decoration: none; }
+.auth-links span { color: var(--text-muted); }
