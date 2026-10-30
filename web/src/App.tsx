@@ -1,6 +1,7 @@
 import { NavLink, Link, Route, Routes } from 'react-router-dom'
-import { BRAND, CHAIN, STAGE, TOKEN } from './config'
+import { BRAND, STAGE, TOKEN } from './config'
 import { LaunchButtons } from './components/ui'
+import { ponsUrl } from './lib/baum'
 import Home from './pages/Home'
 import Leaderboard from './pages/Leaderboard'
 import Browse from './pages/Browse'
@@ -19,7 +20,7 @@ export default function App() {
             <span>Now on <Link to="/token">Robinhood Chain</Link></span>
             <span className="beta">· {STAGE}: numbers, fees and features will change</span>
           </span>
-          <a href={`${CHAIN.explorer}/token/${TOKEN.address}`} target="_blank" rel="noreferrer">View token ↗</a>
+          <a href={ponsUrl()} target="_blank" rel="noreferrer">View token ↗</a>
         </div>
       </aside>
       <header className="nav">

@@ -22,3 +22,6 @@ export const baumLinks = {
 // The token's page on Baum's launchpad, where anyone can buy or sell it. Carries the
 // referral code the way Baum's site spells it (?ref=).
 export const buyUrl = () => `https://baumai.xyz/launch/${TOKEN.address}?ref=${code}`
+
+// The token's page on Pons, the launchpad it launched on (Robinhood Chain).
+export const ponsUrl = () => `https://ponsfamily.com/launchpad/${TOKEN.address}`
