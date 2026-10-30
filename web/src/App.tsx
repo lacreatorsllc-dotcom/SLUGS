@@ -9,6 +9,7 @@ import AgentPage from './pages/AgentPage'
 import Vaults from './pages/Vaults'
 import Swap from './pages/Swap'
 import Token from './pages/Token'
+import Burn from './pages/Burn'
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/vaults" element={<Vaults />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/token" element={<Token />} />
+          <Route path="/burn" element={<Burn />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Home</Link></p>} />
         </Routes>
       </main>

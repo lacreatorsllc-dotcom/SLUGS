@@ -41,21 +41,22 @@ export async function connect(): Promise<string> {
   return account
 }
 
-const tokenCall = (data: string) => request<string>('eth_call', [{ to: TOKEN.address, data }, 'latest']).then(BigInt)
+const call = (token: string, data: string) => request<string>('eth_call', [{ to: token, data }, 'latest']).then(BigInt)
+const tokenCall = (data: string) => call(TOKEN.address, data)
 
 export async function boostCost(hours: number) {
   const decimals = await tokenCall('0x313ce567')
   return BigInt(FEES.boostPerHour * hours) * 10n ** decimals
 }
 
-export const tokenBalance = (account: string) => tokenCall('0x70a08231' + pad(account))
+export const tokenBalance = (account: string, token = TOKEN.address) => call(token, '0x70a08231' + pad(account))
 
-/** Burns the boost for `hours` and resolves with the transaction hash once it's mined. */
-export async function burnBoost(account: string, agent: string, hours: number): Promise<string> {
-  const amount = await boostCost(hours)
-  if ((await tokenBalance(account)) < amount) throw new Error(`Not enough ${TOKEN.symbol} in ${account.slice(0, 6)}…${account.slice(-4)}.`)
-  const data = '0xa9059cbb' + pad(DEAD) + pad(amount.toString(16)) + BOOST_TAG + agent.replace(/^0x/, '').toLowerCase()
-  const hash = await request<string>('eth_sendTransaction', [{ from: account, to: TOKEN.address, data }])
+// Sends `amount` of `token` to the dead address, with `tag` appended to the
+// calldata, and resolves with the transaction hash once it's mined.
+async function sendToDead(account: string, token: string, symbol: string, amount: bigint, tag = ''): Promise<string> {
+  if ((await tokenBalance(account, token)) < amount) throw new Error(`Not enough ${symbol} in ${account.slice(0, 6)}…${account.slice(-4)}.`)
+  const data = '0xa9059cbb' + pad(DEAD) + pad(amount.toString(16)) + tag
+  const hash = await request<string>('eth_sendTransaction', [{ from: account, to: token, data }])
   for (let i = 0; i < 90; i++) {
     const receipt = await request<{ status: string } | null>('eth_getTransactionReceipt', [hash])
     if (receipt) {
@@ -65,6 +66,16 @@ export async function burnBoost(account: string, agent: string, hours: number): 
     await new Promise((r) => setTimeout(r, 2000))
   }
   return hash // still pending; the explorer link will show it
+}
+
+/** Burns the boost for `hours` and resolves with the transaction hash once it's mined. */
+export async function burnBoost(account: string, agent: string, hours: number): Promise<string> {
+  return sendToDead(account, TOKEN.address, TOKEN.symbol, await boostCost(hours), BOOST_TAG + agent.replace(/^0x/, '').toLowerCase())
+}
+
+/** Burns whole `tokens` of an 18-decimal token, e.g. to get into Baum (BURN_TO_ENTER). */
+export async function burnTokens(account: string, token: string, symbol: string, tokens: number): Promise<string> {
+  return sendToDead(account, token, symbol, BigInt(tokens) * 10n ** 18n)
 }
 
 export const txUrl = (hash: string) => `${CHAIN.explorer}/tx/${hash}`
