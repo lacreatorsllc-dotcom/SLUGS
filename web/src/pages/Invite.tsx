@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { ACCESS, BRAND } from '../config'
+import { ACCESS, BRAND, PARTNERSHIP } from '../config'
+import TokenBar from '../components/TokenBar'
 
 // The front door: SLUGS is invite only. A code lets you into the platform (/home);
 // without one, people enter the access raffle by posting on X or burning the token.
@@ -40,6 +41,26 @@ function Arrow() {
   )
 }
 
+// SLUGS × Baum, after the X announcement. Links to the article once it's published.
+function Partnership() {
+  const base = import.meta.env.BASE_URL
+  const body = (
+    <>
+      <span className="partner-eyebrow">Announcement</span>
+      <span className="partner-lockup">
+        <img src={`${base}slugs-logo-orange.png`} alt="SLUGS" />
+        <span className="partner-x" aria-hidden="true">×</span>
+        <img src={`${base}baum-logo.png`} alt="Baum" className="partner-baum" />
+      </span>
+      <span className="partner-caption">Strategic partnership</span>
+      <span className="partner-more">{PARTNERSHIP.articleUrl ? 'Read the announcement →' : 'Full announcement coming soon'}</span>
+    </>
+  )
+  return PARTNERSHIP.articleUrl
+    ? <a className="partner" href={PARTNERSHIP.articleUrl} target="_blank" rel="noreferrer">{body}</a>
+    : <div className="partner">{body}</div>
+}
+
 function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: string; href: string; internal?: boolean }) {
   const body = (
     <>
@@ -73,44 +94,49 @@ export default function Invite() {
   }
 
   return (
-    <div className="invite">
-      <img className="invite-logo" src={`${import.meta.env.BASE_URL}slugs-logo-red.png`} alt={BRAND.name} />
+    <div className="invite-page">
+      <TokenBar />
+      <div className="invite">
+        <Partnership />
 
-      <div className="invite-card">
-        <h1>Create Account</h1>
-        <p className="invite-sub">Enter your invite code to get access to SLUGS.</p>
+        <img className="invite-logo" src={`${import.meta.env.BASE_URL}slugs-logo-orange.png`} alt={BRAND.name} />
 
-        <form onSubmit={submit}>
-          <label htmlFor="invite-code">Invite Code</label>
-          <input
-            id="invite-code"
-            value={code}
-            onChange={(e) => { setCode(e.target.value); setError(null) }}
-            placeholder="e.g. SLUGS-A3X7K2B9"
-            autoCapitalize="characters"
-            autoComplete="off"
-            spellCheck={false}
-          />
-          {error && <p className="down invite-error">{error}</p>}
-          <button type="submit" className="invite-continue">Continue</button>
-        </form>
+        <div className="invite-card">
+          <h1>Create Account</h1>
+          <p className="invite-sub">Enter your invite code to get access to SLUGS.</p>
 
-        <hr />
+          <form onSubmit={submit}>
+            <label htmlFor="invite-code">Invite Code</label>
+            <input
+              id="invite-code"
+              value={code}
+              onChange={(e) => { setCode(e.target.value); setError(null) }}
+              placeholder="e.g. SLUGS-A3X7K2B9"
+              autoCapitalize="characters"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            {error && <p className="down invite-error">{error}</p>}
+            <button type="submit" className="invite-continue">Continue</button>
+          </form>
 
-        <h2>Don't have an invite code?</h2>
-        <p className="invite-sub">Enter our raffle for a chance to win access.</p>
+          <hr />
 
-        <div className="raffles">
-          <RaffleLink icon={<XMark />} label="Shill us on X" href={shillUrl} />
-          <RaffleLink icon={<span className="flame"><Flame /></span>} label="Burn our token" href="/burn" internal />
+          <h2>Don't have an invite code?</h2>
+          <p className="invite-sub">Enter our raffle for a chance to win access.</p>
+
+          <div className="raffles">
+            <RaffleLink icon={<XMark />} label="Shill us on X" href={shillUrl} />
+            <RaffleLink icon={<span className="flame"><Flame /></span>} label="Burn our token" href="/burn" internal />
+          </div>
+
+          <p className="invite-foot">or you know... if we like you enough... go fuck yourself.</p>
         </div>
 
-        <p className="invite-foot">or you know... if we like you enough... go fuck yourself.</p>
+        <p className="invite-login">
+          Already have an account? <a href="/home" onClick={(e) => { e.preventDefault(); enter('member') }}>Log in</a>
+        </p>
       </div>
-
-      <p className="invite-login">
-        Already have an account? <a href="/home" onClick={(e) => { e.preventDefault(); enter('member') }}>Log in</a>
-      </p>
     </div>
   )
 }

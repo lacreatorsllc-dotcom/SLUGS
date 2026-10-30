@@ -28,6 +28,12 @@ export const BURN_TO_ENTER = [
   { symbol: 'BAUM', address: '0xc17FBa7484bdB276C2b5A7593E14fcAF21155C45', amount: 750_000 },
 ] as const
 
+// The SLUGS × Baum strategic partnership announcement on the front page.
+// Set the article link here (or VITE_PARTNERSHIP_URL) once it's published.
+export const PARTNERSHIP = {
+  articleUrl: import.meta.env.VITE_PARTNERSHIP_URL || '',
+}
+
 export const TOKEN = {
   symbol: import.meta.env.VITE_TOKEN_SYMBOL || 'SLUGS',
   // SLUGS on Baum's launchpad (Pons, Robinhood Chain).

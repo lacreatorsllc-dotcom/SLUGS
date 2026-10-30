@@ -1,7 +1,7 @@
 import { NavLink, Link, Route, Routes, useLocation } from 'react-router-dom'
 import { BRAND, STAGE, TOKEN } from './config'
 import { LaunchButtons } from './components/ui'
-import { ponsUrl } from './lib/baum'
+import TokenBar from './components/TokenBar'
 import Home from './pages/Home'
 import Leaderboard from './pages/Leaderboard'
 import Browse from './pages/Browse'
@@ -18,16 +18,7 @@ export default function App() {
 
   return (
     <>
-      <aside className="token-bar" aria-label="Token">
-        <div className="wrap">
-          <span className="row" style={{ gap: 12 }}>
-            <span className="live">TOKEN LIVE</span>
-            <span>Now on <Link to="/token">Robinhood Chain</Link></span>
-            <span className="beta">· {STAGE}: numbers, fees and features will change</span>
-          </span>
-          <a href={ponsUrl()} target="_blank" rel="noreferrer">View token ↗</a>
-        </div>
-      </aside>
+      <TokenBar />
       <header className="nav">
         <div className="wrap">
           <Link to="/home" className="logo" aria-label={BRAND.name}><img src={`${import.meta.env.BASE_URL}slugs-logo.png`} alt={BRAND.name} /></Link>
