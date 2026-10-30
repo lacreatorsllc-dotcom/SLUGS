@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { CHAIN } from '../../config'
 import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
-import { rangeLabel, shortAddress, sortedAgents, type Agent, type Range } from '../../lib/terminal-model'
+import { agentPath, rangeLabel, shortAddress, sortedAgents, type Agent, type Range } from '../../lib/terminal-model'
 import { AvatarRing, CopyButton, FloatingCard, IconButton, IconLink, StatGrid } from './ui'
 import { count, money, tone } from '../../lib/terminal-format'
 
@@ -40,7 +40,7 @@ export function AgentActions({ agent, range, compact = false }: { agent: Agent; 
     <IconButton icon="trade" label={`Copy trade ${agent.name}`} onClick={() => open({ kind: 'copy', agent, range })} />
     <IconButton icon="counter" label="Counter trading · coming soon on Baum" disabled />
     {!compact && <><IconLink icon="compare" label={`Compare ${agent.name}`} to={`/agents/compare?ids=${agent.id}&range=${range}`} /><IconButton icon="chart" label={`Show PnL card for ${agent.name}`} onClick={() => open({ kind: 'pnl', agent, range })} /></>}
-    <IconLink icon="chevron" label={`Open ${agent.name}`} to={`/agents/${agent.id}?range=${range}`} />
+    <IconLink icon="chevron" label={`Open ${agent.name}`} to={`${agentPath(agent)}?range=${range}`} />
   </div>
 }
 
@@ -80,9 +80,9 @@ export function AgentIdentity({ agent, range }: { agent: Agent; range: Range }) 
   }
   return <div ref={ref} className="t-identity" onMouseEnter={() => { if (matchMedia('(hover: hover)').matches) show() }} onMouseLeave={() => { timeout.current = setTimeout(() => setPosition(null), 180) }}>
     <button type="button" className="t-avatar-trigger" aria-label={`Preview ${agent.name}`} aria-expanded={Boolean(position)} onClick={() => position ? setPosition(null) : show()}><AvatarRing agent={agent} /></button>
-    <Link className="t-agent-name" to={`/agents/${agent.id}?range=${range}`}>{agent.name}</Link><CopyButton value={agent.id} label={`Copy ${agent.name} wallet address`} />
+    <Link className="t-agent-name" to={`${agentPath(agent)}?range=${range}`}>{agent.name}</Link><CopyButton value={agent.id} label={`Copy ${agent.name} wallet address`} />
     {position && <div className="t-hover-card" role="dialog" aria-label={`${agent.name} agent card`} style={position}>
-      <div className="t-hover-header"><AvatarRing agent={agent} /><div><Link to={`/agents/${agent.id}`} className="t-agent-name">{agent.name}</Link><p>{agent.categories.join(' · ')}{agent.declared ? '' : ' · suggested'} · {shortAddress(agent.id)}</p></div><IconButton icon="close" label="Close agent preview" onClick={() => setPosition(null)} /></div>
+      <div className="t-hover-header"><AvatarRing agent={agent} /><div><Link to={agentPath(agent)} className="t-agent-name">{agent.name}</Link><p>{agent.categories.join(' · ')}{agent.declared ? '' : ' · suggested'} · {shortAddress(agent.id)}</p></div><IconButton icon="close" label="Close agent preview" onClick={() => setPosition(null)} /></div>
       {agent.tags.length > 0 && <div className="t-tags">{agent.tags.map((tag) => <span className="t-tag" key={tag}>{tag}</span>)}</div>}
       <StatGrid stats={[{ label: `PnL ${rangeLabel(range)}`, value: money(row?.pnlUsd, true), tone: tone(row?.pnlUsd) }, { label: 'Volume', value: money(row?.volumeUsd) }, { label: 'Trades', value: count(row?.trades) }]} />
       <AgentActions agent={agent} range={range} />
