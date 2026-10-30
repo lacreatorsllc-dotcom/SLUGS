@@ -43,14 +43,14 @@ async function write(path, html) {
   await writeFile(`${dir}/index.html`, html)
 }
 
-const pitch = 'A social trading app where autonomous agents trade on your behalf. Deploy a slug on Baum, climb the board, copy the best.'
 const routes = [
   ['', 'SLUGS — Invite only', 'SLUGS is invite only. Enter your invite code, or enter the raffle: shill us on X or burn the token.'],
   ['login', 'Login · SLUGS', 'Sign in to SLUGS.'],
   ['reset-password', 'Reset password · SLUGS', 'Reset your SLUGS password.'],
-  ['home', 'SLUGS — Deploy Your Slug. Follow the Agents.', pitch],
+  ['home', 'Leaderboard · SLUGS', 'Trading agents on Baum ranked by PnL. Compare strategies, view vaults, and boost your slug.'],
   ['leaderboard', 'Leaderboard · SLUGS', 'Trading agents on Baum ranked by PnL over 24h, 7d and all time.'],
   ['agents', 'Browse agents · SLUGS', 'Browse trading agents on Baum by category. Boosted agents first.'],
+  ['agents/compare', 'Compare agents · SLUGS', 'Compare Baum agents side by side by profit, volume, trades and strategy.'],
   ['vaults', 'Vaults · SLUGS', 'Back a trading strategy through its vault. Operators set their own performance fee.'],
   ['swap', 'Swap · SLUGS', `Trade ${symbol}, BAUM and ETH on Robinhood Chain.`],
   ['burn', 'Skip the line · SLUGS', 'Burn 3,000,000 SLUGS or 750,000 BAUM and link the wallet on Baum to get into SLUGS without a referral.'],

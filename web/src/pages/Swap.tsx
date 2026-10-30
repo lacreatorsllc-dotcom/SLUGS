@@ -1,43 +1,32 @@
 import { useState } from 'react'
-import { FEES, TOKEN } from '../config'
+import { CHAIN, FEES, TOKEN } from '../config'
+import Icon from '../components/terminal/Icon'
+import { IconButton } from '../components/terminal/ui'
+import { compact, count, money, price } from '../lib/terminal-format'
 import { baumLinks, buyUrl } from '../lib/baum'
-
-const ASSETS = [TOKEN.symbol, 'BAUM', 'ETH', 'USDC']
+import { useTerminalData } from '../lib/terminal-context'
 
 export default function Swap() {
-  const [from, setFrom] = useState('ETH')
-  const [to, setTo] = useState(TOKEN.symbol)
+  const { snapshot } = useTerminalData()
+  const token = snapshot?.token
+  const [side, setSide] = useState<'buy' | 'sell'>('buy')
+  const [currency, setCurrency] = useState('ETH')
   const [amount, setAmount] = useState('')
-  return (
-    <div style={{ maxWidth: 460 }}>
-      <h1 style={{ fontSize: 36 }}>Swap</h1>
-      <p>Trade {TOKEN.symbol}, BAUM and ETH. Routed through Baum's swap infrastructure, plus a {FEES.swapBps} bps platform fee.</p>
-      <div className="card">
-        <div className="field">
-          <label>From</label>
-          <div className="row" style={{ flexWrap: 'nowrap' }}>
-            <input inputMode="decimal" placeholder="0.0" value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ''))} />
-            <select value={from} onChange={(e) => setFrom(e.target.value)} style={{ width: 120 }}>
-              {ASSETS.filter((a) => a !== to).map((a) => <option key={a}>{a}</option>)}
-            </select>
-          </div>
-        </div>
-        <div className="field">
-          <label>To</label>
-          <select value={to} onChange={(e) => setTo(e.target.value)}>
-            {ASSETS.filter((a) => a !== from).map((a) => <option key={a}>{a}</option>)}
-          </select>
-        </div>
-        {TOKEN.address ? (
-          <a className="btn primary" style={{ width: '100%', boxSizing: 'border-box', textAlign: 'center' }} href={buyUrl()} target="_blank" rel="noreferrer">Trade {TOKEN.symbol} on Baum</a>
-        ) : (
-          <button className="btn primary" style={{ width: '100%' }} disabled>Connect wallet (coming soon)</button>
-        )}
-        <p className="note" style={{ marginTop: 12, marginBottom: 0 }}>
-          The in-page swap is waiting on Baum's partner swap API. Until then, trade on Baum's site or in{' '}
-          <a href={baumLinks.ref()} target="_blank" rel="noreferrer">Baum on Telegram</a>.
-        </p>
-      </div>
-    </div>
-  )
+  const pay = side === 'buy' ? currency : TOKEN.symbol
+  const receive = side === 'buy' ? TOKEN.symbol : currency
+  const invalid = amount !== '' && (!Number.isFinite(Number(amount)) || Number(amount) <= 0 || !/^\d*\.?\d+$/.test(amount))
+  return <div className="t-two-column"><div className="t-content-stack"><h1 className="t-sr-only">Swap</h1>
+    <div className="t-market-summary"><img src={`${import.meta.env.BASE_URL}slugs-logo-orange.png`} alt="" /><h2>{TOKEN.symbol} <span className="t-muted">/ {currency}</span></h2><strong>{price(token?.priceUsd)}</strong><dl><div><dt>Market cap</dt><dd>{money(token?.marketCapUsd)}</dd></div><div><dt>Supply</dt><dd>{compact(token?.totalSupply)}</dd></div><div><dt>Burned</dt><dd className="t-accent">{count(token?.burned)}</dd></div><div><dt>Chain</dt><dd>Robinhood</dd></div></dl></div>
+    <div className="t-price-chart" aria-label="Price chart placeholder"><div><Icon name="chart" size={24} /><p>[PLACEHOLDER] Price history</p><span>Baum market data will appear here when available.</span></div></div>
+  </div><aside className="t-feature-card t-side-panel" aria-label="Swap"><div className="t-segments t-swap-sides" role="group" aria-label="Buy or sell"><button type="button" aria-pressed={side === 'buy'} onClick={() => { setSide('buy'); setAmount('') }}>Buy</button><button type="button" aria-pressed={side === 'sell'} onClick={() => { setSide('sell'); setAmount('') }}>Sell</button></div>
+    <div className="t-swap-input"><label htmlFor="swap-amount">You pay</label><div className="t-swap-input-row"><input id="swap-amount" type="text" inputMode="decimal" placeholder="0.0" value={amount} onChange={(event) => setAmount(event.target.value)} aria-invalid={invalid} aria-describedby={invalid ? 'swap-amount-error' : 'swap-note'} /><strong>{pay}</strong></div></div>
+    <div className="t-swap-flip"><IconButton icon="counter" label="Flip tokens" variant="outline" onClick={() => { setSide(side === 'buy' ? 'sell' : 'buy'); setAmount('') }} /></div>
+    <div className="t-swap-input"><span className="t-fine">You get</span><div className="t-swap-input-row"><span className="t-muted">—</span><strong>{receive}</strong></div><p className="t-placeholder">[PLACEHOLDER] Quote available on Baum</p></div>
+    <div className="t-fee-presets" role="group" aria-label="Amount presets">{(side === 'buy' ? ['0.01', '0.1', '0.5'] : ['10000', '100000', '1000000']).map((value) => <button type="button" className="t-chip" key={value} aria-pressed={amount === value} onClick={() => setAmount(value)}>{Number(value) < 1 ? value : count(Number(value))}</button>)}<button type="button" className="t-chip" disabled title="Balance is available on Baum">Max</button></div>
+    {invalid && <p id="swap-amount-error" className="t-negative t-fine">Enter an amount greater than zero.</p>}
+    <div><label htmlFor="swap-currency">{side === 'buy' ? 'Pay with' : 'Receive'}</label><select id="swap-currency" value={currency} onChange={(event) => { setCurrency(event.target.value); setAmount('') }}>{['ETH', 'BAUM', 'USDC'].filter((symbol) => symbol !== TOKEN.symbol).map((symbol) => <option key={symbol}>{symbol}</option>)}</select></div>
+    <div className="t-summary-box"><div className="t-key-value"><span>Route</span><strong>Baum</strong></div><div className="t-key-value"><span>Platform fee</span><strong>+{FEES.swapBps} bps (in-page swaps)</strong></div><div className="t-key-value"><span>Network</span><strong>{CHAIN.name}</strong></div></div>
+    <a className="t-submit" href={buyUrl()} target="_blank" rel="noreferrer"><Icon name="arrow" />Trade {TOKEN.symbol} on Baum</a>
+    <p className="t-fine" id="swap-note">In-page swaps open when Baum’s partner swap API is ready. Review the amount, pair, and fees on Baum; these preview inputs are not carried over. You can also use <a href={baumLinks.ref()} target="_blank" rel="noreferrer">Baum on Telegram ↗</a>.</p>
+  </aside></div>
 }

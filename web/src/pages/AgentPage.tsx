@@ -1,193 +1,68 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
-import { FEES, TOKEN } from '../config'
-import { type Agent, type Range, isBoosted, useAgents } from '../lib/agents'
-import { useToken, vaultOpenTokens } from '../lib/token'
-import { burnBoost, connect, hasWallet, txUrl } from '../lib/wallet'
-import { baumLinks } from '../lib/baum'
-import { depositSource, operatorLink, platformShare, recordLanding } from '../lib/attribution'
-import { AgentTags, Avatar, Loading, RangeChips, Sparkline, pct, tokens, tone, usd } from '../components/ui'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { CHAIN, FEES, TOKEN } from '../config'
+import { AgentActions, CopyTradeButton } from '../components/terminal/AgentActions'
+import Icon from '../components/terminal/Icon'
+import { AvatarRing, Callout, CopyButton, EmptyState, FloatingCard, IconButton, IconLink, RangeControl, StatGrid, TableSkeleton } from '../components/terminal/ui'
+import { count, money, tone, winRate } from '../lib/terminal-format'
+import { recordLanding } from '../lib/attribution'
+import { useTerminalData } from '../lib/terminal-context'
+import { RANGES, isBoosted, rangeLabel, shortAddress, type Agent, type Range } from '../lib/terminal-model'
+import { vaultOpenTokens } from '../lib/token'
+import { DEAD, burnBoost, connect, hasWallet, txUrl } from '../lib/wallet'
 
 export default function AgentPage() {
   const { id = '' } = useParams()
   const { search } = useLocation()
-  const agents = useAgents()
-  const token = useToken()
-  const [range, setRange] = useState<Range>('7d')
-  useEffect(() => recordLanding(id, search), [id, search])
-
-  if (!agents) return <Loading />
-  const agent = agents.find((a) => a.id.toLowerCase() === id.toLowerCase())
-  if (!agent) return <p>No agent with that address. <Link to="/agents">Browse agents</Link></p>
-
-  const share = platformShare(depositSource(agent.id))
-
-  return (
-    <>
-      <div className="section-head">
-        <div className="row" style={{ gap: 14 }}>
-          <Avatar agent={agent} />
-          <div>
-            <h1 style={{ fontSize: 32, margin: 0 }}>{agent.name}</h1>
-            <div className="row" style={{ gap: 6 }}>
-              <AgentTags agent={agent} />
-              {isBoosted(agent) && <span className="tag boost">Boosted</span>}
-              {agent.vault && <span className="tag vault">Vault</span>}
-              {agent.sample && <span className="tag">Sample</span>}
-              <span className="muted num" style={{ fontSize: 13 }}>{agent.id.slice(0, 10)}…{agent.id.slice(-6)}</span>
-            </div>
-          </div>
-        </div>
-        <RangeChips range={range} onChange={setRange} />
-      </div>
-      <p>{agent.description}</p>
-      {!agent.declared && !agent.sample && (
-        <p className="note">Listed under {agent.category} as a suggestion from its trades. Own this wallet? Send <span className="num">/agent strategy</span> to Baum in Telegram to choose its category.</p>
-      )}
-
-      {agent.trader && (
-      <div className="stats">
-          <div className="card stat"><div className="label">PnL ({range})</div><div className={`value num ${tone(agent.pnlUsd[range])}`}>{usd(agent.pnlUsd[range], true)}</div></div>
-          {Number.isFinite(agent.returnPct[range]) && <div className="card stat"><div className="label">Return ({range})</div><div className={`value num ${tone(agent.returnPct[range])}`}>{pct(agent.returnPct[range])}</div></div>}
-          <div className="card stat"><div className="label">Volume</div><div className="value num">{usd(agent.volumeUsd)}</div></div>
-          <div className="card stat"><div className="label">Trades</div><div className="value num">{agent.trades}</div></div>
-          {Number.isFinite(agent.winRate) && <div className="card stat"><div className="label">Win rate{agent.winTrades ? ` (${agent.winTrades} trades)` : ''}</div><div className="value num">{Math.round(agent.winRate * 100)}%</div></div>}
-        </div>
-      )}
-      {agent.lp && (
-        <>
-          <h2 style={{ marginTop: agent.trader ? 28 : 0 }}>Liquidity provision</h2>
-          <div className="stats">
-            <div className="card stat"><div className="label">Fees ({range})</div><div className={`value num ${tone(agent.lp.feesUsd[range])}`}>{usd(agent.lp.feesUsd[range], true)}</div></div>
-            <div className="card stat"><div className="label">Liquidity</div><div className="value num">{usd(agent.lp.liquidityUsd)}</div></div>
-            <div className="card stat"><div className="label">Fee APR</div><div className="value num">{agent.lp.feeAprPercent === null ? '—' : `${agent.lp.feeAprPercent.toFixed(1)}%`}</div></div>
-            <div className="card stat"><div className="label">Positions</div><div className="value num">{agent.lp.positions}</div></div>
-          </div>
-          {agent.lp.pools.length > 0 && <p className="note">Pools: {agent.lp.pools.join(', ')}</p>}
-        </>
-      )}
-
-      {agent.equity.length > 1 && (
-        <div className="card section" style={{ overflow: 'hidden' }}>
-          <div className="muted" style={{ fontSize: 13, marginBottom: 8 }}>Equity, last 30 days</div>
-          <Sparkline values={agent.equity} width={1080} height={160} fluid />
-        </div>
-      )}
-
-      <div className="grid section">
-        <div className="card">
-          <h3>Copy this agent</h3>
-          <p>Baum opens in Telegram with this agent ready to copy. Auto-copy of agents is rolling out during the beta.</p>
-          <a className="btn primary" href={baumLinks.copy(agent.id)} target="_blank" rel="noreferrer">Copy on Baum</a>
-        </div>
-
-        <div className="card">
-          <h3>Vault</h3>
-          {agent.vault ? (
-            <>
-              <p className="num" style={{ marginBottom: 6 }}>TVL {usd(agent.vault.tvlUsd)} · {agent.vault.depositors} depositors · {agent.vault.feePct}% performance fee</p>
-              <p className="note">Of the operator's fee, the platform keeps {share * 100}% ({share === FEES.platformShareDirect ? 'you came from the operator\'s link' : 'you found it here'}).</p>
-              <button className="btn" disabled>Deposit (coming soon)</button>
-            </>
-          ) : (
-            <>
-              <p>This agent doesn't take deposits. Operators open a vault for {tokens(vaultOpenTokens(token?.priceUsd))} {TOKEN.symbol}{token?.priceUsd ? ` (about ${usd(vaultOpenTokens(token.priceUsd) * token.priceUsd)})` : ` or $${FEES.vaultOpenUsd} of it, whichever is less`}.</p>
-              <Link className="btn" to="/vaults">About vaults</Link>
-            </>
-          )}
-        </div>
-
-        <BoostCard agent={agent} />
-
-        {agent.vault && <OperatorShare agent={agent} />}
-      </div>
-    </>
-  )
-}
-
-// The operator's own link to their vault, for them to share. Deposits through it
-// pay the platform less, so only the vault's operator sees it: they prove it by
-// connecting the agent's wallet.
-function OperatorShare({ agent }: { agent: Agent }) {
-  const [account, setAccount] = useState('')
-  const [copied, setCopied] = useState(false)
-  const [error, setError] = useState('')
-  const isOperator = account.toLowerCase() === agent.id.toLowerCase()
-
-  async function check() {
-    setError('')
-    try {
-      setAccount(await connect())
-    } catch (err) {
-      if ((err as { code?: number }).code !== 4001) setError((err as Error).message ?? String(err))
-    }
-  }
-
-  return (
-    <div className="card">
-      <h3>Run this vault?</h3>
-      {isOperator ? (
-        <>
-          <p>Your own link. Deposits through it pay the platform {FEES.platformShareDirect * 100}% of your fees instead of {FEES.platformShareDiscovered * 100}%.</p>
-          <button className="btn" onClick={() => navigator.clipboard?.writeText(operatorLink(agent.id)).then(() => setCopied(true))}>
-            {copied ? 'Copied' : 'Copy operator link'}
-          </button>
-        </>
-      ) : (
-        <>
-          <p>Connect the agent's wallet to get your operator link.</p>
-          {account && <p className="note">{account.slice(0, 6)}…{account.slice(-4)} isn't this vault's operator.</p>}
-          <button className="btn" onClick={check} disabled={!hasWallet()}>Connect wallet</button>
-          {error && <p className="note down">{error}</p>}
-        </>
-      )}
+  const [params, setParams] = useSearchParams()
+  const { snapshot, loading, error, refresh } = useTerminalData()
+  const range = RANGES.includes(params.get('range') as Range) ? params.get('range') as Range : '7d'
+  useEffect(() => { if (/^0x[0-9a-f]{40}$/i.test(id)) recordLanding(id, search) }, [id, search])
+  if (loading) return <TableSkeleton />
+  if (error || snapshot?.boardError) return <Callout error onRetry={refresh}>Couldn’t load this agent’s data.</Callout>
+  const agent = snapshot?.agents.find((item) => item.id === id.toLowerCase())
+  if (!agent) return <EmptyState title="Agent not found" action={<IconLink icon="back" label="Browse agents" to="/agents" variant="outline" />}>This wallet isn’t on Baum’s current leaderboards. Browse the agents that are reporting data.</EmptyState>
+  const row = agent.trading[range]
+  const lp = agent.liquidity[range]
+  const token = snapshot?.token
+  const cost = vaultOpenTokens(token?.priceUsd)
+  return <>
+    <div className="t-agent-heading"><AvatarRing agent={agent} large /><div className="t-agent-heading-info"><div className="t-tags"><h1>{agent.name}</h1><span className="t-tag">{agent.categories.join(' · ')}{agent.declared ? '' : ' · suggested'}</span>{agent.tags.map((tag) => <span className="t-tag" key={tag}>{tag}</span>)}{isBoosted(agent) && <span className="t-tag t-accent">Boosted</span>}</div><div className="t-actions t-fine"><span title={agent.id}>{shortAddress(agent.id)} · Trades through Baum{row ? ` · ${row.tokens} ${row.tokens === 1 ? 'token' : 'tokens'} traded` : ''}</span><CopyButton value={agent.id} /></div></div><RangeControl value={range} onChange={(value) => setParams((previous) => { const next = new URLSearchParams(previous); next.set('range', value); return next }, { replace: true })} /></div>
+    <StatGrid stats={[{ label: `PnL · ${rangeLabel(range)}`, value: money(row?.pnlUsd, true), tone: tone(row?.pnlUsd) }, { label: 'Volume', value: money(row?.volumeUsd) }, { label: 'Trades', value: count(row?.trades) }, { label: 'Win rate', value: winRate(row?.winRate) }]} />
+    {!row && <Callout>[PLACEHOLDER] This wallet has no reported trading metrics for {rangeLabel(range)}. Liquidity data is shown below when available.</Callout>}
+    {lp && <StatGrid stats={[{ label: `LP fees · ${rangeLabel(range)}`, value: money(lp.feesUsd, true), tone: tone(lp.feesUsd) }, { label: 'Liquidity', value: money(lp.liquidityUsd) }, { label: 'Fee APR', value: lp.feeAprPercent === null ? '—' : `${lp.feeAprPercent.toFixed(1)}%` }, { label: 'Positions', value: count(lp.positions) }]} />}
+    {!agent.declared && <Callout>Listed under {agent.categories.join(' and ')} from its activity. Own this wallet? Send <code>/agent strategy</code> to Baum in Telegram to choose its category.</Callout>}
+    <div className="t-grid-three">
+      <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="trade" /></span><h2>Copy this agent</h2></div><p>Baum opens in Telegram with this agent ready to review. Auto-copy is rolling out during the beta.</p><div className="t-actions"><CopyTradeButton agent={agent} range={range} /><IconButton icon="counter" label="Counter trading · coming soon on Baum" variant="outline" disabled /></div></section>
+      <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="vault" /></span><h2>Vault</h2><span className="t-tag">CLOSED</span></div><p>This agent doesn’t take deposits yet. Its operator can open a vault for {count(cost)} {TOKEN.symbol}{token?.priceUsd ? `, about ${money(cost * token.priceUsd)}` : ` or $${FEES.vaultOpenUsd} of it, whichever is less`}.</p><div className="t-actions"><IconLink icon="arrow" label="About vaults" to="/vaults" variant="outline" className="t-wide" /></div></section>
+      <BoostCard key={agent.id} agent={agent} />
     </div>
-  )
+    <div className="t-page-heading"><p className="t-fine">Performance is reported by Baum. Copying and counter trading can lose funds.</p><AgentActions agent={agent} range={range} /></div>
+  </>
 }
 
 function BoostCard({ agent }: { agent: Agent }) {
   const [hours, setHours] = useState(1)
+  const [confirm, setConfirm] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [tx, setTx] = useState('')
-  const live = Boolean(TOKEN.address) && !agent.sample
-
+  const amount = FEES.boostPerHour * hours
   async function burn() {
-    setBusy(true)
-    setError('')
-    setTx('')
-    try {
-      const account = await connect()
-      setTx(await burnBoost(account, agent.id, hours))
-    } catch (err) {
-      // 4001: the person rejected it in their wallet, which needs no message.
-      if ((err as { code?: number }).code !== 4001) setError((err as Error).message ?? String(err))
-    } finally {
-      setBusy(false)
-    }
+    setConfirm(false); setBusy(true); setError(''); setTx('')
+    try { const account = await connect(); setTx(await burnBoost(account, agent.id, hours)) }
+    catch (err) { setError((err as { code?: number }).code === 4001 ? 'You cancelled the wallet request. No boost was submitted.' : (err as Error).message) }
+    finally { setBusy(false) }
   }
-
-  return (
-    <div className="card">
-      <h3>Boost</h3>
-      <p>Burn {tokens(FEES.boostPerHour)} {TOKEN.symbol} an hour to feature this agent at the top of {agent.categories.join(' and ')} and on the home page.</p>
-      {isBoosted(agent) && <p className="note">Boosted until {new Date(agent.boostedUntil!).toLocaleString()}. Burning more adds to it.</p>}
-      <div className="row">
-        <select value={hours} onChange={(e) => setHours(Number(e.target.value))} style={{ width: 'auto' }}>
-          {[1, 6, 24, 72, 168].map((h) => <option key={h} value={h}>{h < 24 ? `${h}h` : `${h / 24}d`}</option>)}
-        </select>
-        <button className="btn boost" disabled={!live || busy} onClick={burn}>
-          {busy ? 'Confirm in your wallet…' : `Burn ${tokens(FEES.boostPerHour * hours)} ${TOKEN.symbol}`}
-        </button>
-      </div>
-      <p className="note" style={{ marginTop: 8, marginBottom: 0 }}>
-        {!TOKEN.address ? `Opens when ${TOKEN.symbol} launches.`
-          : agent.sample ? 'Sample agents can\'t be boosted.'
-          : tx ? <>Burned. <a href={txUrl(tx)} target="_blank" rel="noreferrer">View transaction</a>. The boost shows here within 10 minutes.</>
-          : error ? <span className="down">{error}</span>
-          : !hasWallet() ? 'Needs a browser wallet with ' + TOKEN.symbol + ' on Robinhood Chain.'
-          : `Sent from your wallet on Robinhood Chain. The tokens go to the dead address.`}
-      </p>
-    </div>
-  )
+  return <section id="boost" className="t-feature-card t-boost-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="flame" /></span><h2>Boost</h2></div>
+    <p>Burn {count(FEES.boostPerHour)} {TOKEN.symbol} an hour to feature this agent at the top of {agent.categories.join(' and ')} and the leaderboard.</p>
+    {isBoosted(agent) && <p className="t-fine">Boosted until {new Date(agent.boostedUntil!).toLocaleString()}. Another burn extends it.</p>}
+    <div className="t-segments t-boost-hours" role="group" aria-label="Boost length">{[1, 3, 6, 12, 24].map((value) => <button type="button" key={value} disabled={busy} aria-pressed={hours === value} onClick={() => { setHours(value); setError(''); setTx('') }}>{value}h</button>)}</div>
+    <div className="t-key-value"><span>Cost</span><strong>{count(amount)} {TOKEN.symbol}</strong></div>
+    <button type="button" className="t-submit" disabled={busy} aria-busy={busy} onClick={() => { setError(''); if (hasWallet()) setConfirm(true); else setError('No wallet found. Open this page in MetaMask or Rabby, or install a browser wallet.') }}><Icon name="flame" />{busy ? 'Confirming in your wallet…' : `Burn ${count(amount)}`}</button>
+    <p className="t-fine">Sent from your wallet on {CHAIN.name} to the dead address. Burns can’t be undone.</p>
+    {error && <Callout error>{error}</Callout>}
+    {tx && <Callout>Transaction submitted. <a href={txUrl(tx)} target="_blank" rel="noreferrer">View status on the explorer ↗</a>. The boost appears after the next data refresh.</Callout>}
+    {confirm && <FloatingCard title="Confirm boost" onClose={() => setConfirm(false)}><p>Burn <strong>{count(amount)} {TOKEN.symbol}</strong> to boost <strong>{agent.name}</strong> for {hours} {hours === 1 ? 'hour' : 'hours'}.</p><div className="t-key-value"><span>Network</span><strong>{CHAIN.name}</strong></div><p className="t-fine">Agent</p><p className="t-confirm-address">{agent.id}</p><p className="t-fine">Tokens are sent to {DEAD}. This burn is permanent. Your wallet will ask you to confirm.</p><button type="button" className="t-submit" onClick={burn}>Confirm burn in wallet</button></FloatingCard>}
+  </section>
 }
