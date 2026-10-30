@@ -15,7 +15,7 @@ Live at [slugs.run](https://www.slugs.run). Slugs run on [Baum](https://baumai.x
 
 SLUGS is private, the way Baum is. Someone who arrives through SLUGS without a Baum account is asked by Baum in Telegram to:
 
-- follow [@goobzXYZ](https://x.com/goobzXYZ) on X and post asking for access, tagging a friend, then
+- follow [@slugsrun](https://x.com/slugsrun) on X and post asking for access, tagging a friend, then
 - send Baum the link to their post.
 
 The request is emailed to lacreatorsllc@gmail.com, with winston@trystable.co cc'd, and either can approve it. One approved person is let in each day. Existing Baum users, and anyone with a friend's referral code, get straight in. This logic lives in Baum (baum-monorepo, `lib/invite-*`), not in this repo.
