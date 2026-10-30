@@ -8,6 +8,8 @@ export const BRAND = {
   name: 'SLUGS',
   // Where SLUGS is talked about on X. Invite requests tag it (see ACCESS).
   x: 'slugsrun',
+  // The SLUGS community group. Baum's bot links stay on BAUM.bot (sign-in, deploy, copy).
+  telegram: 'https://t.me/+FVEQ8dulnv1mOGYx',
 }
 
 // SLUGS is invite only, the way Baum is. Everyone who deploys a slug gets a Baum

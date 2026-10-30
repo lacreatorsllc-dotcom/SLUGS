@@ -68,7 +68,7 @@ export default function TerminalLayout() {
     </main>
     <footer className="t-statusbar">
       <IconLink icon="x" label={`${BRAND.name} on X`} href={`https://x.com/${BRAND.x}`} />
-      <IconLink icon="telegram" label="Open Baum in Telegram" href={baumLinks.ref()} />
+      <IconLink icon="telegram" label={`${BRAND.name} on Telegram`} href={BRAND.telegram} />
       <span className="t-status-divider" />
       <span className="t-feed-status"><span className={`t-dot${snapshot && !snapshot.boardError ? ' t-dot--online' : ''}`} />Baum</span>
       <Link to="/token">${TOKEN.symbol} <strong>{price(token?.priceUsd)}</strong></Link>
