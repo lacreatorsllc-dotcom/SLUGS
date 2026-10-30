@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { BAUM, BRAND, CHAIN, TOKEN } from '../../config'
+import { BAUM, BRAND, TOKEN } from '../../config'
 import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
-import { shortAddress } from '../../lib/terminal-model'
-import { connect } from '../../lib/wallet'
 import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
-import { Callout, CopyButton, IconButton, IconLink } from './ui'
+import { Callout, CopyButton, FloatingCard, IconButton, IconLink } from './ui'
 import WelcomeTour from './WelcomeTour'
 import { timeLeft } from '../../lib/invite'
 import { count, money, price } from '../../lib/terminal-format'
@@ -23,8 +21,7 @@ export default function TerminalLayout() {
   const navigate = useNavigate()
   const input = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState(new URLSearchParams(search).get('q') ?? '')
-  const [account, setAccount] = useState('')
-  const [connecting, setConnecting] = useState(false)
+  const [deploying, setDeploying] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState('')
   useEffect(() => { setQuery(new URLSearchParams(search).get('q') ?? '') }, [pathname, search])
@@ -36,12 +33,6 @@ export default function TerminalLayout() {
     return () => document.removeEventListener('keydown', shortcut)
   }, [])
   useEffect(() => { window.scrollTo(0, 0) }, [pathname])
-  async function connectWallet() {
-    setConnecting(true); setError('')
-    try { setAccount(await connect()) }
-    catch (err) { if ((err as { code?: number }).code !== 4001) setError((err as Error).message) }
-    finally { setConnecting(false) }
-  }
   async function leave() {
     setSigningOut(true)
     try { await signOut() }
@@ -61,12 +52,11 @@ export default function TerminalLayout() {
       </form>
       <div className="t-top-actions">
         <IconButton icon="star" label="Watchlist · coming soon" disabled className="t-secondary-action" variant="outline" />
-        <button type="button" className="t-wallet t-icon--outline" onClick={connectWallet} disabled={connecting} aria-label={account ? `Connected wallet ${account}` : 'Connect wallet'} title={account ? account : `Connect wallet on ${CHAIN.name}`}><Icon name="wallet" size={14} /><span>{connecting ? 'Connecting…' : account ? shortAddress(account) : 'Connect wallet'}</span></button>
-        <IconLink icon="plus" label="Deploy your slug on Baum" href={baumLinks.launch()} variant="primary" />
+        <IconButton icon="plus" label="Deploy your slug" variant="primary" onClick={() => setDeploying(true)} />
         <IconButton icon="bell" label="Notifications · coming soon" disabled variant="outline" className="t-secondary-action" />
         {inviteLink && <CopyButton value={inviteLink} label={`Copy your invite link, ${inviteLink.replace(/^https?:\/\//, '')}`} />}
         {user
-          ? <IconButton icon="signout" label={signingOut ? 'Signing out…' : 'Sign out'} variant="outline" onClick={leave} disabled={signingOut} />
+          ? <><IconLink icon="user" label="Your profile" to="/profile" variant="outline" /><IconButton icon="signout" label={signingOut ? 'Signing out…' : 'Sign out'} variant="outline" onClick={leave} disabled={signingOut} /></>
           : <IconLink icon="user" label="Log in with Baum" to="/login" variant="outline" />}
       </div>
     </header>
@@ -79,6 +69,12 @@ export default function TerminalLayout() {
       {error && <Callout error>{error}<IconButton icon="close" label="Dismiss error" onClick={() => setError('')} /></Callout>}
       <Outlet />
     </main>
+    {deploying && <FloatingCard title="Deploy your slug" onClose={() => setDeploying(false)}>
+      <p>A slug is an AI trading agent that trades for you. Baum makes it with you in Telegram: it gets its own wallet, trades by itself within rules you confirm once, and messages you every time it trades.</p>
+      <p>Today a slug runs DCA: it buys the tokens you pick, an amount you set, every day or every week. Once you fund it, Baum sends you its page here, and its trades rank on the leaderboard.</p>
+      <a className="t-submit" href={baumLinks.launch()} target="_blank" rel="noreferrer" onClick={() => setDeploying(false)}><Icon name="telegram" />Open Baum in Telegram</a>
+      <p className="t-fine">In Telegram, say “launch an agent” to start.</p>
+    </FloatingCard>}
     <WelcomeTour />
     <footer className="t-statusbar">
       <IconLink icon="x" label={`${BRAND.name} on X`} href={`https://x.com/${BRAND.x}`} />

@@ -16,6 +16,10 @@ export type BaumProfile = {
   } | null
   /** Their referral codes, with how often each invite link was opened and how many accounts came through it. */
   invites?: { code: string; aliases: string[]; clicks: number; accounts: number }[]
+  /** Their profile picture on Baum, or null for initials. */
+  avatarUrl?: string | null
+  /** The AI agents they launched in Baum, running ones first. Listed before they trade. */
+  agents?: { name: string; slug: string | null; wallet: string; status: 'active' | 'stopped' }[]
 }
 
 export type AuthSession = {
