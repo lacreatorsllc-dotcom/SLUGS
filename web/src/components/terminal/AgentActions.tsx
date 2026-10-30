@@ -27,8 +27,8 @@ export function AgentOverlayProvider({ children }: { children: ReactNode }) {
       <div className="t-actions"><CopyButton value={`${location.origin}${import.meta.env.BASE_URL}agents/${agent.id}`} label="Copy agent link" /><span className="t-fine">Copy agent link</span></div>
     </> : <>
       <div className="t-actions"><AvatarRing agent={agent} /><strong>{agent.name}</strong></div>
-      <p>Open this agent in Baum on Telegram to review your copy settings. Auto-copy is rolling out during the beta.</p>
-      <p className="t-fine">Any trade requires your confirmation in Baum. Opening this link does not move funds.</p>
+      <p>Baum opens in Telegram with a copy agent set up for this wallet: $25 a buy, inside limits you can change. Once you confirm the plan, it copies their buys and sells on its own.</p>
+      <p className="t-fine">Nothing is copied until you press Confirm in Baum. Opening this link does not move funds.</p>
       <a className="t-submit" href={baumLinks.copy(agent.id)} target="_blank" rel="noreferrer" onClick={() => setOverlay(null)}>Open Baum in Telegram</a>
     </>}
   </FloatingCard>}</Context.Provider>
