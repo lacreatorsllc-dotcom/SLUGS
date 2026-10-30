@@ -32,7 +32,6 @@ export default function Token() {
               <div className="card stat"><div className="label">Price</div><div className="value num">{token.priceUsd ? price(token.priceUsd) : '—'}</div></div>
               <div className="card stat"><div className="label">Market cap</div><div className="value num">{token.marketCapUsd ? usd(token.marketCapUsd) : '—'}</div></div>
               <div className="card stat"><div className="label">Burned</div><div className="value num">{tokens(Math.round(token.burned))}</div></div>
-              <div className="card stat"><div className="label">Burned on boosts</div><div className="value num">{tokens(Math.round(token.boostBurned))}</div></div>
             </div>
           )}
           {token && token.recentBoosts.length > 0 && (
