@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Invite from './pages/Invite'
 import InviteLink from './pages/InviteLink'
 import AuthSessionProvider from './components/AuthSessionProvider'
 import RequireAuth from './components/RequireAuth'
+import { track } from './lib/funnel'
 
 // Keep the terminal out of the public invite page bundle.
 const Login = lazy(() => import('./pages/Login'))
@@ -34,5 +35,7 @@ function AppRoutes() {
 }
 
 export default function App() {
+  // Once per page load: the top of the funnel (lib/funnel.ts).
+  useEffect(() => { track('visit') }, [])
   return <AuthSessionProvider><AppRoutes /></AuthSessionProvider>
 }

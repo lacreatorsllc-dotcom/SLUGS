@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import ShillPopup from '../components/ShillPopup'
 import SignInWithBaum from '../components/SignInWithBaum'
 import { useAuthSession } from '../lib/auth-context'
 
@@ -9,6 +11,7 @@ import { useAuthSession } from '../lib/auth-context'
 // invite flow from the same link.
 export default function Login() {
   const { user, ready } = useAuthSession()
+  const [shill, setShill] = useState(false)
   if (ready && user) return <Navigate to="/home" replace />
 
   return (
@@ -19,9 +22,10 @@ export default function Login() {
       <p className="invite-sub">Use your Baum account. Baum opens in Telegram and sends you a one-time sign-in button.</p>
       <SignInWithBaum />
       <div className="auth-links">
-        <span>No Baum account? Signing in with Baum starts one. SLUGS is invite only, so <Link to="/" className="auth-strong">bring an invite code</Link>.</span>
+        <span>No Baum account? Signing in with Baum starts one. SLUGS is invite only, so <Link to="/" className="auth-strong">bring an invite code</Link>, or <button type="button" className="link-button auth-strong" onClick={() => setShill(true)}>shill us on X</button>.</span>
         <span>Baum’s sign-in link opened in Telegram’s browser? <Link to="/" className="auth-strong">Paste it here</Link></span>
       </div>
+      {shill && <ShillPopup onClose={() => setShill(false)} />}
     </AuthLayout>
   )
 }
