@@ -129,7 +129,7 @@
 .t-welcome-tips { flex-direction: column; gap: 6px; font-size: 12px; color: var(--t-muted); }.t-welcome-tips > span { display: inline-flex; align-items: center; gap: 8px; }
 .t-welcome-agent { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--t-strong); border-radius: 10px; background: var(--t-card); }
 .t-welcome-agent > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; font-size: 13px; }.t-welcome-agent small { color: var(--t-faint); font-size: 11px; }
-.t-welcome-agent .t-welcome-avatar { border-color: #5eb6c9; color: #5eb6c9; }
+.t-welcome-agent .t-welcome-avatar { border-color: var(--t-strong); color: var(--t-secondary); }.t-welcome-picture { object-fit: cover; padding: 0; border-width: 1px; }
 .t-welcome-following { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 7px; background: var(--t-ivory); color: var(--t-bg); font-size: 11.5px; font-weight: 600; }
 .t-welcome-feed { display: grid; grid-template-columns: 40px 1fr; gap: 6px 10px; padding: 2px 4px; font-size: 12px; }.t-welcome-feed > span:nth-child(odd) { color: #6f6c65; }.t-welcome-feed b { font-weight: 600; }
 .t-welcome-caption { margin-top: auto; display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--t-faint); }
