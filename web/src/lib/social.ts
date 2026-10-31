@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
+import { plainOrNull, plainText } from './untrusted'
 
 // Follows and display names (api/social.js), and a wallet's tokens (api/tokens.js).
 const api = (path: string) => `${import.meta.env.BASE_URL}api/${path}`
 
 export type Social = { followers: number; following: number; displayName: string | null; youFollow: boolean; you: string | null }
 export type Person = { wallet: string; username: string | null; avatarUrl: string | null; displayName: string | null }
-/** 'off' until SLUGS' store is connected: follows and display names stay hidden. */
+/** 'off' until Baum ships its social endpoints: follows and display names stay hidden. */
 export type SocialState = Social | 'loading' | 'off' | 'error'
 
 async function call<T>(path: string, body?: Record<string, unknown>): Promise<{ status: number; json: T & { reason?: string } }> {
@@ -17,7 +18,7 @@ async function call<T>(path: string, body?: Record<string, unknown>): Promise<{ 
   return { status: res?.status ?? 0, json: res ? await res.json().catch(() => ({})) : {} }
 }
 
-/** A reason Baum or the store gave, when it's a sentence; else a general one. */
+/** A reason Baum gave, when it's a sentence; else a general one. */
 export const reasonText = (reason: unknown, fallback = 'That didn’t save. Try again.') => (typeof reason === 'string' && reason.includes(' ') ? reason : fallback)
 
 export function useSocial(wallet: string | undefined) {
@@ -26,7 +27,7 @@ export function useSocial(wallet: string | undefined) {
   const load = useCallback(async () => {
     if (!wallet) return setState('off')
     const { status, json } = await call<Social>(`social?wallet=${wallet.toLowerCase()}`)
-    setState(status === 200 ? json : status === 503 ? 'off' : 'error')
+    setState(status === 200 ? { ...json, displayName: plainOrNull(json.displayName, 32) } : status === 503 ? 'off' : 'error')
   }, [wallet])
   useEffect(() => { setState('loading'); load() }, [load])
   async function setFollowing(follow: boolean) {
@@ -36,7 +37,7 @@ export function useSocial(wallet: string | undefined) {
     const before = state
     setState({ ...state, youFollow: follow, followers: state.followers + (follow ? 1 : -1) })
     const { status, json } = await call<Social>('social', { action: follow ? 'follow' : 'unfollow', wallet })
-    if (status === 200) setState(json)
+    if (status === 200) setState({ ...json, displayName: plainOrNull(json.displayName, 32) })
     else { setState(before); setError(status === 401 ? 'Sign in with Baum to follow.' : reasonText(json.reason, 'Couldn’t update that. Try again.')) }
   }
   return { state, error, reload: load, follow: () => setFollowing(true), unfollow: () => setFollowing(false) }
@@ -44,7 +45,16 @@ export function useSocial(wallet: string | undefined) {
 
 export async function loadPeople(wallet: string, list: 'followers' | 'following'): Promise<Person[] | null> {
   const { status, json } = await call<{ people: Person[] }>(`social?wallet=${wallet.toLowerCase()}&list=${list}`)
-  return status === 200 && Array.isArray(json.people) ? json.people : null
+  if (status !== 200 || !Array.isArray(json.people)) return null
+  // Other people's names: plain text only, and only real wallets.
+  return json.people
+    .filter((person) => /^0x[0-9a-f]{40}$/.test(String(person?.wallet).toLowerCase()))
+    .map((person) => ({
+      wallet: person.wallet.toLowerCase(),
+      username: plainOrNull(person.username, 40),
+      avatarUrl: typeof person.avatarUrl === 'string' && /^https:\/\/[^\s"']+$/.test(person.avatarUrl) ? person.avatarUrl : null,
+      displayName: plainOrNull(person.displayName, 32),
+    }))
 }
 
 /** Follows or unfollows someone from a list; answers an error to show, or null. */
@@ -64,5 +74,10 @@ export type TokenAnswer = { tokens: TokenHit[]; pending: boolean } | null
 export async function walletTokens(wallet: string, kind: 'launched' | 'traded'): Promise<TokenAnswer> {
   const res = await fetch(api(`tokens?wallet=${wallet.toLowerCase()}&kind=${kind}`)).catch(() => null)
   const json = res?.ok ? await res.json().catch(() => null) : null
-  return json && Array.isArray(json.tokens) ? { tokens: json.tokens, pending: Boolean(json.pending) } : null
+  if (!json || !Array.isArray(json.tokens)) return null
+  // Token names and tickers are chosen by whoever launched the token.
+  const tokens = (json.tokens as TokenHit[])
+    .filter((token) => /^0x[0-9a-f]{40}$/i.test(String(token?.address)))
+    .map((token) => ({ ...token, symbol: plainText(token.symbol, 16) || '?', name: plainText(token.name, 48) }))
+  return { tokens, pending: Boolean(json.pending) }
 }
