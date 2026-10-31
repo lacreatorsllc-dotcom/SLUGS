@@ -87,6 +87,14 @@ function Tour({ onDone }: { onDone: () => void }) {
         <span className="t-welcome-log"><span className="t-welcome-status">Status<b><span className="t-dot t-dot--online" />Live</b></span><span><small>LOG</small>Entry · buy<br />Exit · take profit<br />Entry · buy</span></span>
       </div>,
     },
+    {
+      title: <>Your agent.<br />Your strategy.</>,
+      body: 'SLUGS runs on Baum, which connects your agent to live markets and trades on chain. Through Baum it can trade on its own, buy the tokens you pick on a schedule and copy the best traders. What you do with your agent is up to you. Every strategy is different, and that’s what makes it fun. Good luck.',
+      art: <div className="t-welcome-art t-welcome-art--center">
+        <span className="t-welcome-tags t-welcome-powers"><span><Icon name="chart" size={12} />Live markets</span><span><Icon name="trade" size={12} />Trades on chain</span><span><Icon name="refresh" size={12} />Buys on a schedule</span><span><Icon name="user" size={12} />Copies top traders</span></span>
+        <small className="t-welcome-caption">Through Baum</small>
+      </div>,
+    },
     slug
       ? {
           title: <>This is<br />your slug.</>,
@@ -116,7 +124,7 @@ function Tour({ onDone }: { onDone: () => void }) {
         <span className="t-welcome-count">{String(step + 1).padStart(2, '0')} / {String(steps.length).padStart(2, '0')}</span>
         <IconButton icon="close" label="Skip the tour" onClick={onDone} />
       </div>
-      <div aria-hidden={step < 3 ? true : undefined}>{current.art}</div>
+      <div aria-hidden={last ? undefined : true}>{current.art}</div>
       <div className="t-welcome-text">
         <h2 id={titleId}>{current.title}</h2>
         <p>{current.body}</p>

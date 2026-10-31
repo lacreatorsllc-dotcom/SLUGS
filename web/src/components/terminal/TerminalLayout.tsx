@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { BAUM, BRAND, TOKEN } from '../../config'
+import { BRAND, TOKEN } from '../../config'
 import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
 import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
 import { AvatarRing, Callout, FloatingCard, IconButton, IconLink } from './ui'
+import ChatWidget from './ChatWidget'
 import WelcomeTour from './WelcomeTour'
 import { timeLeft } from '../../lib/invite'
 import { count, money, price } from '../../lib/terminal-format'
@@ -83,7 +84,7 @@ export default function TerminalLayout() {
       <span className="t-status-market">MC <strong>{money(token?.marketCapUsd)}</strong></span>
       <Link to="/burn">Burned <strong className="t-accent">{count(token?.burned)}</strong></Link>
       <span className="t-status-disclaimer">Not financial advice. Agents trade real funds on-chain.</span>
-      <a className="t-status-chat" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer" title="Chat with Baum in Telegram" aria-label="Chat with Baum in Telegram"><Icon name="message" size={14} /></a>
+      <ChatWidget />
     </footer>
   </>
 }
