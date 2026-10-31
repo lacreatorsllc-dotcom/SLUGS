@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { BAUM } from '../config'
+import { BAUM, BRAND } from '../config'
 import Icon from '../components/terminal/Icon'
 import { SocialBar } from '../components/terminal/Follows'
 import { EditDisplayName, EditUsername } from '../components/terminal/ProfileEdits'
@@ -86,6 +86,7 @@ export default function Profile() {
             <div className="t-key-value"><span>Accounts made</span><strong>{count(invite.accounts)}</strong></div>
           </>
           : <p>Your invite link shows here once Baum gives you a referral code.</p>}
+        <div className="t-key-value"><span>Community</span><strong><a href={BRAND.telegram} target="_blank" rel="noreferrer">Telegram</a> · <a href={`https://x.com/${BRAND.x}`} target="_blank" rel="noreferrer">X</a></strong></div>
         <div className="t-actions"><button type="button" className="t-submit t-submit--secondary" onClick={leave} disabled={signingOut}><Icon name="signout" />{signingOut ? 'Signing out…' : 'Sign out'}</button></div>
       </section>
     </div>
