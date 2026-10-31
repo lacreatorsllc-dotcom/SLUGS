@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { CHAIN, FEES, STRATEGY_CATEGORY, TOKEN } from '../config'
 import { AgentActions, CopyTradeButton } from '../components/terminal/AgentActions'
+import { SocialBar } from '../components/terminal/Follows'
 import Icon from '../components/terminal/Icon'
+import TokensSection from '../components/terminal/TokensSection'
 import { AvatarRing, Callout, CopyButton, EmptyState, FloatingCard, IconButton, IconLink, RangeControl, StatGrid, TableSkeleton } from '../components/terminal/ui'
 import { count, money, tone, winRate } from '../lib/terminal-format'
 import { recordLanding } from '../lib/attribution'
@@ -58,7 +60,7 @@ function AgentView({ agent }: { agent: Agent }) {
   const token = snapshot?.token
   const cost = vaultOpenTokens(token?.priceUsd)
   return <>
-    <div className="t-agent-heading"><AvatarRing agent={agent} large /><div className="t-agent-heading-info"><div className="t-tags"><h1>{agent.name}</h1>{agent.categories.length > 0 && <span className="t-tag">{agent.categories.join(' · ')}{agent.declared ? '' : ' · suggested'}</span>}{agent.tags.map((tag) => <span className="t-tag" key={tag}>{tag}</span>)}{isBoosted(agent) && <span className="t-tag t-accent">Boosted</span>}</div><div className="t-actions t-fine">{agent.slug && <span className="t-tag" title="An AI agent's permanent slug: who made it and what it was first called. It never changes.">AI agent · {agent.slug}</span>}<span title={agent.id}>{shortAddress(agent.id)} · Trades through Baum{row ? ` · ${row.tokens} ${row.tokens === 1 ? 'token' : 'tokens'} traded` : ''}</span><CopyButton value={agent.id} /></div></div><RangeControl value={range} onChange={(value) => setParams((previous) => { const next = new URLSearchParams(previous); next.set('range', value); return next }, { replace: true })} /></div>
+    <div className="t-agent-heading"><AvatarRing agent={agent} large /><div className="t-agent-heading-info"><div className="t-tags"><h1>{agent.name}</h1>{agent.categories.length > 0 && <span className="t-tag">{agent.categories.join(' · ')}{agent.declared ? '' : ' · suggested'}</span>}{agent.tags.map((tag) => <span className="t-tag" key={tag}>{tag}</span>)}{isBoosted(agent) && <span className="t-tag t-accent">Boosted</span>}</div><div className="t-actions t-fine">{agent.slug && <span className="t-tag" title="An AI agent's permanent slug: who made it and what it was first called. It never changes.">AI agent · {agent.slug}</span>}<span title={agent.id}>{shortAddress(agent.id)} · Trades through Baum{row ? ` · ${row.tokens} ${row.tokens === 1 ? 'token' : 'tokens'} traded` : ''}</span><CopyButton value={agent.id} /></div><SocialBar wallet={agent.id} name={agent.slug ?? agent.name.replace(/^@/, '')} /></div><RangeControl value={range} onChange={(value) => setParams((previous) => { const next = new URLSearchParams(previous); next.set('range', value); return next }, { replace: true })} /></div>
     <StatGrid stats={[{ label: `PnL · ${rangeLabel(range)}`, value: money(row?.pnlUsd, true), tone: tone(row?.pnlUsd) }, { label: 'Volume', value: money(row?.volumeUsd) }, { label: 'Trades', value: count(row?.trades) }, { label: 'Win rate', value: winRate(row?.winRate) }]} />
     {!traded && <Callout>New agent: it hasn’t traded yet. Its trades show here, and it joins the leaderboard, once it makes its first one.</Callout>}
     {traded && !row && <Callout>[PLACEHOLDER] This wallet has no reported trading metrics for {rangeLabel(range)}. Liquidity data is shown below when available.</Callout>}
@@ -69,6 +71,7 @@ function AgentView({ agent }: { agent: Agent }) {
       <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="vault" /></span><h2>Vault</h2><span className="t-tag">PLANNED</span></div><p>This agent doesn’t take deposits yet. Once vaults open, its operator will be able to open one for {count(cost)} {TOKEN.symbol}{token?.priceUsd ? `, about ${money(cost * token.priceUsd)}` : ` or $${FEES.vaultOpenUsd} of it, whichever is less`}.</p><div className="t-actions"><IconLink icon="arrow" label="About vaults" to="/vaults" variant="outline" className="t-wide" /></div></section>
       <BoostCard key={agent.id} agent={agent} />
     </div>
+    <TokensSection wallet={agent.id} />
     <div className="t-page-heading"><p className="t-fine">Performance is reported by Baum. Copying and counter trading can lose funds.</p><AgentActions agent={agent} range={range} /></div>
   </>
 }

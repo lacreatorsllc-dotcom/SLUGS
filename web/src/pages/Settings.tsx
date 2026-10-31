@@ -5,33 +5,12 @@ import Icon from '../components/terminal/Icon'
 import { AvatarRing, Callout, CopyButton, EmptyState, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
 import { baumLinks } from '../lib/baum'
+import { call, reasonText, type Account } from '../lib/account'
 import { shortAddress } from '../lib/terminal-model'
 
 // Settings for the signed-in person's Baum account, through api/account.js and Baum's
 // partner account API. SLUGS signs people in with Baum, so these are kept with their
 // Baum account, and a change here shows in Baum too.
-
-type Account = {
-  username: string | null
-  usernameChange: { canChange: boolean; changesLeft: number; nextChangeAt: string | null }
-  avatarUrl: string | null
-  email: string | null
-  emailVerified: boolean
-  personalWallet: string | null
-  walletDetails: { address: string; label: string | null; agent: { name: string; slug: string | null; username: string | null; status: 'active' | 'stopped' } | null }[]
-}
-
-async function call(body?: Record<string, unknown>) {
-  const res = await fetch(`/api/account${body ? '' : '?action=me'}`, {
-    method: body ? 'POST' : 'GET',
-    credentials: 'same-origin',
-    ...(body ? { headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) } : {}),
-  }).catch(() => null)
-  const json = res ? await res.json().catch(() => ({})) : {}
-  return { ok: Boolean(res?.ok), json }
-}
-
-const reasonText = (json: { reason?: unknown }) => (typeof json.reason === 'string' && json.reason.includes(' ') ? json.reason : 'That didn’t save. Try again.')
 
 function Section({ icon, title, children }: { icon: Parameters<typeof Icon>[0]['name']; title: string; children: ReactNode }) {
   return <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name={icon} /></span><h2>{title}</h2></div>{children}</section>

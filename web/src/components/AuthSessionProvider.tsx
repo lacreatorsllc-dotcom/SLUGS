@@ -32,6 +32,11 @@ export default function AuthSessionProvider({ children }: { children: ReactNode 
     currentPass().then((pass) => { if (active) { setGuest(pass); setGuestReady(true) } })
     return () => { active = false }
   }, [revision])
+  const refresh = useCallback(async () => {
+    if (devUser()) return
+    const user = await currentProfile().catch(() => undefined)
+    if (user !== undefined) setState({ user, ready: true, error: false })
+  }, [])
   const signIn = useCallback(async (code: string) => {
     setState({ user: await redeem(code), ready: true, error: false })
     track('signed_in')
@@ -49,5 +54,5 @@ export default function AuthSessionProvider({ children }: { children: ReactNode 
     setGuest(pass)
     return pass
   }, [])
-  return <AuthContext.Provider value={{ ...state, ready: state.ready && guestReady, guest, retry, signIn, signOut, acceptInvite }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ ...state, ready: state.ready && guestReady, guest, retry, refresh, signIn, signOut, acceptInvite }}>{children}</AuthContext.Provider>
 }

@@ -2,9 +2,13 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BAUM } from '../config'
 import Icon from '../components/terminal/Icon'
-import { AvatarRing, Callout, CopyButton, EmptyState, IconLink } from '../components/terminal/ui'
+import { SocialBar } from '../components/terminal/Follows'
+import { EditDisplayName, EditUsername } from '../components/terminal/ProfileEdits'
+import TokensSection from '../components/terminal/TokensSection'
+import { AvatarRing, Callout, CopyButton, EmptyState, IconButton, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
 import { baumLinks } from '../lib/baum'
+import { useSocial } from '../lib/social'
 import { count } from '../lib/terminal-format'
 import { shortAddress } from '../lib/terminal-model'
 
@@ -14,9 +18,13 @@ export default function Profile() {
   const { user, signOut } = useAuthSession()
   const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState('')
+  const [editing, setEditing] = useState<'username' | 'name' | null>(null)
+  const social = useSocial(user?.wallets[0])
   if (!user) return <EmptyState title="Not signed in" icon="user" action={<IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}>Sign in with Baum to see your profile.</EmptyState>
   const wallet = user.wallets[0] ?? ''
   const name = user.username ? `@${user.username}` : 'No username yet'
+  const displayName = typeof social.state === 'object' ? social.state.displayName : null
+  const namesOn = social.state !== 'off'
   const agents = user.agents ?? []
   const invite = user.invites?.[0]
   const inviteLink = invite ? `${location.origin}/${invite.aliases[0] ?? invite.code}` : null
@@ -30,10 +38,20 @@ export default function Profile() {
     <div className="t-agent-heading">
       <AvatarRing agent={{ id: wallet || name, name: user.username ?? 'you', avatarUrl: user.avatarUrl ?? undefined }} large />
       <div className="t-agent-heading-info">
-        <h1>{name}</h1>
-        <div className="t-actions t-fine">{wallet && <><span title={wallet}>{shortAddress(wallet)} · Baum wallet</span><CopyButton value={wallet} /></>}</div>
+        <div className="t-profile-name">
+          <h1>{displayName ?? user.username ?? 'No username yet'}</h1>
+          {namesOn && <IconButton icon="edit" label="Edit display name" onClick={() => setEditing('name')} />}
+        </div>
+        <div className="t-actions t-fine">
+          {user.username && <span className="t-slug-chip">{user.username}<CopyButton value={user.username} label={`Copy ${user.username}`} /></span>}
+          <button type="button" className="t-link-button" onClick={() => setEditing('username')}>{user.username ? 'Edit username' : 'Pick a username'}</button>
+          {wallet && <><span title={wallet}>{shortAddress(wallet)} · Baum wallet</span><CopyButton value={wallet} /></>}
+        </div>
+        {wallet && <SocialBar wallet={wallet} name={user.username ?? 'You'} />}
       </div>
     </div>
+    {editing === 'username' && <EditUsername onClose={() => setEditing(null)} />}
+    {editing === 'name' && <EditDisplayName current={displayName} username={user.username} onClose={() => setEditing(null)} onSaved={() => social.reload()} />}
     {error && <Callout error>{error}</Callout>}
     <div className="t-grid-three">
       <section className="t-feature-card">
@@ -48,10 +66,10 @@ export default function Profile() {
       </section>
       <section className="t-feature-card">
         <div className="t-section-title"><span className="t-section-icon"><Icon name="user" /></span><h2>Account</h2></div>
-        <div className="t-key-value"><span>Username</span><strong>{user.username ? `@${user.username}` : '—'}</strong></div>
+        <div className="t-key-value"><span>Username</span><strong>{user.username ?? '—'}</strong></div>
         <div className="t-key-value"><span>Strategy</span><strong>{user.strategy?.name ?? '—'}</strong></div>
         <div className="t-key-value"><span>Copy trading</span><strong>{user.copy ? `${user.copy.status} · ${count(user.copy.sources.length)} ${user.copy.sources.length === 1 ? 'trader' : 'traders'}` : 'Off'}</strong></div>
-        <p className="t-fine">You sign in to SLUGS with Baum. Change your username, picture, email and your agents’ usernames in Settings. They’re kept with your Baum account, so they also show in Baum.</p>
+        <p className="t-fine">You sign in to SLUGS with Baum. Change your picture, email and your agents’ usernames in Settings. They’re kept with your Baum account, so they also show in Baum.</p>
         <div className="t-actions"><Link className="t-submit t-submit--secondary" to="/settings"><Icon name="settings" />Settings</Link><a className="t-submit t-submit--secondary" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" />Open Baum</a></div>
       </section>
       <section className="t-feature-card">
@@ -66,5 +84,6 @@ export default function Profile() {
         <div className="t-actions"><button type="button" className="t-submit t-submit--secondary" onClick={leave} disabled={signingOut}><Icon name="signout" />{signingOut ? 'Signing out…' : 'Sign out'}</button></div>
       </section>
     </div>
+    {wallet && <TokensSection wallet={wallet} />}
   </>
 }

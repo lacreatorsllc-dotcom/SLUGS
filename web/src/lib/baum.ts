@@ -27,9 +27,9 @@ export const baumLinks = {
   join: (friend: string) => tg(`slug-join-${friend.toUpperCase()}`),
 }
 
-// The token's page on Baum's launchpad, where anyone can buy or sell it. Carries the
+// A token's page on Baum's launchpad (ours by default), where anyone can buy or sell it. Carries the
 // referral code the way Baum's site spells it (?ref=).
-export const buyUrl = () => `https://baumai.xyz/launch/${TOKEN.address}?ref=${code}`
+export const buyUrl = (address: string = TOKEN.address) => `https://baumai.xyz/launch/${address}?ref=${code}`
 
 // The token's page on Pons, the launchpad it launched on (Robinhood Chain).
 export const ponsUrl = () => `https://ponsfamily.com/launchpad/${TOKEN.address}`
