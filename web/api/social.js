@@ -15,9 +15,13 @@ export const MAX_NAME = 32
 
 const sessionFrom = (req) => (req.headers?.cookie ?? '').match(/(?:^|;\s*)slugs_session=([A-Za-z0-9_-]+)/)?.[1] ?? null
 
-/** Trims a display name and takes out control and invisible characters; null when it's too long. */
+// The same hidden characters src/lib/untrusted.ts strips: controls, zero-width and
+// invisible characters, and bidi overrides that can disguise a name.
+const HIDDEN = /[\u0000-\u001f\u007f-\u009f\u00ad\u061c\u115f\u1160\u180e\u200b-\u200f\u202a-\u202e\u2060-\u2069\u3164\ufeff\ufff9-\ufffb]/g
+
+/** Trims a display name and takes out hidden characters; null when it's too long. */
 export function cleanName(value) {
-  const name = String(value ?? '').replace(/[\u0000-\u001f\u007f​-‏‪-‮]/g, '').replace(/\s+/g, ' ').trim()
+  const name = String(value ?? '').replace(/\s+/g, ' ').replace(HIDDEN, '').replace(/ {2,}/g, ' ').trim()
   return [...name].length > MAX_NAME ? null : name
 }
 

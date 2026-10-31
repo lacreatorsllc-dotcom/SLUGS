@@ -1,4 +1,5 @@
 import type { Category } from '../config'
+import { plainText } from './untrusted.ts'
 
 export type Range = '24h' | '7d' | 'all'
 export const RANGES: Range[] = ['24h', '7d', 'all']
@@ -58,9 +59,18 @@ export const isSlug = (value: unknown): value is string => typeof value === 'str
 /** An agent's page: by its slug when it's an AI agent, else by wallet. */
 export const agentPath = (agent: { id: string; slug?: string }) => `/agents/${agent.slug ?? agent.id}`
 
+// Fields on a board row that people write themselves: shown as plain text (lib/untrusted.ts).
+const WRITTEN = { username: 40, agentName: 48, strategy: 48, category: 32 } as const
+
 function board<T>(body: unknown, valid: (row: unknown) => boolean): Board<T> {
   if (!record(body) || !Array.isArray(body.rows) || !body.rows.every(valid)) throw new Error('Invalid Baum board')
-  return { rows: body.rows as T[], updatedAt: finite(body.updatedAt) && body.updatedAt > 0 ? body.updatedAt : null }
+  const rows = (body.rows as Record<string, unknown>[]).map((row) => {
+    const clean = { ...row }
+    for (const [field, max] of Object.entries(WRITTEN)) if (typeof row[field] === 'string') clean[field] = plainText(row[field], max) || undefined
+    if (Array.isArray(row.pools)) clean.pools = row.pools.map((pool) => plainText(pool, 48))
+    return clean
+  })
+  return { rows: rows as T[], updatedAt: finite(body.updatedAt) && body.updatedAt > 0 ? body.updatedAt : null }
 }
 
 export function traderBoard(body: unknown): Board<TraderRow> {
@@ -130,11 +140,12 @@ export function assembleAgents(
  * launched or funded that hasn't traded. Null for anything else.
  */
 export function launchedAgent(body: unknown, categoryOf: (strategy: string) => Category | undefined): Agent | null {
-  if (!record(body) || !wallet(body.wallet) || typeof body.name !== 'string' || !body.name.trim()) return null
+  const name = record(body) ? plainText(body.name, 48) : ''
+  if (!record(body) || !wallet(body.wallet) || !name) return null
   const strategy = record(body.strategy) && typeof body.strategy.id === 'string' ? categoryOf(body.strategy.id) : undefined
   return {
     id: body.wallet.toLowerCase(),
-    name: body.name.trim(),
+    name,
     categories: strategy ? [strategy] : [],
     declared: Boolean(strategy),
     tags: [],
