@@ -8,6 +8,9 @@
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const POST = /^https:\/\/x\.com\/[A-Za-z0-9_]{1,15}\/status\/\d{1,25}$/
 
+// Vercel puts the visitor's address first; Baum limits applications per address with it.
+const ipOf = (req) => String(req.headers['x-forwarded-for'] ?? '').split(',')[0].trim() || String(req.headers['x-real-ip'] ?? '') || null
+
 const visitorOf = (req) => (req.headers.cookie ?? '').match(/(?:^|;\s*)slugs_vid=([A-Za-z0-9_-]{16,64})/)?.[1] ?? null
 
 export default async function handler(req, res) {
@@ -30,6 +33,7 @@ export default async function handler(req, res) {
       ...(email ? { email } : {}),
       ...(telegram ? { telegram } : {}),
       visitor: visitorOf(req),
+      client: { ip: ipOf(req) },
     }),
     signal: AbortSignal.timeout(10_000),
   }).catch(() => null)
