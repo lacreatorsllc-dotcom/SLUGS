@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react'
 import type { GuestPass } from './invite'
 
-// A SLUGS account is a Baum account: this is what Baum shares about the signed-in
+// SLUGS signs people in with Baum: this is what Baum shares about the signed-in
 // person (GET /api/partner/me on Baum, through api/session.js).
 export type BaumProfile = {
   username: string | null

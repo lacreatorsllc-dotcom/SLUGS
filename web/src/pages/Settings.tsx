@@ -8,8 +8,8 @@ import { baumLinks } from '../lib/baum'
 import { shortAddress } from '../lib/terminal-model'
 
 // Settings for the signed-in person's Baum account, through api/account.js and Baum's
-// partner account API. A SLUGS account is a Baum account, so a change here is the
-// same change in Telegram and on baumai.xyz.
+// partner account API. SLUGS signs people in with Baum, so these are kept with their
+// Baum account, and a change here shows in Baum too.
 
 type Account = {
   username: string | null
@@ -67,7 +67,7 @@ export default function Settings() {
   useEffect(() => { if (user) load() }, [user, load])
   useEffect(() => { document.title = 'Settings · SLUGS' }, [])
 
-  if (!user) return <EmptyState title="Not signed in" icon="user" action={<IconLink icon="user" label="Log in with Baum" to="/login" variant="outline" />}>Log in with your Baum account to change your settings.</EmptyState>
+  if (!user) return <EmptyState title="Not signed in" icon="user" action={<IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}>Sign in with Baum to change your settings.</EmptyState>
   if (account === undefined) return <p className="t-muted" role="status">Loading your settings…</p>
   if (!account) return <Callout error onRetry={load}>Couldn’t load your settings from Baum.</Callout>
 
@@ -92,7 +92,7 @@ export default function Settings() {
   const agents = account.walletDetails.filter((w) => w.agent)
 
   return <>
-    <div className="t-page-heading"><div><h1>Settings</h1><p>Your SLUGS account is your Baum account. Changes here show in Telegram and on baumai.xyz too.</p></div><div className="t-heading-actions"><IconLink icon="user" label="Your profile" to="/profile" variant="outline" /></div></div>
+    <div className="t-page-heading"><div><h1>Settings</h1><p>You sign in to SLUGS with Baum, so your username, picture and email are kept with your Baum account. Changes here also show in Baum.</p></div><div className="t-heading-actions"><IconLink icon="user" label="Your profile" to="/profile" variant="outline" /></div></div>
     <div className="t-grid-three">
       <Section icon="user" title="Account">
         <div className="t-actions"><AvatarRing agent={{ id: account.personalWallet ?? account.walletDetails[0]?.address ?? 'you', name: account.username ?? 'you', avatarUrl: account.avatarUrl ?? undefined }} large />

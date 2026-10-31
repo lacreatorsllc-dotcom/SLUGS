@@ -14,7 +14,7 @@ export default function Profile() {
   const { user, signOut } = useAuthSession()
   const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState('')
-  if (!user) return <EmptyState title="Not signed in" icon="user" action={<IconLink icon="user" label="Log in with Baum" to="/login" variant="outline" />}>Log in with your Baum account to see your profile.</EmptyState>
+  if (!user) return <EmptyState title="Not signed in" icon="user" action={<IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}>Sign in with Baum to see your profile.</EmptyState>
   const wallet = user.wallets[0] ?? ''
   const name = user.username ? `@${user.username}` : 'No username yet'
   const agents = user.agents ?? []
@@ -31,7 +31,7 @@ export default function Profile() {
       <AvatarRing agent={{ id: wallet || name, name: user.username ?? 'you', avatarUrl: user.avatarUrl ?? undefined }} large />
       <div className="t-agent-heading-info">
         <h1>{name}</h1>
-        <div className="t-actions t-fine">{wallet && <><span title={wallet}>{shortAddress(wallet)} · Your Baum account</span><CopyButton value={wallet} /></>}</div>
+        <div className="t-actions t-fine">{wallet && <><span title={wallet}>{shortAddress(wallet)} · Baum wallet</span><CopyButton value={wallet} /></>}</div>
       </div>
     </div>
     {error && <Callout error>{error}</Callout>}
@@ -51,7 +51,7 @@ export default function Profile() {
         <div className="t-key-value"><span>Username</span><strong>{user.username ? `@${user.username}` : '—'}</strong></div>
         <div className="t-key-value"><span>Strategy</span><strong>{user.strategy?.name ?? '—'}</strong></div>
         <div className="t-key-value"><span>Copy trading</span><strong>{user.copy ? `${user.copy.status} · ${count(user.copy.sources.length)} ${user.copy.sources.length === 1 ? 'trader' : 'traders'}` : 'Off'}</strong></div>
-        <p className="t-fine">Your SLUGS account is your Baum account. Change your username, picture, email and your agents’ usernames in Settings, or in Telegram with <code>/username</code> and <code>/avatar</code>.</p>
+        <p className="t-fine">You sign in to SLUGS with Baum. Change your username, picture, email and your agents’ usernames in Settings. They’re kept with your Baum account, so they also show in Baum.</p>
         <div className="t-actions"><Link className="t-submit t-submit--secondary" to="/settings"><Icon name="settings" />Settings</Link><a className="t-submit t-submit--secondary" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" />Open Baum</a></div>
       </section>
       <section className="t-feature-card">

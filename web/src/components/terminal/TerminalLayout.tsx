@@ -57,14 +57,14 @@ export default function TerminalLayout() {
         {inviteLink && <CopyButton value={inviteLink} label={`Copy your invite link, ${inviteLink.replace(/^https?:\/\//, '')}`} />}
         {user
           ? <><IconLink icon="user" label="Your profile" to="/profile" variant="outline" /><IconButton icon="signout" label={signingOut ? 'Signing out…' : 'Sign out'} variant="outline" onClick={leave} disabled={signingOut} /></>
-          : <IconLink icon="user" label="Log in with Baum" to="/login" variant="outline" />}
+          : <IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}
       </div>
     </header>
     <main className="t-main" id="terminal-main" tabIndex={-1}>
       {!user && guest && <div className="t-guest"><Callout>
         {guest.from ? <><strong>{guest.from}</strong> invited you. </> : 'You’re in on an invite. '}
-        You have {timeLeft(guest)} to make your SLUGS account, or you’ll need an invite code again. Your account is your Baum account, made in Telegram.
-        <a className="t-guest-cta" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer">Create my account on Baum</a>
+        You have {timeLeft(guest)} to make your SLUGS account, or you’ll need an invite code again. SLUGS uses Baum for sign-in, so it takes a minute in Telegram.
+        <a className="t-guest-cta" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer">Sign up with Baum</a>
       </Callout></div>}
       {error && <Callout error>{error}<IconButton icon="close" label="Dismiss error" onClick={() => setError('')} /></Callout>}
       <Outlet />
