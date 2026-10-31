@@ -5,7 +5,7 @@ const api = (path: string) => `${import.meta.env.BASE_URL}api/${path}`
 
 export type Social = { followers: number; following: number; displayName: string | null; youFollow: boolean; you: string | null }
 export type Person = { wallet: string; username: string | null; avatarUrl: string | null; displayName: string | null }
-/** 'off' until SLUGS' store is connected: follows and display names stay hidden. */
+/** 'off' until Baum ships its social endpoints: follows and display names stay hidden. */
 export type SocialState = Social | 'loading' | 'off' | 'error'
 
 async function call<T>(path: string, body?: Record<string, unknown>): Promise<{ status: number; json: T & { reason?: string } }> {
@@ -17,7 +17,7 @@ async function call<T>(path: string, body?: Record<string, unknown>): Promise<{ 
   return { status: res?.status ?? 0, json: res ? await res.json().catch(() => ({})) : {} }
 }
 
-/** A reason Baum or the store gave, when it's a sentence; else a general one. */
+/** A reason Baum gave, when it's a sentence; else a general one. */
 export const reasonText = (reason: unknown, fallback = 'That didn’t save. Try again.') => (typeof reason === 'string' && reason.includes(' ') ? reason : fallback)
 
 export function useSocial(wallet: string | undefined) {
