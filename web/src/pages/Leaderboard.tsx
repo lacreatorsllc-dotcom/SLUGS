@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { CATEGORIES, FEES, STRATEGY_CATEGORY, TOKEN } from '../config'
 import { baumLinks } from '../lib/baum'
 import { AgentActions, AgentIdentity } from '../components/terminal/AgentActions'
-import { Callout, EmptyState, IconButton, IconLink, RangeControl, TableSkeleton } from '../components/terminal/ui'
+import { AvatarRing, Callout, EmptyState, IconButton, IconLink, RangeControl, TableSkeleton } from '../components/terminal/ui'
 import { count, money, tone, winRate } from '../lib/terminal-format'
 import Icon from '../components/terminal/Icon'
 import { useTerminalData } from '../lib/terminal-context'
@@ -50,7 +50,7 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
   const updated = minutes === null ? 'Snapshot time unavailable' : minutes < 1 ? 'Updated just now' : minutes < 60 ? `Updated ${minutes}m ago` : minutes < 1440 ? `Updated ${Math.floor(minutes / 60)}h ago` : `Updated ${Math.floor(minutes / 1440)}d ago`
   return <>
     <div className="t-page-heading"><div><h1>{browse ? 'Agents' : 'Leaderboard'}</h1><p>{yieldOnly ? 'Liquidity providers ranked by fees earned on Baum.' : `Ranked by PnL. The top 3 strategies each week split the ${TOKEN.symbol} prize pool.`}</p></div><div className="t-heading-actions">
-      {updatedAt && <span className="t-updated" title={`${new Date(updatedAt).toLocaleString()} · server cache: 1 hour`}><span className={`t-dot${minutes !== null && minutes < 120 ? ' t-dot--online' : ''}`} />{updated} · cached hourly</span>}
+      {updatedAt && <span className="t-updated" title={`${new Date(updatedAt).toLocaleString()} · server cache: 30 minutes`}><span className={`t-dot${minutes !== null && minutes < 120 ? ' t-dot--online' : ''}`} />{updated} · refreshes every 30 min</span>}
       <RangeControl value={range} onChange={(value) => update('range', value)} /><IconButton icon="refresh" label="Refresh Baum data" onClick={refresh} disabled={loading} /><IconLink icon="compare" label="Compare agents" to="/agents/compare" variant="outline" />
     </div></div>
     <section className="t-boost-strip" aria-label="Boosted agents"><span className="t-boost-label"><Icon name="flame" size={14} />Boosted</span>
@@ -62,8 +62,14 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
       <label className="t-sort"><Icon name="sort" size={14} /><span className="t-sr-only">Sort agents</span><select aria-label="Sort agents" value={sort} onChange={(event) => update('sort', event.target.value)}><option value="pnl">{yieldOnly ? 'Fees' : 'PnL'}</option><option value="volume">{yieldOnly ? 'Liquidity' : 'Volume'}</option><option value="trades">{yieldOnly ? 'Positions' : 'Trades'}</option><option value="wins">{yieldOnly ? 'Fee APR' : 'Win rate'}</option></select></label>
     </div>
     {query && <div className="t-actions t-muted">Results for “{params.get('q')}”<IconButton icon="close" label="Clear search" onClick={() => update('q', '')} /></div>}
-    {notTrading.length > 0 && <section className="t-panel t-not-trading" aria-label="Agents that haven't traded yet"><h2 className="t-fine">Not trading yet</h2>
-      {notTrading.map((agent) => <div className="t-key-value" key={agent.id}><Link to={agentPath(agent)}>{agent.name}{agent.slug ? ` · ${agent.slug}` : ''}</Link><strong>{agent.categories.join(' · ') || 'AI agent'}</strong></div>)}
+    {notTrading.length > 0 && <section className="t-panel t-not-trading" aria-label="Agents that haven't traded yet">
+      <div className="t-not-trading-head"><h2>Not trading yet <span className="t-muted">· {notTrading.length}</span></h2><p className="t-fine">Made on Baum. They join the leaderboard after their first trade.</p></div>
+      <ul>{notTrading.map((agent) => <li key={agent.id}><Link to={agentPath(agent)} className="t-found-agent">
+        <AvatarRing agent={agent} />
+        <span className="t-found-name"><strong>{agent.name}</strong>{agent.slug && <span className="t-found-slug">{agent.slug}</span>}</span>
+        <span className="t-tag">{agent.categories.join(' · ') || 'AI agent'}</span>
+        <Icon name="chevron" size={14} />
+      </Link></li>)}</ul>
     </section>}
     {loading ? <TableSkeleton /> : error || !board ? <Callout error onRetry={refresh}>Couldn’t load {yieldOnly ? 'liquidity providers' : 'agents'} for {range === 'all' ? 'all time' : range}. Try again in a moment.</Callout> : <>
       {snapshot?.partial && <Callout onRetry={refresh}>Some Baum feeds are unavailable. Only reported data is shown.</Callout>}

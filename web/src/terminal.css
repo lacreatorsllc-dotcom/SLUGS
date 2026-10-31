@@ -196,4 +196,32 @@
 .t-tweet { display: grid; gap: 6px; }.t-tweet iframe { width: 100%; max-width: 550px; height: 560px; border: 1px solid var(--t-line); border-radius: 12px; background: var(--t-panel); }
 .t-review-boxes { display: grid; gap: 10px; border: 1px solid var(--t-line); border-radius: 12px; padding: 12px 14px; margin: 0; }.t-review-boxes legend { padding: 0 6px; color: var(--t-muted); font-size: 12px; }.t-review-boxes label { display: flex; align-items: center; gap: 8px; }
 .terminal .t-table--narrow { min-width: 0; }
-.t-not-trading { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; }.t-not-trading a { text-decoration: underline; }
+.t-not-trading { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.t-not-trading-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 14px 16px 10px; border-bottom: 1px solid var(--t-line); }
+.t-not-trading-head h2 { margin: 0; font-size: 14px; font-weight: 600; }
+.t-not-trading-head p { margin: 0; }
+.t-not-trading ul { list-style: none; margin: 0; padding: 0; }
+.t-not-trading li + li { border-top: 1px solid var(--t-row-line); }
+.t-found-agent { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--t-text); text-decoration: none; }
+.t-found-agent > svg { color: var(--t-faint); flex: none; }
+.t-found-name { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.t-found-name strong { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.t-found-slug { font-family: var(--t-mono); font-size: 11px; color: var(--t-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) { .t-found-agent:hover { background: var(--t-card); } .t-found-agent:hover > svg { color: var(--t-text); } }
+.t-top-button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; border: 1px solid var(--t-strong); border-radius: 8px; background: transparent; color: var(--t-secondary); font: inherit; font-size: 12.5px; font-weight: 500; white-space: nowrap; text-decoration: none; cursor: pointer; }
+.t-top-button--primary { background: var(--t-ivory); border-color: var(--t-ivory); color: var(--t-bg); }
+@media (hover: hover) { .t-top-button:hover { color: var(--t-text); background: var(--t-selected); } .t-top-button--primary:hover { color: var(--t-bg); background: #fff; } }
+.t-account { position: relative; }
+.t-account-button { padding: 0 8px 0 4px; }
+.t-account-button .t-avatar { width: 22px; height: 22px; font-size: 9px; }
+.t-account-button > svg:last-child { transform: rotate(90deg); color: var(--t-faint); }
+.t-account-name { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+.t-account-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 50; min-width: 240px; display: flex; flex-direction: column; padding: 6px; border: 1px solid var(--t-strong); border-radius: 12px; background: var(--t-card); box-shadow: var(--t-card-shadow); }
+.t-account-menu > :is(a, button) { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 9px 10px; border: 0; border-radius: 8px; background: transparent; color: var(--t-text); font: inherit; font-size: 13px; text-align: left; text-decoration: none; cursor: pointer; }
+.t-account-menu > :is(a, button) > svg { margin-top: 2px; color: var(--t-muted); flex: none; }
+.t-account-menu > :is(a, button) span { display: flex; flex-direction: column; min-width: 0; }
+.t-account-menu small { font-family: var(--t-mono); font-size: 11px; color: var(--t-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.t-account-menu > :is(a, button):hover:not(:disabled) { background: var(--t-selected); }
+.t-account-menu > :last-child { margin-top: 4px; border-top: 1px solid var(--t-line); border-radius: 0 0 8px 8px; padding-top: 11px; }
+@media (pointer: coarse), (max-width: 767px) { .t-top-button { height: 40px; } .t-account-button .t-avatar { width: 26px; height: 26px; } }
+@media (max-width: 767px) { .t-account-name { display: none; } .t-found-agent .t-tag { display: none; } }
