@@ -5,7 +5,7 @@ import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
 import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
-import { Callout, CopyButton, FloatingCard, IconButton, IconLink } from './ui'
+import { AvatarRing, Callout, FloatingCard, IconButton, IconLink } from './ui'
 import WelcomeTour from './WelcomeTour'
 import { timeLeft } from '../../lib/invite'
 import { count, money, price } from '../../lib/terminal-format'
@@ -50,14 +50,12 @@ export default function TerminalLayout() {
       <form className="t-search" role="search" onSubmit={(event) => { event.preventDefault(); navigate(`/agents${query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''}`); input.current?.blur() }}>
         <Icon name="search" size={14} /><input ref={input} type="search" aria-label="Search agents and wallet addresses" placeholder="Search agents, slugs, @usernames, wallets" value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘K</kbd>
       </form>
+      {/* Every action says what it is in words: icons alone left people guessing until they clicked. */}
       <div className="t-top-actions">
-        <IconButton icon="star" label="Watchlist · coming soon" disabled className="t-secondary-action" variant="outline" />
-        <IconButton icon="plus" label="Deploy your slug" variant="primary" onClick={() => setDeploying(true)} />
-        <IconButton icon="bell" label="Notifications · coming soon" disabled variant="outline" className="t-secondary-action" />
-        {inviteLink && <CopyButton value={inviteLink} label={`Copy your invite link, ${inviteLink.replace(/^https?:\/\//, '')}`} />}
+        <button type="button" className="t-top-button t-top-button--primary" onClick={() => setDeploying(true)}><Icon name="plus" size={14} /><span>Deploy a slug</span></button>
         {user
-          ? <><IconLink icon="user" label="Your profile" to="/profile" variant="outline" /><IconButton icon="signout" label={signingOut ? 'Signing out…' : 'Sign out'} variant="outline" onClick={leave} disabled={signingOut} /></>
-          : <IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}
+          ? <AccountMenu name={user.username ? `@${user.username}` : 'Your account'} id={user.wallets[0] ?? user.username ?? 'you'} avatarUrl={user.avatarUrl ?? undefined} inviteLink={inviteLink} signingOut={signingOut} onSignOut={leave} />
+          : <Link to="/login" className="t-top-button"><Icon name="user" size={14} /><span>Sign in</span></Link>}
       </div>
     </header>
     <main className="t-main" id="terminal-main" tabIndex={-1}>
@@ -88,4 +86,41 @@ export default function TerminalLayout() {
       <a className="t-status-chat" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer" title="Chat with Baum in Telegram" aria-label="Chat with Baum in Telegram"><Icon name="message" size={14} /></a>
     </footer>
   </>
+}
+
+// The signed-in account: who you are, and everything about you behind one labelled menu.
+function AccountMenu({ name, id, avatarUrl, inviteLink, signingOut, onSignOut }: { name: string; id: string; avatarUrl?: string; inviteLink: string | null; signingOut: boolean; onSignOut: () => void }) {
+  const [open, setOpen] = useState(false)
+  const [copied, setCopied] = useState<'idle' | 'copied' | 'error'>('idle')
+  const ref = useRef<HTMLDivElement>(null)
+  const { pathname } = useLocation()
+  useEffect(() => { setOpen(false) }, [pathname])
+  useEffect(() => {
+    if (!open) return
+    const outside = (event: PointerEvent) => { if (!ref.current?.contains(event.target as Node)) setOpen(false) }
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false) }
+    document.addEventListener('pointerdown', outside)
+    document.addEventListener('keydown', escape)
+    return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', escape) }
+  }, [open])
+  useEffect(() => {
+    if (copied === 'idle') return
+    const timeout = window.setTimeout(() => setCopied('idle'), 2500)
+    return () => window.clearTimeout(timeout)
+  }, [copied])
+  async function copy() {
+    if (!inviteLink) return
+    try { await navigator.clipboard.writeText(inviteLink); setCopied('copied') }
+    catch { setCopied('error') }
+  }
+  return <div className="t-account" ref={ref}>
+    <button type="button" className="t-top-button t-account-button" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+      <AvatarRing agent={{ id, name, avatarUrl }} /><span className="t-account-name">{name}</span><Icon name="chevron" size={12} />
+    </button>
+    {open && <div className="t-account-menu" role="menu" aria-label="Your account">
+      <Link role="menuitem" to="/profile"><Icon name="user" size={14} /><span>Your profile</span></Link>
+      {inviteLink && <button type="button" role="menuitem" onClick={copy}><Icon name={copied === 'copied' ? 'check' : 'copy'} size={14} /><span>{copied === 'copied' ? 'Invite link copied' : copied === 'error' ? 'Couldn’t copy. Try again' : 'Copy your invite link'}<small>{inviteLink.replace(/^https?:\/\//, '')}</small></span></button>}
+      <button type="button" role="menuitem" onClick={onSignOut} disabled={signingOut}><Icon name="signout" size={14} /><span>{signingOut ? 'Signing out…' : 'Sign out'}</span></button>
+    </div>}
+  </div>
 }
