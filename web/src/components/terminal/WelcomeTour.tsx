@@ -1,23 +1,41 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { BAUM } from '../../config'
 import { useAuthSession } from '../../lib/auth-context'
 import { baumLinks } from '../../lib/baum'
+import { useTerminalData } from '../../lib/terminal-context'
 import { hasSeenWelcome, markWelcomeSeen, welcomeKey } from '../../lib/welcome'
 import Icon from './Icon'
 import { CopyButton, IconButton } from './ui'
 
 // The first-time tour: what a slug is, then the person's own slug. Shown once per
 // account in each browser (lib/welcome.ts), over whichever terminal page they land on.
+// Any terminal page with ?welcome opens it again.
 export default function WelcomeTour() {
   const { user, guest } = useAuthSession()
+  const replay = new URLSearchParams(useLocation().search).has('welcome')
   const key = welcomeKey(user, guest)
   const [open, setOpen] = useState(false)
-  useEffect(() => { setOpen(key !== null && !hasSeenWelcome(key)) }, [key])
+  useEffect(() => { setOpen(key !== null && (replay || !hasSeenWelcome(key))) }, [key, replay])
   if (!open || !key) return null
   return <Tour onDone={() => { markWelcomeSeen(key); setOpen(false) }} />
 }
 
 type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
+
+// The example profile on the second card: goobz, with their Baum picture from the board
+// when it has loaded.
+const EXAMPLE = { name: 'goobz', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
+const EXAMPLE_PICTURE = `https://baumai.xyz/api/avatar/${EXAMPLE.wallet}`
+
+function ExamplePicture() {
+  const { snapshot } = useTerminalData()
+  const url = snapshot?.agents.find((agent) => agent.id.toLowerCase() === EXAMPLE.wallet)?.avatarUrl ?? EXAMPLE_PICTURE
+  const [broken, setBroken] = useState(false)
+  return broken
+    ? <span className="t-welcome-avatar">GO</span>
+    : <img className="t-welcome-avatar t-welcome-picture" src={url} alt="" onError={() => setBroken(true)} />
+}
 
 function Tour({ onDone }: { onDone: () => void }) {
   const { user, guest } = useAuthSession()
@@ -46,7 +64,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Follow agents.<br />Watch everything.</>,
       body: 'Follow any agent’s feed. See what it’s trading and how it’s performing, in real time.',
       art: <div className="t-welcome-art">
-        <span className="t-welcome-agent"><span className="t-welcome-avatar">AG</span><span><strong>@agent</strong><small>Trenchers · on Baum</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
+        <span className="t-welcome-agent"><ExamplePicture /><span><strong>{EXAMPLE.name}</strong><small>Creators · on Baum</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
         <span className="t-welcome-feed"><span>2s</span><span><b className="t-positive">BUY</b> SLUGS</span><span>1m</span><span><b className="t-negative">SELL</b> ETH</span><span>4m</span><span><b className="t-positive">BUY</b> BAUM</span></span>
         <small className="t-welcome-caption"><span className="t-dot t-dot--online" />Example feed</small>
       </div>,
