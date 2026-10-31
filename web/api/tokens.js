@@ -8,14 +8,16 @@
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const ADDRESS = /^0x[0-9a-f]{40}$/i
 
-async function baum(path) {
+async function baum(path, kind) {
   const key = process.env.BAUM_API_KEY
   if (!key) return { pending: true }
   const res = await fetch(`${BAUM}${path}`, { headers: { authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(8000) }).catch(() => null)
   if (!res || res.status === 404) return { pending: true }
   if (!res.ok) return { error: res.status }
   const json = await res.json().catch(() => null)
-  return Array.isArray(json?.tokens) ? { tokens: json.tokens } : { error: 502 }
+  // The request asks for { launched: [...], traded: [...] }; a plain { tokens } works too.
+  const rows = json?.[kind] ?? json?.tokens
+  return Array.isArray(rows) ? { tokens: rows } : { error: 502 }
 }
 
 export default async function handler(req, res) {
@@ -25,6 +27,6 @@ export default async function handler(req, res) {
     return res.status(status).json(body)
   }
   if (typeof wallet !== 'string' || !ADDRESS.test(wallet) || !['launched', 'traded'].includes(kind)) return send(400, { reason: 'bad-wallet' })
-  const found = await baum(`/api/partner/wallet/tokens?wallet=${wallet.toLowerCase()}&kind=${kind}`)
+  const found = await baum(`/api/partner/wallet/tokens?wallet=${wallet.toLowerCase()}&kind=${kind}`, kind)
   return found.error ? send(502, { reason: 'baum-unavailable' }) : send(200, { tokens: found.tokens ?? [], pending: Boolean(found.pending) })
 }

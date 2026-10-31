@@ -55,7 +55,7 @@ export function Follows({ wallet, name, initial, onClose }: { wallet: string; na
     loadPeople(me, 'following').then((found) => setMine(new Set((found ?? []).map((person) => person.wallet))))
   }, [me])
 
-  // Names and pictures from the boards where they're there; Baum's from the store else.
+  // Names and pictures from the boards where they're there, else the ones Baum sends.
   const byWallet = useMemo(() => new Map((snapshot?.agents ?? []).map((agent) => [agent.id, agent])), [snapshot])
   const rows = (people[tab] ?? []).map((person) => {
     const agent = byWallet.get(person.wallet)
