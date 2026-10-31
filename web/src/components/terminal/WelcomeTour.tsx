@@ -23,18 +23,28 @@ export default function WelcomeTour() {
 
 type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
 
-// The example profile on the second card: goobz, with their Baum picture from the board
+// The example profile on the first two cards: goobz, with their Baum picture from the board
 // when it has loaded.
 const EXAMPLE = { name: 'goobz', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
-const EXAMPLE_PICTURE = `https://baumai.xyz/api/avatar/${EXAMPLE.wallet}`
 
-function ExamplePicture() {
+// A Baum profile picture: the one Baum shares at sign-in, else the one on the board, else
+// Baum's avatar for the wallet, else initials.
+function Picture({ wallet, url, initials }: { wallet?: string; url?: string | null; initials: string }) {
   const { snapshot } = useTerminalData()
-  const url = snapshot?.agents.find((agent) => agent.id.toLowerCase() === EXAMPLE.wallet)?.avatarUrl ?? EXAMPLE_PICTURE
-  const [broken, setBroken] = useState(false)
-  return broken
-    ? <span className="t-welcome-avatar">GO</span>
-    : <img className="t-welcome-avatar t-welcome-picture" src={url} alt="" onError={() => setBroken(true)} />
+  const fromBoard = wallet ? snapshot?.agents.find((agent) => agent.id.toLowerCase() === wallet.toLowerCase())?.avatarUrl : undefined
+  const src = url || fromBoard || (wallet ? `https://baumai.xyz/api/avatar/${wallet.toLowerCase()}` : null)
+  const [broken, setBroken] = useState<string | null>(null)
+  return src && broken !== src
+    ? <img className="t-welcome-avatar t-welcome-picture" src={src} alt="" onError={() => setBroken(src)} />
+    : <span className="t-welcome-avatar">{initials}</span>
+}
+
+const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
+
+// The signed-in person's own picture.
+function OwnPicture({ initials }: { initials: string }) {
+  const { user } = useAuthSession()
+  return <Picture url={user?.avatarUrl} wallet={user?.wallets[0]} initials={initials} />
 }
 
 function Tour({ onDone }: { onDone: () => void }) {
@@ -54,9 +64,9 @@ function Tour({ onDone }: { onDone: () => void }) {
   const steps: Step[] = [
     {
       title: <>Every agent<br />has a slug.</>,
-      body: 'A slug is a unique identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
+      body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
       art: <div className="t-welcome-art t-welcome-art--center">
-        <span className="t-welcome-slug"><span className="t-welcome-avatar">{(user?.username ?? 'you').slice(0, 2).toUpperCase()}</span>{slug ?? '@you'}<Icon name="copy" size={15} /></span>
+        <span className="t-welcome-slug"><ExamplePicture />@{EXAMPLE.name}<Icon name="copy" size={15} /></span>
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
       </div>,
     },
@@ -82,7 +92,7 @@ function Tour({ onDone }: { onDone: () => void }) {
           title: <>This is<br />your slug.</>,
           body: 'Your slug is your identity in the agent network. People find you, follow you and track your agents by it. It’s your Baum username.',
           art: <div className="t-welcome-art t-welcome-art--center">
-            <span className="t-welcome-slug t-welcome-slug--own"><span className="t-welcome-avatar">{user!.username!.slice(0, 2).toUpperCase()}</span>{slug}<CopyButton value={slug} label={`Copy ${slug}`} /></span>
+            <span className="t-welcome-slug t-welcome-slug--own"><OwnPicture initials={user!.username!.slice(0, 2).toUpperCase()} />{slug}<CopyButton value={slug} label={`Copy ${slug}`} /></span>
             <span className="t-welcome-tips"><span><Icon name="search" size={13} />Anyone can find you with ⌘K</span><span><Icon name="copy" size={13} />Anyone can copy your @slug in one click</span></span>
           </div>,
         }
