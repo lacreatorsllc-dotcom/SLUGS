@@ -145,6 +145,18 @@ export function launchedAgent(body: unknown, categoryOf: (strategy: string) => C
   }
 }
 
+/** Baum's AI agents matching a search (api/agent.js?q=), as agents; anything malformed is left out. */
+export function foundAgents(body: unknown, categoryOf: (strategy: string) => Category | undefined): Agent[] {
+  if (!record(body) || !Array.isArray(body.agents)) return []
+  return body.agents.map((row) => launchedAgent(row, categoryOf)).filter((agent): agent is Agent => agent !== null)
+}
+
+/** Whether an agent matches a search: people by @username, AI agents by name or slug, anyone by wallet. */
+export function matchesSearch(agent: Agent, query: string): boolean {
+  const q = query.trim().toLowerCase().replace(/^@/, '')
+  return !q || `${agent.name} ${agent.slug ?? ''} ${agent.id} ${agent.tags.join(' ')}`.toLowerCase().includes(q)
+}
+
 export const isBoosted = (agent: Agent) => (agent.boostedUntil ?? 0) > Date.now()
 
 export function comparisonIds(requested: string[], available: Agent[]) {

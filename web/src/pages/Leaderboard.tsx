@@ -1,12 +1,30 @@
-import { useSearchParams } from 'react-router-dom'
-import { CATEGORIES, FEES, TOKEN } from '../config'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { CATEGORIES, FEES, STRATEGY_CATEGORY, TOKEN } from '../config'
 import { baumLinks } from '../lib/baum'
 import { AgentActions, AgentIdentity } from '../components/terminal/AgentActions'
 import { Callout, EmptyState, IconButton, IconLink, RangeControl, TableSkeleton } from '../components/terminal/ui'
 import { count, money, tone, winRate } from '../lib/terminal-format'
 import Icon from '../components/terminal/Icon'
 import { useTerminalData } from '../lib/terminal-context'
-import { RANGES, isBoosted, sortedAgents, type Range } from '../lib/terminal-model'
+import { RANGES, agentPath, foundAgents, isBoosted, matchesSearch, sortedAgents, type Agent, type Range } from '../lib/terminal-model'
+
+// Baum's AI agents matching a search, for the ones the boards don't have: an agent
+// that hasn't traded isn't on them. Empty until it answers, and on any failure.
+function useBaumSearch(query: string): Agent[] {
+  const [found, setFound] = useState<{ query: string; agents: Agent[] }>({ query: '', agents: [] })
+  useEffect(() => {
+    if (query.replace(/^@/, '').length < 2) return
+    let live = true
+    const timer = setTimeout(() => {
+      fetch(`${import.meta.env.BASE_URL}api/agent?q=${encodeURIComponent(query)}`)
+        .then((response) => response.ok ? response.json() : null)
+        .then((body) => { if (live) setFound({ query, agents: foundAgents(body, (strategy) => STRATEGY_CATEGORY[strategy]) }) }, () => {})
+    }, 250)
+    return () => { live = false; clearTimeout(timer) }
+  }, [query])
+  return found.query === query ? found.agents : []
+}
 
 export default function Leaderboard({ browse = false }: { browse?: boolean }) {
   const { snapshot, loading, error, refresh } = useTerminalData()
@@ -17,11 +35,14 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
   const query = (params.get('q') ?? '').trim().toLowerCase()
   const yieldOnly = category === 'Yield'
   function update(key: string, value: string) { setParams((previous) => { const next = new URLSearchParams(previous); if (value) next.set(key, value); else next.delete(key); return next }, { replace: true }) }
-  const members = (snapshot?.agents ?? []).filter((agent) => (yieldOnly ? agent.liquidity[range] : agent.trading[range])
+  // A search looks at every agent on the boards, whatever the range: one that didn't
+  // trade this week is still the one being looked for. Its metrics show as —.
+  const members = (snapshot?.agents ?? []).filter((agent) => (query || (yieldOnly ? agent.liquidity[range] : agent.trading[range]))
     && (category === 'All' || agent.categories.includes(category))
-    // People by @username, AI agents by username or slug, anyone by wallet.
-    && (!query || `${agent.name} ${agent.slug ?? ''} ${agent.id} ${agent.tags.join(' ')}`.toLowerCase().includes(query.replace(/^@/, ''))))
+    && matchesSearch(agent, query))
   const agents = sortedAgents(members, range, sort, yieldOnly)
+  const onBoards = new Set((snapshot?.agents ?? []).map((agent) => agent.id))
+  const notTrading = useBaumSearch(query).filter((agent) => !onBoards.has(agent.id) && (category === 'All' || agent.categories.includes(category)))
   const boosted = (snapshot?.agents ?? []).filter(isBoosted)
   const board = yieldOnly ? snapshot?.lps[range] : snapshot?.traders[range]
   const updatedAt = board?.updatedAt
@@ -41,10 +62,13 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
       <label className="t-sort"><Icon name="sort" size={14} /><span className="t-sr-only">Sort agents</span><select aria-label="Sort agents" value={sort} onChange={(event) => update('sort', event.target.value)}><option value="pnl">{yieldOnly ? 'Fees' : 'PnL'}</option><option value="volume">{yieldOnly ? 'Liquidity' : 'Volume'}</option><option value="trades">{yieldOnly ? 'Positions' : 'Trades'}</option><option value="wins">{yieldOnly ? 'Fee APR' : 'Win rate'}</option></select></label>
     </div>
     {query && <div className="t-actions t-muted">Results for “{params.get('q')}”<IconButton icon="close" label="Clear search" onClick={() => update('q', '')} /></div>}
+    {notTrading.length > 0 && <section className="t-panel t-not-trading" aria-label="Agents that haven't traded yet"><h2 className="t-fine">Not trading yet</h2>
+      {notTrading.map((agent) => <div className="t-key-value" key={agent.id}><Link to={agentPath(agent)}>{agent.name}{agent.slug ? ` · ${agent.slug}` : ''}</Link><strong>{agent.categories.join(' · ') || 'AI agent'}</strong></div>)}
+    </section>}
     {loading ? <TableSkeleton /> : error || !board ? <Callout error onRetry={refresh}>Couldn’t load {yieldOnly ? 'liquidity providers' : 'agents'} for {range === 'all' ? 'all time' : range}. Try again in a moment.</Callout> : <>
       {snapshot?.partial && <Callout onRetry={refresh}>Some Baum feeds are unavailable. Only reported data is shown.</Callout>}
       {minutes !== null && minutes >= 120 && <Callout onRetry={refresh}>This snapshot is over two hours old. Performance may have changed.</Callout>}
-      {agents.length === 0 ? <section className="t-panel"><EmptyState title={query || category !== 'All' ? 'No agents match these filters' : 'No agents on this board yet'} action={<IconButton icon="refresh" label="Clear filters and refresh" onClick={() => { setParams({ range }); refresh() }} variant="outline" />}>Try another category or time range, or deploy your own slug on Baum.</EmptyState></section> : <>
+      {agents.length === 0 && notTrading.length > 0 ? null : agents.length === 0 ? <section className="t-panel"><EmptyState title={query || category !== 'All' ? 'No agents match these filters' : 'No agents on this board yet'} action={<IconButton icon="refresh" label="Clear filters and refresh" onClick={() => { setParams({ range }); refresh() }} variant="outline" />}>Try another category or time range, or deploy your own slug on Baum.</EmptyState></section> : <>
         <div className="t-table-scroll" role="region" aria-label={yieldOnly ? 'Liquidity provider leaderboard' : 'Agent leaderboard'} tabIndex={0}><table className="t-table"><thead><tr><th scope="col">#</th><th scope="col">Agent</th><th scope="col">Category</th><th scope="col" className="t-number">{yieldOnly ? 'Fees earned' : 'PnL'}</th><th scope="col" className="t-number">{yieldOnly ? 'Liquidity' : 'Volume'}</th><th scope="col" className="t-number">{yieldOnly ? 'Positions' : 'Trades'}</th><th scope="col" className="t-number">{yieldOnly ? 'Fee APR' : 'Win rate'}</th><th scope="col"><span className="t-sr-only">Agent actions</span></th></tr></thead><tbody>
           {agents.map((agent, index) => {
             const trading = agent.trading[range], lp = agent.liquidity[range]

@@ -122,3 +122,14 @@ test('an AI agent that has not traded yet gets a page from what Baum says about 
   assert.equal(launchedAgent({ reason: 'not-found' }, category), null)
   assert.deepEqual(launchedAgent({ wallet: '0x' + '1'.repeat(40), name: 'x', slug: 'Bad Slug', strategy: null }, category)?.categories, [])
 })
+
+test('search finds agents by @username, slug or wallet, and Baum’s agents that haven’t traded', async () => {
+  const { foundAgents, matchesSearch } = await import('../src/lib/terminal-model.ts')
+  const category = (strategy: string) => strategy === 'spot' ? 'Spot traders' as const : undefined
+  const [kyle] = foundAgents({ agents: [{ wallet: '0x6deaf784c9d67892e91633f8dc2b25ffa366910e', slug: 'hornygoat-kyle', name: 'kyle', strategy: { id: 'spot', name: 'Spot' } }, { wallet: 'bad', name: 'x' }] }, category)
+  assert.equal(kyle.slug, 'hornygoat-kyle')
+  assert.deepEqual(foundAgents({ reason: 'short-query' }, category), [])
+  assert.equal(foundAgents({ agents: [{ wallet: 'bad', name: 'x' }] }, category).length, 0)
+  for (const query of ['kyle', '@hornygoat', 'HORNYGOAT-KYLE', '0x6deaf7', '']) assert.equal(matchesSearch(kyle, query), true, query)
+  assert.equal(matchesSearch(kyle, 'oak'), false)
+})

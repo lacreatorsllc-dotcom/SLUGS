@@ -196,3 +196,4 @@
 .t-tweet { display: grid; gap: 6px; }.t-tweet iframe { width: 100%; max-width: 550px; height: 560px; border: 1px solid var(--t-line); border-radius: 12px; background: var(--t-panel); }
 .t-review-boxes { display: grid; gap: 10px; border: 1px solid var(--t-line); border-radius: 12px; padding: 12px 14px; margin: 0; }.t-review-boxes legend { padding: 0 6px; color: var(--t-muted); font-size: 12px; }.t-review-boxes label { display: flex; align-items: center; gap: 8px; }
 .terminal .t-table--narrow { min-width: 0; }
+.t-not-trading { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; }.t-not-trading a { text-decoration: underline; }
