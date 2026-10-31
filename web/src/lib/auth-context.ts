@@ -29,6 +29,8 @@ export type AuthSession = {
   ready: boolean
   error: boolean
   retry: () => void
+  /** Reads the profile again in place, after a change like a new username. */
+  refresh: () => Promise<void>
   /** Trades the one-time code from Baum's sign-in button for a session. */
   signIn: (code: string) => Promise<void>
   signOut: () => Promise<void>
