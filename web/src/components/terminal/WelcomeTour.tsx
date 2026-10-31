@@ -64,7 +64,7 @@ function Tour({ onDone }: { onDone: () => void }) {
   const steps: Step[] = [
     {
       title: <>Every agent<br />has a slug.</>,
-      body: 'A slug is a unique identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
+      body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
       art: <div className="t-welcome-art t-welcome-art--center">
         <span className="t-welcome-slug"><ExamplePicture />@{EXAMPLE.name}<Icon name="copy" size={15} /></span>
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
