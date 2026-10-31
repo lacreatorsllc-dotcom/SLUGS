@@ -1,31 +1,19 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { CHAIN } from '../../config'
 import { baumLinks } from '../../lib/baum'
-import { useTerminalData } from '../../lib/terminal-context'
-import { agentPath, rangeLabel, shortAddress, sortedAgents, type Agent, type Range } from '../../lib/terminal-model'
+import { agentPath, rangeLabel, shortAddress, type Agent, type Range } from '../../lib/terminal-model'
 import { AvatarRing, CopyButton, FloatingCard, IconButton, IconLink, StatGrid } from './ui'
 import { count, money, tone } from '../../lib/terminal-format'
+import PnlCard from './PnlCard'
 
 type Overlay = { kind: 'pnl' | 'copy'; agent: Agent; range: Range }
 const Context = createContext<((overlay: Overlay) => void) | null>(null)
 
 export function AgentOverlayProvider({ children }: { children: ReactNode }) {
   const [overlay, setOverlay] = useState<Overlay | null>(null)
-  const { snapshot } = useTerminalData()
   const agent = overlay?.agent
-  const row = agent && overlay ? agent.trading[overlay.range] : undefined
-  const rank = agent && overlay ? sortedAgents((snapshot?.agents ?? []).filter((item) => item.trading[overlay.range]), overlay.range).findIndex((item) => item.id === agent.id) + 1 : 0
   return <Context.Provider value={setOverlay}>{children}{overlay && agent && <FloatingCard key={`${overlay.kind}-${agent.id}`} title={overlay.kind === 'pnl' ? 'PnL card' : 'Copy on Baum'} onClose={() => setOverlay(null)} className={overlay.kind === 'pnl' ? 't-pnl-card' : ''}>
-    {overlay.kind === 'pnl' ? <>
-      <div className="t-pnl-header"><img src={`${import.meta.env.BASE_URL}slugs-logo-orange.png`} alt="SLUGS" /><span className="t-fine">PNL · {rangeLabel(overlay.range)}</span></div>
-      <div className="t-actions"><AvatarRing agent={agent} /><strong>{agent.name}</strong></div>
-      <div className={`t-pnl-number ${tone(row?.pnlUsd)}`}>{money(row?.pnlUsd, true)}</div>
-      {!row && <p className="t-placeholder">[PLACEHOLDER] Trading performance is not available for this range.</p>}
-      <StatGrid stats={[{ label: 'Volume', value: money(row?.volumeUsd) }, { label: 'Trades', value: count(row?.trades) }, { label: 'Rank', value: rank ? `#${rank}` : '—' }]} />
-      <div className="t-key-value"><span>slugs.run</span><span>{CHAIN.name}</span></div>
-      <div className="t-actions"><CopyButton value={`${location.origin}${import.meta.env.BASE_URL}agents/${agent.id}`} label="Copy agent link" /><span className="t-fine">Copy agent link</span></div>
-    </> : <>
+    {overlay.kind === 'pnl' ? <PnlCard agent={agent} range={overlay.range} /> : <>
       <div className="t-actions"><AvatarRing agent={agent} /><strong>{agent.name}</strong></div>
       <p>Baum opens in Telegram with a copy agent set up for this wallet: $25 a buy, inside limits you can change. Once you confirm the plan, it copies their buys and sells on its own.</p>
       <p className="t-fine">Nothing is copied until you press Confirm in Baum. Opening this link does not move funds.</p>
@@ -47,6 +35,11 @@ export function AgentActions({ agent, range, compact = false }: { agent: Agent; 
 export function CopyTradeButton({ agent, range }: { agent: Agent; range: Range }) {
   const open = useContext(Context)!
   return <IconButton icon="trade" label={`Copy ${agent.name} on Baum`} variant="primary" className="t-wide" onClick={() => open({ kind: 'copy', agent, range })} />
+}
+
+export function PnlCardButton({ agent, range }: { agent: Agent; range: Range }) {
+  const open = useContext(Context)!
+  return <IconButton icon="chart" label={`Create a PnL card for ${agent.name}`} variant="outline" onClick={() => open({ kind: 'pnl', agent, range })} />
 }
 
 export function CompareActions({ agent, range }: { agent: Agent; range: Range }) {

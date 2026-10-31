@@ -3,7 +3,12 @@
   "installCommand": "npm ci",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/data.js": { "includeFiles": "server-assets/**" }
+  },
   "rewrites": [
+    { "source": "/share/pnl", "destination": "/api/data?pnl=1" },
+    { "source": "/api/pnl", "destination": "/api/data?pnl=1" },
     { "source": "/data/:file.json", "destination": "/api/data?file=:file" },
     { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
   ],

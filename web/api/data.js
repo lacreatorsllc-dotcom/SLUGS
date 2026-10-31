@@ -42,6 +42,8 @@ async function fromFallback(file) {
 }
 
 export default async function handler(req, res) {
+  // Share cards reuse this function; the renderer and fonts load only for a card request.
+  if (req.query.pnl === '1') return (await import('../server/pnl-api.js')).default(req, res)
   const file = String(req.query.file ?? '')
   if (!FILES.has(file)) return res.status(404).json({ error: 'not found' })
   const body = (await fromBaum(file)) ?? (await fromFallback(file))

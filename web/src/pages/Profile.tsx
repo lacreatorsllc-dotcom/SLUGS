@@ -5,12 +5,14 @@ import Icon from '../components/terminal/Icon'
 import { SocialBar } from '../components/terminal/Follows'
 import { EditDisplayName, EditUsername } from '../components/terminal/ProfileEdits'
 import TokensSection from '../components/terminal/TokensSection'
+import { PnlCardButton } from '../components/terminal/AgentActions'
 import { AvatarRing, Callout, CopyButton, EmptyState, IconButton, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
 import { baumLinks } from '../lib/baum'
 import { useSocial } from '../lib/social'
 import { count } from '../lib/terminal-format'
 import { shortAddress } from '../lib/terminal-model'
+import { useTerminalData } from '../lib/terminal-context'
 
 // The signed-in person: what Baum shares about their account (GET /api/partner/me),
 // their slugs, their invite link, and sign out. Everything is changed in Baum.
@@ -20,8 +22,10 @@ export default function Profile() {
   const [error, setError] = useState('')
   const [editing, setEditing] = useState<'username' | 'name' | null>(null)
   const social = useSocial(user?.wallets[0])
+  const { snapshot } = useTerminalData()
   if (!user) return <EmptyState title="Not signed in" icon="user" action={<IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}>Sign in with Baum to see your profile.</EmptyState>
   const wallet = user.wallets[0] ?? ''
+  const ownAgent = snapshot?.agents.find((agent) => agent.id === wallet.toLowerCase() && agent.trading['7d'])
   const name = user.username ? `@${user.username}` : 'No username yet'
   const displayName = typeof social.state === 'object' ? social.state.displayName : null
   const namesOn = social.state !== 'off'
@@ -40,6 +44,7 @@ export default function Profile() {
       <div className="t-agent-heading-info">
         <div className="t-profile-name">
           <h1>{displayName ?? user.username ?? 'No username yet'}</h1>
+          {ownAgent && <PnlCardButton agent={ownAgent} range="7d" />}
           {namesOn && <IconButton icon="edit" label="Edit display name" onClick={() => setEditing('name')} />}
         </div>
         <div className="t-actions t-fine">

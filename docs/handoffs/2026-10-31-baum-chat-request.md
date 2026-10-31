@@ -1,9 +1,6 @@
 # Request to Baum: chat with Baum inside SLUGS
 
-SLUGS has a **Chat with Baum** panel (status bar → message icon, `web/src/components/terminal/ChatWidget.tsx`). Baum has no partner chat API today: `/api/partner/chat` and similar paths answer 404. So the panel hands everything to Baum in Telegram:
-
-- **Deep links:** launch an agent, copy an agent, and make an account, through the existing `atp-*` / `slug-join-*` start payloads.
-- **Anything typed:** copied to the clipboard and Baum opened in Telegram, because Telegram can't prefill a bot chat.
+SLUGS has a **Chat with Baum** panel (status bar → message icon, `web/src/components/terminal/ChatWidget.tsx`). The owner requested that it stay in SLUGS. Drafts and quick actions stay in the panel; sending and confirmations are disabled while Baum's web-chat contract is unavailable. There is no Telegram or clipboard handoff.
 
 ## What we'd like from Baum
 

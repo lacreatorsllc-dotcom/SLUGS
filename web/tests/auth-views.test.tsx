@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createElement, type ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
+import ChatWidget, { ChatPanel } from '../src/components/terminal/ChatWidget'
+import { TerminalDataContext } from '../src/lib/terminal-context'
 import RequireAuth from '../src/components/RequireAuth'
 import Login from '../src/pages/Login'
 import Invite from '../src/pages/Invite'
@@ -15,6 +17,16 @@ function render(children: ReactNode, session: Partial<AuthSession> = {}) {
 const privateContent = createElement('div', null, 'PRIVATE TERMINAL')
 const guard = () => createElement(RequireAuth, { children: privateContent })
 const user: BaumProfile = { username: 'slug', wallets: ['0x0000000000000000000000000000000000000001'], strategy: null, copy: null }
+
+test('chat opens inside SLUGS and never hands a draft to Telegram', () => {
+  const launcher = renderToStaticMarkup(createElement(ChatWidget))
+  assert.match(launcher, /<button[^>]*aria-label="Chat with Baum"/)
+  assert.doesNotMatch(launcher, /href=|t\.me/)
+  const panel = renderToStaticMarkup(createElement(TerminalDataContext.Provider, { value: { snapshot: null, loading: false, error: false, refresh() {} } }, createElement(ChatPanel, { draft: 'Keep this draft', onDraft() {}, onClose() {} })))
+  assert.match(panel, /Keep this draft/)
+  assert.match(panel, /<button(?=[^>]*type="submit")(?=[^>]*disabled="")[^>]*>/)
+  assert.doesNotMatch(panel, /href=|Telegram|Copied for|Opened in/)
+})
 
 test('terminal content stays hidden while the persisted session is restoring', () => {
   const html = render(guard(), { ready: false })

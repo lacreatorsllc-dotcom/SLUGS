@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react'
 // API=https://www.slugs.run npm run dev also sends /api (sign-in, invites, data) to that site,
 // so you can sign in locally by pasting the sign-in link from Baum on the invite page.
 const data = {
+  ...(process.env.PNL_API ? { '/api/pnl': { target: process.env.PNL_API, changeOrigin: true } } : {}),
   '/data': {
     target: 'https://gumdropsteve.github.io',
     changeOrigin: true,
