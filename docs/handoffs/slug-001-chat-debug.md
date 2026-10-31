@@ -25,7 +25,7 @@ The Firestore `onSnapshot` listener on `agents/slug-001/messages` is not firing 
 
 ## YAML file recreation
 ```bash
-printf "GEMINI_API_KEY: \"AIzaSyD6A9B0w927VkWGcj3WpGQjk-uhSnNPfVU\"\nGEMINI_MODEL: \"gemini-2.0-flash-exp\"\n" > /tmp/slug001-env.yaml
+printf "GEMINI_API_KEY: \"<YOUR_GEMINI_API_KEY>\"\nGEMINI_MODEL: \"gemini-2.0-flash-exp\"\n" > /tmp/slug001-env.yaml
 ```
 
 ## Firestore Structure
