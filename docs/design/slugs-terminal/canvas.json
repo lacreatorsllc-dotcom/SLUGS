@@ -1,28 +1,198 @@
 {
   "v": 3,
-  "createdOnFiles": { "v": 1, "at": "2026-10-30T19:05:00Z" },
+  "createdOnFiles": {
+    "at": "2026-10-30T19:05:00Z",
+    "v": 1
+  },
   "title": "SLUGS Terminal",
-  "launch": { "view": "canvas" },
+  "launch": {
+    "view": "canvas"
+  },
   "pages": [],
   "boards": {
-    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 1100, "title": "Leaderboard (home) · hover card", "expand": "fill" },
-    "Onboarding.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 1100, "title": "Onboarding · first login", "expand": "fill" },
-    "Search.dc.html": { "x": 0, "y": 1220, "w": 1440, "h": 900, "title": "⌘K search · copy @usernames", "expand": "fill" },
-    "Chat.dc.html": { "x": 1520, "y": 1220, "w": 1440, "h": 900, "title": "Chat with Baum", "expand": "fill" },
-    "Compare.dc.html": { "x": 0, "y": 2240, "w": 1440, "h": 1040, "title": "Create & compare agents", "expand": "fill" },
-    "Vaults.dc.html": { "x": 1520, "y": 2240, "w": 1440, "h": 1040, "title": "Vaults · allocate, copy, counter", "expand": "fill" },
-    "Token.dc.html": { "x": 0, "y": 3400, "w": 1440, "h": 1040, "title": "$SLUGS · burn, fees, staking, yield", "expand": "fill" },
-    "Profile.dc.html": { "x": 1520, "y": 3400, "w": 1440, "h": 1040, "title": "Profile · press Play, tap the chart icon for the PnL card", "expand": "fill", "is_interactive": true },
-    "Treasury.dc.html": { "x": 0, "y": 4740, "w": 1440, "h": 1040, "title": "Treasury · route funds to agents", "expand": "fill" },
-    "Settings.dc.html": { "x": 1520, "y": 4740, "w": 1440, "h": 1040, "title": "Settings", "expand": "fill" },
-    "Activity.dc.html": { "x": 0, "y": 5900, "w": 1440, "h": 1040, "title": "Agent page · public activity", "expand": "fill" },
-    "Follows.dc.html": { "x": 1520, "y": 5900, "w": 1440, "h": 900, "title": "Followers / following (floating) · press Play to switch tabs", "expand": "fill", "is_interactive": true },
-    "EditUsername.dc.html": { "x": 0, "y": 7060, "w": 1440, "h": 800, "title": "Edit username (floating)", "expand": "fill" },
-    "EditName.dc.html": { "x": 1520, "y": 7060, "w": 1440, "h": 800, "title": "Edit display name (floating)", "expand": "fill" },
-    "ConnectAgent.dc.html": { "x": 0, "y": 7980, "w": 1440, "h": 800, "title": "Connect an agent · Claude Code (floating)", "expand": "fill" },
-    "Agent.dc.html": { "x": 0, "y": 9240, "w": 1440, "h": 1040, "title": "Baum agent · copy, vault, boost (press Play to pick hours)", "expand": "fill", "is_interactive": true },
-    "Swap.dc.html": { "x": 1520, "y": 9240, "w": 1440, "h": 1040, "title": "Swap · SLUGS, BAUM, ETH via Baum", "expand": "fill" },
-    "Burn.dc.html": { "x": 0, "y": 10400, "w": 1440, "h": 900, "title": "Skip the line · burn to get in", "expand": "fill" }
+    "Activity.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "title": "Agent page \u00b7 public activity",
+      "w": 1440,
+      "x": 0,
+      "y": 5900
+    },
+    "Agent.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "title": "Baum agent \u00b7 copy, vault, boost (press Play to pick hours)",
+      "w": 1440,
+      "x": 0,
+      "y": 9240
+    },
+    "Burn.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Skip the line \u00b7 burn to get in",
+      "w": 1440,
+      "x": 0,
+      "y": 10400
+    },
+    "Chat.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Chat with Baum",
+      "w": 1440,
+      "x": 1583,
+      "y": 1220
+    },
+    "Compare.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "title": "Create & compare agents",
+      "w": 1440,
+      "x": 0,
+      "y": 2240
+    },
+    "ConnectAgent.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "title": "Connect an agent \u00b7 Claude Code (floating)",
+      "w": 1440,
+      "x": 0,
+      "y": 7980
+    },
+    "EditName.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "title": "Edit display name (floating)",
+      "w": 1440,
+      "x": 1520,
+      "y": 7060
+    },
+    "EditUsername.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "title": "Edit username (floating)",
+      "w": 1440,
+      "x": 0,
+      "y": 7060
+    },
+    "Follows.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Followers / following (floating) \u00b7 press Play to switch tabs",
+      "w": 1440,
+      "x": 1520,
+      "y": 5900
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Leaderboard (home) \u00b7 hover card",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "OldOnboarding.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "is_interactive": true,
+      "title": "ORIGINAL (April app) \u00b7 welcome cards \u2192 Claim your slug \u00b7 press Play",
+      "w": 1440,
+      "x": 0,
+      "y": 13020
+    },
+    "Onboarding.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Onboarding \u00b7 first login",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "OnboardingCards.dc.html": {
+      "expand": "fill",
+      "h": 860,
+      "is_interactive": true,
+      "title": "Welcome cards \u00b7 press Play and click through",
+      "w": 1440,
+      "x": 0,
+      "y": 11720
+    },
+    "Profile.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "title": "Profile \u00b7 press Play, tap the chart icon for the PnL card",
+      "w": 1440,
+      "x": 1520,
+      "y": 3400
+    },
+    "Search.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "\u2318K search \u00b7 copy @usernames",
+      "w": 1440,
+      "x": 0,
+      "y": 1220
+    },
+    "Settings.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "title": "Settings",
+      "w": 1440,
+      "x": 1520,
+      "y": 4740
+    },
+    "SlugCards.dc.html": {
+      "expand": "fill",
+      "h": 860,
+      "is_interactive": true,
+      "title": "REDESIGNED \u00b7 what a slug is \u2192 Claim your slug \u00b7 press Play",
+      "w": 1440,
+      "x": 1520,
+      "y": 13020
+    },
+    "SlugConcepts.dc.html": {
+      "expand": "fill",
+      "h": 1640,
+      "is_interactive": true,
+      "title": "SLUG concepts \u00b7 A address chip \u00b7 B handle line \u00b7 C labelled SLUG \u00b7 press Play to copy",
+      "w": 1440,
+      "x": 0,
+      "y": 14080
+    },
+    "Swap.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "title": "Swap \u00b7 SLUGS, BAUM, ETH via Baum",
+      "w": 1440,
+      "x": 1520,
+      "y": 9240
+    },
+    "Token.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "title": "$SLUGS \u00b7 burn, fees, staking, yield",
+      "w": 1440,
+      "x": 0,
+      "y": 3400
+    },
+    "Treasury.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "title": "Treasury \u00b7 route funds to agents",
+      "w": 1440,
+      "x": 0,
+      "y": 4740
+    },
+    "Vaults.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "title": "Vaults \u00b7 allocate, copy, counter",
+      "w": 1440,
+      "x": 1520,
+      "y": 2240
+    }
   },
   "order": [
     "Main.dc.html",
@@ -42,12 +212,51 @@
     "ConnectAgent.dc.html",
     "Agent.dc.html",
     "Swap.dc.html",
-    "Burn.dc.html"
+    "Burn.dc.html",
+    "OnboardingCards.dc.html",
+    "OldOnboarding.dc.html",
+    "SlugCards.dc.html",
+    "SlugConcepts.dc.html"
   ],
   "notes": {
-    "title": { "x": 0, "y": -300, "text": "SLUGS Terminal — mockups", "kind": "title1", "maxW": 2960 },
-    "account": { "x": 0, "y": 4460, "text": "Account, wallets & agents — redesigned for desktop", "kind": "title1", "maxW": 2960 },
-    "baum": { "x": 0, "y": 8960, "text": "Baum features — agent, swap, skip the line (leaderboard, vaults & $SLUGS rebuilt above)", "kind": "title1", "maxW": 2960 }
+    "account": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Account, wallets & agents \u2014 redesigned for desktop",
+      "w": 240,
+      "x": 0,
+      "y": 4460
+    },
+    "baum": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Baum features \u2014 agent, swap, skip the line (leaderboard, vaults & $SLUGS rebuilt above)",
+      "w": 240,
+      "x": 0,
+      "y": 8960
+    },
+    "original": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "What new users saw before (April app) \u2014 recreated from the code",
+      "x": 0,
+      "y": 12740
+    },
+    "title": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "SLUGS Terminal \u2014 mockups",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "welcome": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Original onboarding cards \u2014 redesigned",
+      "x": 0,
+      "y": 11440
+    }
   },
   "designSystems": []
 }
