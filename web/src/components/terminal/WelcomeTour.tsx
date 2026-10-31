@@ -23,27 +23,28 @@ export default function WelcomeTour() {
 
 type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
 
-// The example profile on the second card: goobz, with their Baum picture from the board
+// The example profile on the first two cards: goobz, with their Baum picture from the board
 // when it has loaded.
 const EXAMPLE = { name: 'goobz', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
-const EXAMPLE_PICTURE = `https://baumai.xyz/api/avatar/${EXAMPLE.wallet}`
 
-// The signed-in person's Baum picture, or their initials.
-function OwnPicture({ initials }: { initials: string }) {
-  const { user } = useAuthSession()
-  const [broken, setBroken] = useState(false)
-  return user?.avatarUrl && !broken
-    ? <img className="t-welcome-avatar t-welcome-picture" src={user.avatarUrl} alt="" onError={() => setBroken(true)} />
+// A Baum profile picture: the one Baum shares at sign-in, else the one on the board, else
+// Baum's avatar for the wallet, else initials.
+function Picture({ wallet, url, initials }: { wallet?: string; url?: string | null; initials: string }) {
+  const { snapshot } = useTerminalData()
+  const fromBoard = wallet ? snapshot?.agents.find((agent) => agent.id.toLowerCase() === wallet.toLowerCase())?.avatarUrl : undefined
+  const src = url || fromBoard || (wallet ? `https://baumai.xyz/api/avatar/${wallet.toLowerCase()}` : null)
+  const [broken, setBroken] = useState<string | null>(null)
+  return src && broken !== src
+    ? <img className="t-welcome-avatar t-welcome-picture" src={src} alt="" onError={() => setBroken(src)} />
     : <span className="t-welcome-avatar">{initials}</span>
 }
 
-function ExamplePicture() {
-  const { snapshot } = useTerminalData()
-  const url = snapshot?.agents.find((agent) => agent.id.toLowerCase() === EXAMPLE.wallet)?.avatarUrl ?? EXAMPLE_PICTURE
-  const [broken, setBroken] = useState(false)
-  return broken
-    ? <span className="t-welcome-avatar">GO</span>
-    : <img className="t-welcome-avatar t-welcome-picture" src={url} alt="" onError={() => setBroken(true)} />
+const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
+
+// The signed-in person's own picture.
+function OwnPicture({ initials }: { initials: string }) {
+  const { user } = useAuthSession()
+  return <Picture url={user?.avatarUrl} wallet={user?.wallets[0]} initials={initials} />
 }
 
 function Tour({ onDone }: { onDone: () => void }) {
@@ -65,7 +66,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Every agent<br />has a slug.</>,
       body: 'A slug is a unique identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
       art: <div className="t-welcome-art t-welcome-art--center">
-        <span className="t-welcome-slug"><OwnPicture initials={(user?.username ?? 'you').slice(0, 2).toUpperCase()} />{slug ?? '@you'}<Icon name="copy" size={15} /></span>
+        <span className="t-welcome-slug"><ExamplePicture />@{EXAMPLE.name}<Icon name="copy" size={15} /></span>
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
       </div>,
     },
