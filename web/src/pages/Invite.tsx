@@ -1,17 +1,16 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate } from 'react-router-dom'
-import { ACCESS } from '../config'
 import AuthLayout from '../components/AuthLayout'
+import ShillPopup from '../components/ShillPopup'
 import { useAuthSession } from '../lib/auth-context'
 import { signInCodeFrom, signInMessage } from '../lib/auth'
+import { track } from '../lib/funnel'
 import { inviteMessage } from '../lib/invite'
 
 // The front door: SLUGS is invite only. Without a code, people enter the access raffle
-// by posting on X or burning the token. An invite code is a Baum referral code: a real
+// by posting on X (components/ShillPopup.tsx) or burning the token. An invite code is a Baum referral code: a real
 // one lets them in as a guest for 7 days, and they make their account on Baum to stay. The same box
 // takes a sign-in link from Baum, pasted, which signs this browser in.
-const shillUrl = `https://x.com/intent/post?text=${encodeURIComponent(ACCESS.applyPost)}`
-
 function XMark() {
   return (
     <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
@@ -36,7 +35,7 @@ function Arrow() {
   )
 }
 
-function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: string; href: string; internal?: boolean }) {
+function RaffleLink({ icon, label, href, internal, onClick }: { icon: ReactNode; label: string; href?: string; internal?: boolean; onClick?: () => void }) {
   const body = (
     <>
       <span className="raffle-icon">{icon}</span>
@@ -44,8 +43,9 @@ function RaffleLink({ icon, label, href, internal }: { icon: ReactNode; label: s
       <Arrow />
     </>
   )
+  if (onClick) return <button type="button" className="raffle" onClick={onClick}>{body}</button>
   return internal
-    ? <Link className="raffle" to={href}>{body}</Link>
+    ? <Link className="raffle" to={href ?? '/'}>{body}</Link>
     : <a className="raffle" href={href} target="_blank" rel="noreferrer">{body}</a>
 }
 
@@ -54,6 +54,9 @@ export default function Invite() {
   const [code, setCode] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [shill, setShill] = useState(false)
+  const signedOut = ready && !user && !guest
+  useEffect(() => { if (signedOut) track('invite_view') }, [signedOut])
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -120,9 +123,10 @@ export default function Invite() {
       <p className="invite-sub">Enter a raffle for a chance to win access</p>
 
       <div className="raffles">
-        <RaffleLink icon={<XMark />} label="Shill us on X" href={shillUrl} />
+        <RaffleLink icon={<XMark />} label="Shill us on X" onClick={() => setShill(true)} />
         <RaffleLink icon={<span className="flame"><Flame /></span>} label="Burn our token" href="/burn" internal />
       </div>
+      {shill && <ShillPopup onClose={() => setShill(false)} />}
     </AuthLayout>
   )
 }

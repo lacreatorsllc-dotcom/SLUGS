@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
 import { useAuthSession } from '../lib/auth-context'
+import { track } from '../lib/funnel'
 import { inviteMessage } from '../lib/invite'
 
 // slugs.run/<code>: a friend's invite link. A real code gives this browser a 7-day guest
@@ -11,6 +12,7 @@ export default function InviteLink({ code }: { code: string }) {
   const [state, setState] = useState<'checking' | 'in' | string>('checking')
   useEffect(() => {
     if (!ready || user) return
+    track('invite_view', { ref: code.toUpperCase() })
     let active = true
     acceptInvite(code)
       .then(() => { if (active) setState('in') })

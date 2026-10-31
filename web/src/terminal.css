@@ -188,3 +188,11 @@
 .t-wallet-box { display: flex; flex-direction: column; gap: 10px; padding: 12px; border: 1px solid var(--t-line); border-radius: 10px; }.t-wallet-row { display: flex; align-items: center; gap: 10px; }.t-wallet-row > img { border-radius: 6px; }.t-wallet-who { display: flex; flex: 1; flex-direction: column; min-width: 0; }.t-wallet-who strong { font-size: 13px; font-weight: 600; }.t-wallet-actions { display: flex; flex-wrap: wrap; gap: 6px; }.t-wallet-actions .t-chip { display: inline-flex; align-items: center; gap: 6px; }
 .t-wallet-options { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }.t-wallet-option { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 1px solid var(--t-line); border-radius: 10px; background: transparent; color: var(--t-text); font: 500 13px var(--t-font); text-align: left; cursor: pointer; }.t-wallet-option:hover { border-color: var(--t-strong); }.t-wallet-option > span:first-of-type { flex: 1; }.t-wallet-option img { border-radius: 6px; }
 .t-link-button { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+
+/* The admin page's waitlist (pages/AdminWaitlist.tsx). */
+.t-waitlist { margin: 8px 0 32px; }.t-waitlist .t-callout { margin: 12px 0; }.t-waitlist code { color: var(--t-text); }
+.t-waitlist .t-heading-actions .t-submit, .t-review .t-heading-actions .t-submit { width: auto; }.t-auto { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.t-review { display: grid; gap: 14px; max-width: 620px; }
+.t-tweet { display: grid; gap: 6px; }.t-tweet iframe { width: 100%; max-width: 550px; height: 560px; border: 1px solid var(--t-line); border-radius: 12px; background: var(--t-panel); }
+.t-review-boxes { display: grid; gap: 10px; border: 1px solid var(--t-line); border-radius: 12px; padding: 12px 14px; margin: 0; }.t-review-boxes legend { padding: 0 6px; color: var(--t-muted); font-size: 12px; }.t-review-boxes label { display: flex; align-items: center; gap: 8px; }
+.terminal .t-table--narrow { min-width: 0; }

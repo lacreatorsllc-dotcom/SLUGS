@@ -7,11 +7,16 @@
 // geolocation for it and the user agent, so Baum logs where each one came from and
 // warns the admins in Telegram about a new country.
 //
-//   GET  ?action=me | report | logins | device
+//   GET  ?action=me | report | logins | device | review | funnel
 //   POST { action: 'password', email, password } | { action: 'forgot', email }
 //        { action: 'reset', token, password }    | { action: 'code', code }
 //        { action: 'baum' }  (already signed in to SLUGS with Baum)
 //        { action: 'device' } (ask the admins in Telegram) | { action: 'refresh' } | { action: 'logout' }
+//
+// The waitlist (people who shilled SLUGS on X, from Telegram or this site's popup):
+//        { action: 'review', id, decision: 'approve' | 'reject', score }
+//        { action: 'draw' }  (picks one approved person, weighted by tickets)
+//        { action: 'auto', on }  (one draw a day, until nobody approved is left)
 
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const ADMIN = 'slugs_admin'
@@ -70,6 +75,9 @@ function signedIn(res, answer, extraCookies = []) {
   return res.status(200).json({ who: answer.json.who ?? null })
 }
 
+// The boxes an admin ticked, and nothing else.
+const scoreOf = (raw) => Object.fromEntries(['why', 'friend', 'friendWhy'].map((k) => [k, Boolean(raw?.[k])]))
+
 export default async function handler(req, res) {
   res.setHeader('cache-control', 'private, no-store')
   if (!process.env.BAUM_API_KEY) return res.status(503).json({ reason: 'not-configured' })
@@ -88,7 +96,7 @@ export default async function handler(req, res) {
       if (state !== 'waiting') res.setHeader('set-cookie', cookie(DEVICE, '', 0))
       return res.status(200).json({ state: state ?? 'expired' })
     }
-    if (!['me', 'report', 'logins'].includes(action)) return res.status(404).json({ reason: 'unknown-action' })
+    if (!['me', 'report', 'logins', 'review', 'funnel'].includes(action)) return res.status(404).json({ reason: 'unknown-action' })
     if (!admin) return res.status(401).json({ reason: 'signed-out' })
     const answer = await baum('GET', `/api/partner/admin/${action}`, { admin })
     if (answer.status === 401) res.setHeader('set-cookie', cookie(ADMIN, '', 0))
@@ -131,6 +139,17 @@ export default async function handler(req, res) {
     case 'refresh': {
       if (!admin) return res.status(401).json({ reason: 'signed-out' })
       const answer = await baum('POST', '/api/partner/admin/report', { admin, body: { codes: CODES } })
+      return res.status(answer.status).json(answer.json)
+    }
+    case 'review':
+    case 'draw':
+    case 'auto': {
+      if (!admin) return res.status(401).json({ reason: 'signed-out' })
+      const sent = body.action === 'review'
+        ? { id: str(body.id), decision: body.decision === 'approve' ? 'approve' : 'reject', score: scoreOf(body.score) }
+        : body.action === 'auto' ? { on: body.on === true } : {}
+      const answer = await baum('POST', `/api/partner/admin/${body.action}`, { admin, body: sent })
+      if (answer.status === 401) res.setHeader('set-cookie', cookie(ADMIN, '', 0))
       return res.status(answer.status).json(answer.json)
     }
     case 'logout':

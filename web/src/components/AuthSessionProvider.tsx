@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { AuthContext, type BaumProfile } from '../lib/auth-context'
 import { currentProfile, endSession, redeem } from '../lib/auth'
+import { track, trackActiveToday } from '../lib/funnel'
 import { acceptInvite as accept, currentPass, type GuestPass } from '../lib/invite'
 
 // Local development only: ?as=<username> acts as that Baum user, since Baum's sign-in
@@ -33,7 +34,11 @@ export default function AuthSessionProvider({ children }: { children: ReactNode 
   }, [revision])
   const signIn = useCallback(async (code: string) => {
     setState({ user: await redeem(code), ready: true, error: false })
+    track('signed_in')
   }, [])
+  // Signed in and using SLUGS today: counted once a day per browser (lib/funnel.ts).
+  const signedIn = Boolean(state.user)
+  useEffect(() => { if (signedIn) trackActiveToday() }, [signedIn])
   const signOut = useCallback(async () => {
     if (import.meta.env.DEV) sessionStorage.removeItem('slugs.dev.as')
     await endSession()

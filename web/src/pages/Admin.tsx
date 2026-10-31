@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import AdminWaitlist from './AdminWaitlist'
 import { BAUM } from '../config'
 import { count } from '../lib/terminal-format'
 import '../terminal.css'
 
-// The admin page: who opened SLUGS' invite links, and the accounts that came of them.
+// The admin page: who opened SLUGS' invite links, the accounts that came of them, and
+// the waitlist of people who shilled SLUGS on X (AdminWaitlist.tsx).
 // Runs on Baum's partner admin API through api/admin.js. Admins are the Baum account
 // holding SLUGS' key (mememarketer). Every sign-in is logged with where it came from.
 //
@@ -206,6 +208,8 @@ function Dashboard({ who, onOut }: { who: string | null; onOut: () => void }) {
       </div>
     </div>
     {error && <p className="t-callout t-callout--error" role="alert">{error}</p>}
+
+    <AdminWaitlist call={call} say={say} onOut={onOut} />
 
     {report && <>
       <dl className="t-stats" style={{ '--stat-count': 4, margin: '16px 0' } as React.CSSProperties}>
