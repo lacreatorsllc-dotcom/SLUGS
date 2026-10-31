@@ -83,6 +83,26 @@ async function send(account: string, token: string, symbol: string, amount: bigi
   return hash // still pending; the explorer link will show it
 }
 
+/**
+ * Sends a transaction Baum built (a swap), from the connected wallet on Robinhood
+ * Chain, and resolves with its hash once it's mined, or still pending after 3 minutes.
+ * The chain is checked first so a wallet left on another network isn't asked to sign there.
+ */
+export async function sendBuilt(account: string, tx: { to: string; data: string; value: string; chainId: number }): Promise<string> {
+  if (tx.chainId !== CHAIN.id) throw new Error('That trade is for another network.')
+  await onChain()
+  const hash = await request<string>('eth_sendTransaction', [{ from: account, to: tx.to, data: tx.data, value: tx.value }])
+  for (let i = 0; i < 90; i++) {
+    const receipt = await request<{ status: string } | null>('eth_getTransactionReceipt', [hash])
+    if (receipt) {
+      if (receipt.status !== '0x1') throw new Error('The swap failed on-chain. Nothing was spent but gas.')
+      return hash
+    }
+    await new Promise((r) => setTimeout(r, 2000))
+  }
+  return hash
+}
+
 /** Burns the boost for `hours` and resolves with the transaction hash once it's mined. */
 export async function burnBoost(account: string, agent: string, hours: number): Promise<string> {
   await onChain()
