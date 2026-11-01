@@ -192,6 +192,60 @@
       "w": 1440,
       "x": 1520,
       "y": 2240
+    },
+    "SearchResults.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "title": "Search results \u00b7 tokens, users, agents \u00b7 $ticker, 0x contract, SLUG \u00b7 press Play and type",
+      "w": 1440,
+      "x": 1520,
+      "y": 15300
+    },
+    "PnlShare.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "title": "Share PnL \u00b7 where the button lives \u00b7 3 card styles \u00b7 X / Telegram \u00b7 press Play",
+      "w": 1440,
+      "x": 0,
+      "y": 16620
+    },
+    "ExampleBots.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "title": "Example bots on welcome card 01 \u00b7 4 options \u00b7 press Play to see D and the last card animate",
+      "w": 1440,
+      "x": 1520,
+      "y": 16620
+    },
+    "DeployConcept.dc.html": {
+      "expand": "fill",
+      "h": 1080,
+      "is_interactive": true,
+      "title": "Deploy a slug \u00b7 CONCEPT \u00b7 name it, then set it up in a chat (bottom left) or in Telegram \u00b7 press Play",
+      "w": 1440,
+      "x": 0,
+      "y": 18260
+    },
+    "DeployCompact.dc.html": {
+      "expand": "fill",
+      "h": 1760,
+      "is_interactive": true,
+      "title": "Deploy a slug \u00b7 3 COMPACT CONCEPTS (Axiom density) \u00b7 A command bar \u00b7 B side panel \u00b7 C chat-first \u00b7 press Play",
+      "w": 1440,
+      "x": 1520,
+      "y": 18260
+    },
+    "DeployFinal.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Deploy a slug \u00b7 FINAL (recommended) \u00b7 command bar, Prompt Agent opens the chat bottom right, compact walkthrough \u00b7 press Play",
+      "w": 1440,
+      "x": 0,
+      "y": 19480
     }
   },
   "order": [
@@ -216,7 +270,13 @@
     "OnboardingCards.dc.html",
     "OldOnboarding.dc.html",
     "SlugCards.dc.html",
-    "SlugConcepts.dc.html"
+    "SlugConcepts.dc.html",
+    "SearchResults.dc.html",
+    "PnlShare.dc.html",
+    "ExampleBots.dc.html",
+    "DeployConcept.dc.html",
+    "DeployCompact.dc.html",
+    "DeployFinal.dc.html"
   ],
   "notes": {
     "account": {

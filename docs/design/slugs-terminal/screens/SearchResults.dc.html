@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Search results</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #b8b5ad;outline-offset:2px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+.grp{display:flex;justify-content:space-between;padding:10px 14px 6px;font-size:10px;letter-spacing:.14em;color:#6f6c65}
+.row{display:flex;align-items:center;gap:11px;width:100%;box-sizing:border-box;padding:8px 14px;border:0;border-left:2px solid transparent;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.row:hover{background:#151514}
+.pic{width:30px;height:30px;flex:none;border-radius:50%;object-fit:cover;border:1px solid #2a2824}
+.ring{width:30px;height:30px;flex:none;box-sizing:border-box;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
+.tok{width:30px;height:30px;flex:none;box-sizing:border-box;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;border:1px solid #2a2824;background:#141413}
+.tag{font-size:10px;padding:1px 6px;border:1px solid #2a2824;border-radius:999px;color:#85827a}
+.chip{display:inline-flex;align-items:center;gap:8px;max-width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid #2a2824;border-radius:7px;background:#0b0b0a;color:#d6d3cb;font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:12px;cursor:pointer;text-align:left;word-break:break-all}
+.chip:hover{border-color:#5a564f;color:#f5f3ee}
+.try{font:inherit;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid #2a2824;background:#111110;color:#d6d3cb;cursor:pointer}
+.try:hover{border-color:#5a564f;color:#f5f3ee}
+.stat{padding:8px 10px;border:1px solid #1f1e1c;border-radius:9px;background:#111110;margin:0}
+.stat dt{font-size:10.5px;color:#85827a}.stat dd{margin:2px 0 0;font-size:13.5px;font-weight:600}
+.btn{height:32px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;border-radius:8px;border:0;background:#ece9e2;color:#0b0b0a;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:#d6d3cb;border:1px solid #2a2824}
+.btn:hover{color:#0b0b0a;filter:brightness(1.05)}.btn.ghost:hover{color:#f5f3ee;border-color:#5a564f}
+.lbl{font-size:10.5px;letter-spacing:.14em;color:#6f6c65}
+.m{color:#f8622e}
+</style>
+</helmet>
+<div style="min-height:1180px;box-sizing:border-box;padding:36px 40px;background:#0b0b0a;color:#f5f3ee;font-family:Inter,-apple-system,system-ui,sans-serif;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;gap:20px">
+
+  <header style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <h1 style="margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em">One search bar for tokens, users and agents</h1>
+      <span class="tag" style="font-size:11px;padding:3px 9px">Example data</span>
+    </div>
+    <p style="margin:0;max-width:880px;font-size:14px;line-height:1.6;color:#9a978f">The top bar reads what you type and searches the right thing. Results drop down under it, grouped by kind, with a preview of the one you're on. Press Play, then type in the search bar or pick an example below.</p>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+      <div class="stat"><dt><span class="mono" style="color:#f5f3ee">$SLU</span> · ticker</dt><dd style="font-size:12.5px;font-weight:500;color:#b8b5ad">Tokens only, by ticker</dd></div>
+      <div class="stat"><dt><span class="mono" style="color:#f5f3ee">0xa5A0…ff10A</span> · contract</dt><dd style="font-size:12.5px;font-weight:500;color:#b8b5ad">Full address: exact token or wallet</dd></div>
+      <div class="stat"><dt><span class="mono" style="color:#f5f3ee">goobz/dca</span> · agent SLUG</dt><dd style="font-size:12.5px;font-weight:500;color:#b8b5ad">A slash searches agents</dd></div>
+      <div class="stat"><dt><span class="mono" style="color:#f5f3ee">goo</span> · anything</dt><dd style="font-size:12.5px;font-weight:500;color:#b8b5ad">Users, agents and tokens together</dd></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span class="lbl" style="margin-right:4px">TRY</span>
+      <button type="button" class="try" onClick="{{tryGoo}}">goo</button>
+      <button type="button" class="try mono" onClick="{{tryTicker}}">$SLU</button>
+      <button type="button" class="try mono" onClick="{{tryCa}}">SLUGS contract</button>
+      <button type="button" class="try mono" onClick="{{tryWallet}}">goobz wallet</button>
+      <button type="button" class="try mono" onClick="{{tryAgent}}">goobz/</button>
+      <button type="button" class="try mono" onClick="{{tryPartial}}">0x3b7e</button>
+      <button type="button" class="try" onClick="{{tryNone}}">No match</button>
+      <button type="button" class="try" onClick="{{tryEmpty}}">Empty (just opened)</button>
+    </div>
+  </header>
+
+  <div style="position:relative;flex:1;min-height:820px;border:1px solid #1f1e1c;border-radius:14px;overflow:hidden;background:#0b0b0a">
+    <div style="display:flex;align-items:center;gap:16px;min-height:44px;padding:0 14px;border-bottom:1px solid #1f1e1c;background:#0a0a09">
+      <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height:14px;width:auto;image-rendering:pixelated">
+      <nav aria-label="Main" style="display:flex;gap:2px">
+        <a href="Main.dc.html" style="padding:5px 10px;border-radius:7px;background:#1a1918;font-size:13px;font-weight:500">Leaderboard</a>
+        <a href="Compare.dc.html" style="padding:5px 10px;border-radius:7px;color:#9a978f;font-size:13px;font-weight:500">Agents</a>
+        <a href="Vaults.dc.html" style="padding:5px 10px;border-radius:7px;color:#9a978f;font-size:13px;font-weight:500">Vaults</a>
+        <a href="Token.dc.html" style="padding:5px 10px;border-radius:7px;color:#9a978f;font-size:13px;font-weight:500">$SLUGS</a>
+      </nav>
+      <div role="search" style="flex:0 1 460px;display:flex;align-items:center;gap:8px;height:32px;padding:0 10px;border:1px solid #5a564f;border-radius:8px;background:#141413;box-shadow:0 0 0 3px rgba(236,233,226,.06)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8b5ad" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input aria-label="Search tokens, users, agents, contract addresses" placeholder="Search $tickers, 0x contracts, users, agents" value="{{q}}" onInput="{{type}}" onKeyDown="{{key}}" spellcheck="false" autocomplete="off" style="flex:1;min-width:0;font:inherit;font-size:13px;border:0;outline:0;background:transparent;color:#f5f3ee">
+        <sc-if value="{{hasMode}}" hint-placeholder-val="{{ true }}">
+          <span style="flex:none;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:#262522;color:#d6d3cb">{{modeLabel}}</span>
+        </sc-if>
+        <span style="flex:none;font-size:10px;padding:1px 5px;border:1px solid #2a2824;border-radius:4px;color:#9a978f">esc</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+        <span style="width:30px;height:30px;border-radius:8px;background:#ece9e2"></span>
+        <span style="width:28px;height:28px;border-radius:50%;border:1.5px solid #f8622e"></span>
+      </div>
+    </div>
+
+    <div aria-hidden="true" style="padding:24px;opacity:.18;display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:22px;font-weight:600">Leaderboard</div>
+      <div style="height:40px;border-radius:8px;background:#141413"></div>
+      <div style="height:40px;border-radius:8px;background:#111110"></div>
+      <div style="height:40px;border-radius:8px;background:#141413"></div>
+      <div style="height:40px;border-radius:8px;background:#111110"></div>
+      <div style="height:40px;border-radius:8px;background:#141413"></div>
+      <div style="height:40px;border-radius:8px;background:#111110"></div>
+    </div>
+    <div aria-hidden="true" style="position:absolute;inset:44px 0 0;background:rgba(5,5,5,.55)"></div>
+
+    <div role="dialog" aria-label="Search results" style="position:absolute;top:50px;left:372px;width:860px;box-sizing:border-box;border:1px solid #2a2824;border-radius:14px;background:#0f0f0e;box-shadow:0 30px 80px rgba(0,0,0,.7);overflow:hidden">
+      <div role="tablist" style="display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid #1f1e1c">
+        <button type="button" role="tab" aria-selected="{{fAll}}" onClick="{{showAll}}" style="font:inherit;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;cursor:pointer;border:1px solid {{allBorder}};background:{{allBg}};color:{{allColor}}">All <span style="color:#85827a">{{nAll}}</span></button>
+        <button type="button" role="tab" aria-selected="{{fTok}}" onClick="{{showTok}}" style="font:inherit;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;cursor:pointer;border:1px solid {{tokBorder}};background:{{tokBg}};color:{{tokColor}}">Tokens <span style="color:#85827a">{{nTok}}</span></button>
+        <button type="button" role="tab" aria-selected="{{fUser}}" onClick="{{showUser}}" style="font:inherit;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;cursor:pointer;border:1px solid {{userBorder}};background:{{userBg}};color:{{userColor}}">Users <span style="color:#85827a">{{nUser}}</span></button>
+        <button type="button" role="tab" aria-selected="{{fAgent}}" onClick="{{showAgent}}" style="font:inherit;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;cursor:pointer;border:1px solid {{agentBorder}};background:{{agentBg}};color:{{agentColor}}">Agents <span style="color:#85827a">{{nAgent}}</span></button>
+        <span style="margin-left:auto;font-size:11.5px;color:#85827a">{{hint}}</span>
+      </div>
+
+      <sc-if value="{{showPartial}}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #1f1e1c;background:#111110;font-size:12.5px;color:#b8b5ad">
+          <span style="flex:1">Paste the whole address for an exact match. Showing addresses that start with <span class="mono" style="color:#f5f3ee">{{q}}</span>.</span>
+          <span class="mono" style="font-size:11px;color:#85827a">{{addrLen}} / 42</span>
+          <span style="width:90px;height:4px;border-radius:2px;background:#1f1e1c;overflow:hidden"><span style="display:block;height:4px;width:{{addrPct}};background:#ece9e2"></span></span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{hasRows}}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);min-height:520px">
+          <div style="border-right:1px solid #1f1e1c;padding:4px 0 8px;max-height:620px;overflow:auto">
+
+            <sc-if value="{{showUserRows}}" hint-placeholder-val="{{ true }}">
+              <div class="grp"><span>{{userHead}}</span><span>PNL 7D</span></div>
+              <sc-for list="{{userRows}}" as="r" hint-placeholder-count="2">
+                <button type="button" class="row" onClick="{{r.pick}}" style="background:{{r.bg}};border-left-color:{{r.edge}}">
+                  <sc-if value="{{r.hasPic}}" hint-placeholder-val="{{ true }}"><img class="pic" src="{{r.pic}}" alt=""></sc-if>
+                  <sc-if value="{{r.noPic}}" hint-placeholder-val="{{ false }}"><span class="ring" style="color:{{r.color}};border-color:{{r.color}}">{{r.init}}</span></sc-if>
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:13.5px;font-weight:600">{{r.a}}<span class="m">{{r.m}}</span>{{r.b}}</span>
+                    <span style="display:block;font-size:11.5px;color:#85827a;margin-top:1px">{{r.sub}}</span>
+                  </span>
+                  <span style="flex:none;font-size:13px;font-weight:600;color:{{r.chColor}}">{{r.ch}}</span>
+                </button>
+              </sc-for>
+            </sc-if>
+
+            <sc-if value="{{showAgentRows}}" hint-placeholder-val="{{ true }}">
+              <div class="grp"><span>{{agentHead}}</span><span>PNL 7D</span></div>
+              <sc-for list="{{agentRows}}" as="r" hint-placeholder-count="2">
+                <button type="button" class="row" onClick="{{r.pick}}" style="background:{{r.bg}};border-left-color:{{r.edge}}">
+                  <sc-if value="{{r.hasPic}}" hint-placeholder-val="{{ true }}"><img class="pic" src="{{r.pic}}" alt="" style="border-radius:8px"></sc-if>
+                  <sc-if value="{{r.noPic}}" hint-placeholder-val="{{ false }}"><span class="ring" style="border-radius:8px;color:{{r.color}};border-color:{{r.color}}">{{r.init}}</span></sc-if>
+                  <span style="flex:1;min-width:0">
+                    <span class="mono" style="display:block;font-size:13px">{{r.a}}<span class="m">{{r.m}}</span>{{r.b}}</span>
+                    <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#85827a;margin-top:2px"><span style="width:6px;height:6px;border-radius:50%;background:{{r.dot}}"></span>{{r.sub}}</span>
+                  </span>
+                  <span style="flex:none;font-size:13px;font-weight:600;color:{{r.chColor}}">{{r.ch}}</span>
+                </button>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{showTokRows}}" hint-placeholder-val="{{ true }}">
+              <div class="grp"><span>{{tokHead}}</span><span>{{tokRight}}</span></div>
+              <sc-for list="{{tokRows}}" as="r" hint-placeholder-count="3">
+                <button type="button" class="row" onClick="{{r.pick}}" style="background:{{r.bg}};border-left-color:{{r.edge}}">
+                  <span class="tok" style="color:{{r.color}}">{{r.init}}</span>
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:13.5px;font-weight:600">{{r.a}}<span class="m">{{r.m}}</span>{{r.b}} <span style="font-weight:400;color:#85827a">{{r.name}}</span></span>
+                    <span class="mono" style="display:block;font-size:11px;color:#85827a;margin-top:1px">{{r.sub}}</span>
+                  </span>
+                  <span style="text-align:right;flex:none">
+                    <span style="display:block;font-size:13px;font-weight:600">{{r.price}}</span>
+                    <span style="display:block;font-size:11.5px;color:{{r.chColor}}">{{r.ch}}</span>
+                  </span>
+                </button>
+              </sc-for>
+            </sc-if>
+
+          </div>
+
+          <div style="padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0">
+            <sc-if value="{{selTok}}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="tok" style="width:44px;height:44px;font-size:15px;border-radius:11px;color:{{p.color}}">{{p.init}}</span>
+                <div style="min-width:0">
+                  <div style="font-size:17px;font-weight:700">{{p.tk}} <span style="font-size:13px;font-weight:400;color:#85827a">{{p.name}}</span></div>
+                  <div style="font-size:13px;margin-top:2px">{{p.price}} <span style="color:{{p.chColor}}">{{p.ch}} 24h</span></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span class="lbl">CONTRACT</span>
+                <button type="button" class="chip" onClick="{{p.copyCa}}" aria-label="Copy contract address">{{p.ca}}<sc-if value="{{p.caDone}}" hint-placeholder-val="{{ false }}"><span style="color:#2fd39a;flex:none">✓</span></sc-if><sc-if value="{{p.caIdle}}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg></sc-if></button>
+              </div>
+              <dl style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0">
+                <div class="stat"><dt>Market cap</dt><dd>{{p.mc}}</dd></div>
+                <div class="stat"><dt>Volume 24h</dt><dd>{{p.vol}}</dd></div>
+                <div class="stat"><dt>Holders</dt><dd>{{p.holders}}</dd></div>
+                <div class="stat"><dt>Launched on</dt><dd>{{p.where}}</dd></div>
+              </dl>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span class="lbl">LAUNCHED BY</span>
+                <button type="button" class="chip" onClick="{{p.copyBy}}" aria-label="Copy the launcher's SLUG">{{p.by}}<sc-if value="{{p.byDone}}" hint-placeholder-val="{{ false }}"><span style="color:#2fd39a;flex:none">✓</span></sc-if></button>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:auto">
+                <a class="btn" href="Swap.dc.html">Swap</a>
+                <a class="btn ghost" href="Token.dc.html">Open token</a>
+                <a class="btn ghost" href="#" style="margin-left:auto">Explorer ↗</a>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{selUser}}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px">
+                <sc-if value="{{p.hasPic}}" hint-placeholder-val="{{ true }}"><img src="{{p.pic}}" alt="" style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:1px solid #3a3732"></sc-if>
+                <sc-if value="{{p.noPic}}" hint-placeholder-val="{{ false }}"><span class="ring" style="width:46px;height:46px;font-size:16px;color:{{p.color}};border-color:{{p.color}}">{{p.init}}</span></sc-if>
+                <div style="min-width:0">
+                  <button type="button" class="chip" onClick="{{p.copySlug}}" aria-label="Copy SLUG" style="font-size:14px;color:#f5f3ee">{{p.u}}<sc-if value="{{p.slugDone}}" hint-placeholder-val="{{ false }}"><span style="color:#2fd39a">✓</span></sc-if></button>
+                  <div style="font-size:12px;color:#85827a;margin-top:4px">{{p.cat}} · {{p.followers}} followers</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span class="lbl">WALLET</span>
+                <button type="button" class="chip" onClick="{{p.copyWallet}}" aria-label="Copy wallet address">{{p.wallet}}<sc-if value="{{p.walletDone}}" hint-placeholder-val="{{ false }}"><span style="color:#2fd39a;flex:none">✓</span></sc-if></button>
+              </div>
+              <dl style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0">
+                <div class="stat"><dt>PnL 7d</dt><dd style="color:{{p.chColor}}">{{p.ch}}</dd></div>
+                <div class="stat"><dt>Rank</dt><dd>{{p.rank}}</dd></div>
+                <div class="stat"><dt>Agents</dt><dd>{{p.agents}}</dd></div>
+                <div class="stat"><dt>Tokens launched</dt><dd>{{p.launched}}</dd></div>
+              </dl>
+              <div style="display:flex;gap:8px;margin-top:auto">
+                <button type="button" class="btn">Follow</button>
+                <a class="btn ghost" href="Profile.dc.html">Open profile</a>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{selAgent}}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px">
+                <sc-if value="{{p.hasPic}}" hint-placeholder-val="{{ true }}"><img src="{{p.pic}}" alt="" style="width:46px;height:46px;border-radius:11px;object-fit:cover;border:1px solid #3a3732"></sc-if>
+                <sc-if value="{{p.noPic}}" hint-placeholder-val="{{ false }}"><span class="ring" style="width:46px;height:46px;font-size:16px;border-radius:11px;color:{{p.color}};border-color:{{p.color}}">{{p.init}}</span></sc-if>
+                <div style="min-width:0">
+                  <button type="button" class="chip" onClick="{{p.copySlug}}" aria-label="Copy agent SLUG" style="font-size:13.5px;color:#f5f3ee">{{p.s}}<sc-if value="{{p.slugDone}}" hint-placeholder-val="{{ false }}"><span style="color:#2fd39a">✓</span></sc-if></button>
+                  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#85827a;margin-top:4px"><span style="width:6px;height:6px;border-radius:50%;background:{{p.dot}}"></span>{{p.status}} · {{p.strat}}</div>
+                </div>
+              </div>
+              <dl style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0">
+                <div class="stat"><dt>PnL 7d</dt><dd style="color:{{p.chColor}}">{{p.ch}}</dd></div>
+                <div class="stat"><dt>Trades</dt><dd>{{p.trades}}</dd></div>
+                <div class="stat"><dt>Buys</dt><dd>{{p.buys}}</dd></div>
+                <div class="stat"><dt>Made by</dt><dd class="mono" style="font-size:12.5px">{{p.owner}}</dd></div>
+              </dl>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span class="lbl">LAST TRADES</span>
+                <div style="display:flex;flex-direction:column;border:1px solid #1f1e1c;border-radius:9px;overflow:hidden;font-size:12.5px">
+                  <div style="display:flex;justify-content:space-between;padding:7px 10px;background:#111110"><span><b style="color:#2fd39a">BUY</b> {{p.t1}}</span><span style="color:#85827a">2h</span></div>
+                  <div style="display:flex;justify-content:space-between;padding:7px 10px;border-top:1px solid #1f1e1c"><span><b style="color:#2fd39a">BUY</b> {{p.t2}}</span><span style="color:#85827a">1d</span></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:auto">
+                <button type="button" class="btn">Follow</button>
+                <a class="btn ghost" href="Agent.dc.html">Open agent</a>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{noRows}}" hint-placeholder-val="{{ false }}">
+        <div style="padding:56px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
+          <div style="font-size:15px;font-weight:600">{{emptyTitle}}</div>
+          <p style="margin:0;max-width:440px;font-size:13px;line-height:1.6;color:#9a978f">{{emptyBody}}</p>
+          <sc-if value="{{emptyIsAddr}}" hint-placeholder-val="{{ false }}"><a class="btn ghost" href="#" style="margin-top:6px">Look it up on the Robinhood Chain explorer ↗</a></sc-if>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;align-items:center;gap:16px;padding:9px 14px;border-top:1px solid #1f1e1c;font-size:11.5px;color:#85827a;flex-wrap:wrap">
+        <span><span style="color:#b8b5ad">↑↓</span> move</span>
+        <span><span style="color:#b8b5ad">↵</span> open</span>
+        <span><span style="color:#b8b5ad">⌘C</span> copy SLUG or contract</span>
+        <span style="margin-left:auto">Type <span class="mono" style="color:#d6d3cb">$</span> for tickers · paste <span class="mono" style="color:#d6d3cb">0x…</span> for contracts · add <span class="mono" style="color:#d6d3cb">/</span> for agents</span>
+      </div>
+    </div>
+
+    <sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="position:absolute;left:50%;bottom:24px;transform:translateX(-50%);padding:8px 14px;border-radius:9px;background:#ece9e2;color:#0b0b0a;font-size:12.5px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.5)">{{toastText}}</div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { q: 'goo', f: 'all', sel: 0, copied: null, toast: null };
+  }
+  renderVals() {
+    var self = this, st = this.state;
+    var GOOBZ_PIC = 'https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754';
+    var UP = '#2fd39a', DOWN = '#f87171';
+    var TOKENS = [
+      { t: 'SLUGS', name: 'SLUGS', ca: '0xa5A0A37778D6b656A37b2E10c13E2E31826ff10A', price: '$0.00412', ch: '+12.4%', up: true, mc: '$4.1M', vol: '$812K', holders: '3,214', where: 'Baum', by: 'slugs', color: '#f8622e' },
+      { t: 'SLUGZ', name: 'Slugz Inu', ca: '0x2e8d4c1f7a90b3e65d2c18f4a7b0e9c3d5f61a87', price: '$0.0000318', ch: '−4.1%', up: false, mc: '$31.8K', vol: '$2.4K', holders: '212', where: 'Baum', by: 'frog_cap', color: '#a78bfa' },
+      { t: 'GOOB', name: 'Goober Coin', ca: '0x3b7e91c0d4a2f6e85b1c09a7d3e4f2b6c8a1d590', price: '$0.00091', ch: '+38.0%', up: true, mc: '$910K', vol: '$96K', holders: '1,077', where: 'Baum', by: 'goobz', color: '#2fd39a' },
+      { t: 'DCAI', name: 'DCA Intelligence', ca: '0x9c41e7b2a06d38f5c1e4b7a90d2f6c3e8b5a7d14', price: '$0.0142', ch: '+2.2%', up: true, mc: '$1.4M', vol: '$58K', holders: '2,540', where: 'Baum', by: 'goobz/dca-agent', color: '#60a5fa' },
+      { t: 'BAUM', name: 'Baum', ca: '0x7d1af3c92b84e06d5a1c7f39e2b480d6c5a91e3f', price: '$0.0387', ch: '+5.6%', up: true, mc: '$38.7M', vol: '$2.1M', holders: '18,902', where: 'Robinhood Chain', by: 'baum', color: '#ece9e2' },
+      { t: 'PONS7', name: 'Pons Seven', ca: '0x51f0c8a2e9d7b4316ac05e2f8b9d7c4a1e6f3b28', price: '$0.00007', ch: '−11.9%', up: false, mc: '$70K', vol: '$4.0K', holders: '389', where: 'Baum', by: 'pons', color: '#fbbf24' }
+    ];
+    var USERS = [
+      { u: 'goobz', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92', pic: GOOBZ_PIC, cat: 'Creators', ch: '+$221.35', up: true, rank: '#8', agents: '2', launched: '1', followers: '1.2K' },
+      { u: 'goober_eth', wallet: '0x84c2e1a0f97b3d56e2a8c41b0d7f9e3a5c6b2d18', cat: 'Traders', ch: '+$48.10', up: true, rank: '#31', agents: '1', launched: '0', followers: '214', color: '#60a5fa' },
+      { u: 'goodbags', wallet: '0x1fa96c3e0b7d45a28e9c1f6b3d0a7e54c2b98d61', cat: 'Degens', ch: '−$12.40', up: false, rank: '#77', agents: '1', launched: '2', followers: '96', color: '#a78bfa' },
+      { u: 'frog_cap', wallet: '0x6e03b9d14a7c2f85e1b6d0a39c7f4e2b8d5a1c07', cat: 'Creators', ch: '+$9.88', up: true, rank: '#52', agents: '1', launched: '1', followers: '480', color: '#fbbf24' },
+      { u: 'slugmaster', wallet: '0xc7a2d05e9f1b483c6a0e7d2b5f9c1a84e3b6d027', cat: 'Traders', ch: '+$131.02', up: true, rank: '#12', agents: '1', launched: '0', followers: '3.4K', color: '#f8622e' }
+    ];
+    var AGENTS = [
+      { s: 'goobz/dca-agent', owner: 'goobz', pic: GOOBZ_PIC, strat: 'DCA · daily', status: 'Live', ch: '+$184.20', up: true, trades: '17', buys: 'SLUGS, BAUM', t1: 'SLUGS · $25', t2: 'BAUM · $25' },
+      { s: 'goobz/BraveAmberFox', owner: 'goobz', pic: GOOBZ_PIC, strat: 'DCA · weekly', status: 'Live', ch: '+$37.15', up: true, trades: '4', buys: 'ETH', t1: 'ETH · $50', t2: 'ETH · $50' },
+      { s: 'goober_eth/eth-stacker', owner: 'goober_eth', strat: 'DCA · weekly', status: 'Paused', ch: '+$6.02', up: true, trades: '6', buys: 'ETH', t1: 'ETH · $20', t2: 'ETH · $20', color: '#60a5fa' },
+      { s: 'slugmaster/slug-sniper', owner: 'slugmaster', strat: 'DCA · daily', status: 'Live', ch: '+$131.02', up: true, trades: '41', buys: 'SLUGS', t1: 'SLUGS · $10', t2: 'SLUGS · $10', color: '#f8622e' },
+      { s: 'frog_cap/QuietJadeOtter', owner: 'frog_cap', strat: 'DCA · daily', status: 'Live', ch: '−$3.10', up: false, trades: '9', buys: 'SLUGZ, GOOB', t1: 'SLUGZ · $5', t2: 'GOOB · $5', color: '#fbbf24' }
+    ];
+
+    var raw = String(st.q || '').trim(), low = raw.toLowerCase();
+    var mode = !low ? 'empty'
+      : /^0x[0-9a-f]{40}$/.test(low) ? 'address'
+      : /^0x[0-9a-f]*$/.test(low) ? 'partial'
+      : low[0] === '$' ? 'ticker'
+      : low.indexOf('/') >= 0 ? 'agent'
+      : 'all';
+    var term = low.replace(/^[@$]/, '');
+    var MODES = { address: 'Contract or wallet', partial: 'Address', ticker: 'Ticker', agent: 'Agent SLUG', all: '' };
+
+    // Splits a label around the matched text so the match can be highlighted.
+    var cut = function (label, needle) {
+      var i = needle ? label.toLowerCase().indexOf(needle) : -1;
+      return i < 0 ? { a: label, m: '', b: '' } : { a: label.slice(0, i), m: label.slice(i, i + needle.length), b: label.slice(i + needle.length) };
+    };
+    var short = function (a) { return a.slice(0, 6) + '…' + a.slice(-5); };
+
+    var toks = [], users = [], agents = [];
+    if (mode === 'empty') {
+      toks = [TOKENS[0], TOKENS[2], TOKENS[4]].map(function (t) { return { item: t, hl: cut(t.t, '') }; });
+      agents = [AGENTS[0], AGENTS[3]].map(function (a) { return { item: a, hl: cut(a.s, '') }; });
+    } else if (mode === 'address' || mode === 'partial') {
+      var hit = function (addr) { return mode === 'address' ? addr.toLowerCase() === low : low.length >= 3 && addr.toLowerCase().indexOf(low) === 0; };
+      toks = TOKENS.filter(function (t) { return hit(t.ca); }).map(function (t) { return { item: t, hl: cut(t.t, ''), sub: t.ca }; });
+      users = USERS.filter(function (u) { return hit(u.wallet); }).map(function (u) { return { item: u, hl: cut(u.u, ''), sub: u.wallet }; });
+    } else {
+      if (mode === 'ticker' || mode === 'all') {
+        toks = TOKENS.filter(function (t) { return t.t.toLowerCase().indexOf(term) === 0 || (mode === 'all' && t.name.toLowerCase().indexOf(term) >= 0); })
+          .map(function (t) { return { item: t, hl: cut(t.t, term) }; });
+      }
+      if (mode === 'all') {
+        users = USERS.filter(function (u) { return u.u.indexOf(term) >= 0; }).map(function (u) { return { item: u, hl: cut(u.u, term) }; });
+      }
+      if (mode === 'agent' || mode === 'all') {
+        agents = AGENTS.filter(function (a) { return a.s.toLowerCase().indexOf(term) >= 0; }).map(function (a) { return { item: a, hl: cut(a.s, term) }; });
+      }
+    }
+
+    var f = st.f;
+    var showT = toks.length > 0 && (f === 'all' || f === 'tokens');
+    var showU = users.length > 0 && (f === 'all' || f === 'users');
+    var showA = agents.length > 0 && (f === 'all' || f === 'agents');
+    var flat = [];
+    if (showU) users.forEach(function (x) { flat.push({ kind: 'user', x: x }); });
+    if (showA) agents.forEach(function (x) { flat.push({ kind: 'agent', x: x }); });
+    if (showT) toks.forEach(function (x) { flat.push({ kind: 'tok', x: x }); });
+    var sel = Math.min(st.sel, Math.max(0, flat.length - 1));
+    var cur = flat[sel];
+
+    var copy = function (id, value) {
+      return function (e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        try { navigator.clipboard.writeText(value); } catch (err) {}
+        self.setState({ copied: id, toast: 'Copied ' + value });
+        clearTimeout(self.timer);
+        self.timer = setTimeout(function () { self.setState({ copied: null, toast: null }); }, 1600);
+      };
+    };
+    var row = function (kind, x, i) {
+      var on = cur && cur.kind === kind && cur.x === x;
+      var it = x.item;
+      var base = { a: x.hl.a, m: x.hl.m, b: x.hl.b, bg: on ? '#1a1918' : 'transparent', edge: on ? '#f8622e' : 'transparent',
+        pick: function () { self.setState({ sel: flat.indexOf(flat.filter(function (r) { return r.x === x; })[0]) }); },
+        chColor: it.up ? UP : DOWN, ch: it.ch, color: it.color || '#b8b5ad', hasPic: !!it.pic, noPic: !it.pic, pic: it.pic || '' };
+      if (kind === 'tok') { base.a = '$' + x.hl.a; base.init = it.t.slice(0, 2); base.name = it.name; base.price = it.price; base.sub = x.sub || short(it.ca); }
+      if (kind === 'user') { base.init = it.u.slice(0, 2).toUpperCase(); base.sub = x.sub ? short(x.sub) + ' · wallet match' : it.cat + ' · ' + it.agents + (it.agents === '1' ? ' agent' : ' agents'); }
+      if (kind === 'agent') { base.init = it.owner.slice(0, 2).toUpperCase(); base.sub = it.status + ' · ' + it.strat; base.dot = it.status === 'Live' ? UP : '#85827a'; }
+      return base;
+    };
+
+    var p = {};
+    if (cur) {
+      var it = cur.x.item;
+      p = Object.assign({}, it, { chColor: it.up ? UP : DOWN, color: it.color || '#b8b5ad', hasPic: !!it.pic, noPic: !it.pic });
+      if (cur.kind === 'tok') {
+        p.init = it.t.slice(0, 2); p.tk = '$' + it.t;
+        p.copyCa = copy('ca', it.ca); p.caDone = st.copied === 'ca'; p.caIdle = st.copied !== 'ca';
+        p.copyBy = copy('by', it.by); p.byDone = st.copied === 'by';
+      } else {
+        p.init = (it.u || it.owner).slice(0, 2).toUpperCase();
+        p.copySlug = copy('slug', it.u || it.s); p.slugDone = st.copied === 'slug';
+        if (it.wallet) { p.copyWallet = copy('wallet', it.wallet); p.walletDone = st.copied === 'wallet'; }
+        p.dot = it.status === 'Live' ? UP : '#85827a';
+      }
+    }
+
+    var pill = function (yes) { return yes ? { bg: '#262522', color: '#f5f3ee', border: '#5a564f' } : { bg: 'transparent', color: '#9a978f', border: '#2a2824' }; };
+    var PA = pill(f === 'all'), PT = pill(f === 'tokens'), PU = pill(f === 'users'), PG = pill(f === 'agents');
+    var setF = function (v) { return function () { self.setState({ f: v, sel: 0 }); }; };
+    var setQ = function (v) { return function () { self.setState({ q: v, f: 'all', sel: 0 }); }; };
+    var total = toks.length + users.length + agents.length;
+
+    var emptyTitle = 'No results for “' + raw + '”', emptyBody = 'Try a $ticker, a full 0x contract address, a username, or username/agent for an agent.';
+    if (mode === 'address') { emptyTitle = 'Nothing on SLUGS at this address'; emptyBody = 'No token, user or agent here uses ' + raw + '. It may be a token Baum hasn’t indexed yet.'; }
+    if (mode === 'partial') { emptyTitle = 'Keep pasting'; emptyBody = 'Addresses are 42 characters, 0x plus 40. Paste the whole contract for an exact match.'; }
+    if (flat.length === 0 && total > 0) { emptyTitle = 'Nothing in this tab'; emptyBody = 'Switch back to All to see the ' + total + ' result' + (total === 1 ? '' : 's') + '.'; }
+
+    var hint = mode === 'empty' ? 'Trending now'
+      : mode === 'address' ? 'Exact match'
+      : mode === 'ticker' ? 'Tokens by ticker'
+      : mode === 'agent' ? 'Agents by SLUG'
+      : mode === 'partial' ? 'Address starts with'
+      : total + ' results';
+
+    return {
+      q: st.q, hasMode: !!MODES[mode], modeLabel: MODES[mode] || '',
+      type: function (e) { self.setState({ q: String(e.target.value), sel: 0, f: 'all' }); },
+      key: function (e) {
+        if (e.key === 'ArrowDown') { e.preventDefault(); self.setState({ sel: Math.min(flat.length - 1, sel + 1) }); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); self.setState({ sel: Math.max(0, sel - 1) }); }
+        if (e.key === 'Escape') self.setState({ q: '', sel: 0 });
+        if (e.key === 'Enter' && cur) {
+          var label = cur.kind === 'tok' ? '$' + cur.x.item.t : (cur.x.item.u || cur.x.item.s);
+          self.setState({ toast: 'Opens ' + label });
+          clearTimeout(self.timer);
+          self.timer = setTimeout(function () { self.setState({ toast: null }); }, 1600);
+        }
+      },
+      tryGoo: setQ('goo'), tryTicker: setQ('$SLU'), tryCa: setQ('0xa5A0A37778D6b656A37b2E10c13E2E31826ff10A'),
+      tryWallet: setQ('0xf6414c58f65b106232871c0d566c417054ef6b92'), tryAgent: setQ('goobz/'), tryPartial: setQ('0x3b7e'),
+      tryNone: setQ('zzzz'), tryEmpty: setQ(''),
+      fAll: f === 'all', fTok: f === 'tokens', fUser: f === 'users', fAgent: f === 'agents',
+      showAll: setF('all'), showTok: setF('tokens'), showUser: setF('users'), showAgent: setF('agents'),
+      allBg: PA.bg, allColor: PA.color, allBorder: PA.border, tokBg: PT.bg, tokColor: PT.color, tokBorder: PT.border,
+      userBg: PU.bg, userColor: PU.color, userBorder: PU.border, agentBg: PG.bg, agentColor: PG.color, agentBorder: PG.border,
+      nAll: total, nTok: toks.length, nUser: users.length, nAgent: agents.length, hint: hint,
+      showPartial: mode === 'partial', addrLen: low.length, addrPct: Math.round(low.length / 42 * 100) + '%',
+      hasRows: flat.length > 0, noRows: flat.length === 0,
+      showTokRows: showT, showUserRows: showU, showAgentRows: showA,
+      tokHead: mode === 'empty' ? 'TRENDING TOKENS' : mode === 'address' ? 'CONTRACT MATCH' : 'TOKENS', tokRight: mode === 'address' || mode === 'partial' ? 'PRICE' : 'PRICE · 24H',
+      userHead: mode === 'address' ? 'WALLET MATCH' : 'USERS', agentHead: mode === 'empty' ? 'TOP AGENTS' : 'AGENTS',
+      tokRows: showT ? toks.map(function (x, i) { return row('tok', x, i); }) : [],
+      userRows: showU ? users.map(function (x, i) { return row('user', x, i); }) : [],
+      agentRows: showA ? agents.map(function (x, i) { return row('agent', x, i); }) : [],
+      selTok: !!cur && cur.kind === 'tok', selUser: !!cur && cur.kind === 'user', selAgent: !!cur && cur.kind === 'agent', p: p,
+      emptyTitle: emptyTitle, emptyBody: emptyBody, emptyIsAddr: mode === 'address' && total === 0,
+      toast: !!st.toast, toastText: st.toast || ''
+    };
+  }
+}
+</script>
+</body>
+</html>

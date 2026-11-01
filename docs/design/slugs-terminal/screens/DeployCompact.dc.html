@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Deploy, compact concepts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+*{box-sizing:border-box}
+.wrap{min-height:1760px;padding:32px 40px;background:#0b0b0a;color:#f5f3ee;font:13px/1.45 Inter,-apple-system,system-ui,sans-serif;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;gap:22px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+.dim{color:#85827a}.faint{color:#6f6c65}
+.lbl{font-size:10px;letter-spacing:.14em;color:#6f6c65;text-transform:uppercase}
+.concept{display:flex;flex-direction:column;gap:10px}
+.concept h2{margin:0;font-size:14px;font-weight:600}.concept h2 span{font-weight:400;color:#85827a;margin-left:8px;font-size:12.5px}.concept h2 .rec{color:#0b0b0a;font-weight:700;font-size:9.5px}
+.rec{font-size:9.5px;letter-spacing:.12em;padding:2px 6px;border-radius:4px;background:#f8622e;color:#0b0b0a;font-weight:700;margin-left:8px;vertical-align:2px}
+.screen{position:relative;height:330px;border:1px solid #1f1e1c;border-radius:10px;background:#0b0b0a;overflow:hidden}
+.bar{display:flex;align-items:center;gap:12px;height:36px;padding:0 12px;border-bottom:1px solid #1f1e1c;background:#0a0a09;font-size:12px;color:#9a978f}
+.bar img{height:11px;image-rendering:pixelated}
+.panel{border:1px solid #1f1e1c;border-radius:8px;background:#0f0f0e}
+.field{display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;border:1px solid #2a2824;border-radius:6px;background:#0b0b0a}
+.field:focus-within{border-color:#f8622e}
+.field img{width:18px;height:18px;border-radius:50%;object-fit:cover}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:30px;padding:0 12px;border-radius:6px;border:1px solid #ece9e2;background:#ece9e2;color:#0b0b0a;font:600 12px Inter,sans-serif;white-space:nowrap}
+.btn.ghost{background:transparent;color:#d6d3cb;border-color:#2a2824}
+.kbd{font:500 10px Inter,sans-serif;padding:1px 4px;border:1px solid #3a3732;border-radius:3px;color:#9a978f}
+.tag{display:inline-flex;align-items:center;height:20px;padding:0 7px;border:1px solid #2a2824;border-radius:4px;font:500 11px 'JetBrains Mono',monospace;color:#b8b5ad;white-space:nowrap}
+.kv{display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid #171615;font-size:12px}.kv:first-of-type{border-top:0}.kv span{color:#85827a}
+.roll{display:inline-block;height:18px;overflow:hidden;vertical-align:bottom}
+.roll i{display:block;font-style:normal;height:18px;line-height:18px;animation:roll 12s steps(1) infinite}
+@keyframes roll{0%{transform:translateY(0)}16.6%{transform:translateY(-18px)}33.3%{transform:translateY(-36px)}50%{transform:translateY(-54px)}66.6%{transform:translateY(-72px)}83.3%{transform:translateY(-90px)}}
+.ghost-roll{position:relative;display:inline-block;height:18px;overflow:hidden;vertical-align:bottom;color:#5a564f}
+.ghost-roll b{display:block;font-weight:500;height:18px;line-height:18px;animation:rollsmooth 12s cubic-bezier(.7,0,.3,1) infinite}
+@keyframes rollsmooth{0%,13%{transform:translateY(0)}16.6%,30%{transform:translateY(-18px)}33.3%,47%{transform:translateY(-36px)}50%,63%{transform:translateY(-54px)}66.6%,80%{transform:translateY(-72px)}83.3%,97%{transform:translateY(-90px)}100%{transform:translateY(-108px)}}
+.marq{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marq>div{display:flex;gap:6px;width:max-content;animation:marq 22s linear infinite}
+@keyframes marq{to{transform:translateX(-50%)}}
+.marq:hover>div{animation-play-state:paused}
+.coach{position:absolute;width:232px;padding:10px 11px;border:1px solid #2a2824;border-radius:8px;background:#141413;box-shadow:0 14px 40px rgba(0,0,0,.6);font-size:12px;animation:cin .35s ease-out both}
+.coach::before{content:'';position:absolute;top:-5px;left:var(--a,24px);width:8px;height:8px;background:#141413;border-left:1px solid #2a2824;border-top:1px solid #2a2824;transform:rotate(45deg)}
+.coach strong{display:block;font-size:12.5px;margin-bottom:2px}
+.coach p{margin:0;color:#9a978f;line-height:1.45}
+.coach .cf{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10.5px;color:#6f6c65}
+.coach .cf .n{margin-left:auto;height:22px;padding:0 9px;border-radius:5px;background:#ece9e2;color:#0b0b0a;font-weight:600;font-size:11px;display:inline-flex;align-items:center}
+.coach .cf .s{color:#85827a}
+@keyframes cin{from{opacity:0;transform:translateY(6px)}}
+.ring{position:absolute;border-radius:8px;box-shadow:0 0 0 1.5px #f8622e,0 0 0 9999px rgba(4,4,4,.5);pointer-events:none}
+.chat{position:absolute;left:12px;bottom:12px;width:300px;border:1px solid #2a2824;border-radius:10px;background:#111110;box-shadow:0 20px 50px rgba(0,0,0,.6);font-size:12px;overflow:hidden}
+.chat .h{display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border-bottom:1px solid #1f1e1c}
+.chat .h img{width:18px;height:18px;border-radius:5px}
+.chat .m{padding:10px;display:flex;flex-direction:column;gap:6px}
+.chat .b{align-self:flex-start;max-width:85%;padding:6px 9px;border-radius:9px;border-bottom-left-radius:3px;background:#141413;border:1px solid #1f1e1c;color:#b8b5ad}
+.chat .y{align-self:flex-end;padding:6px 9px;border-radius:9px;border-bottom-right-radius:3px;background:#262522}
+.chat .q{display:flex;gap:5px;padding:0 10px 10px;flex-wrap:wrap}
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.notes div{padding:12px 14px;border:1px solid #1f1e1c;border-radius:10px;background:#0f0f0e;font-size:12.5px;line-height:1.55;color:#b8b5ad}.notes b{display:block;color:#f5f3ee;margin-bottom:4px;font-size:12px}
+@media (prefers-reduced-motion:reduce){.roll i,.ghost-roll b,.marq>div,.coach{animation:none!important}}
+</style>
+</helmet>
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:6px;max-width:980px">
+    <h1 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.02em">Deploy a slug: three compact concepts</h1>
+    <p style="margin:0;color:#9a978f;font-size:13.5px">Terminal density, like the leaderboard: 12–13px type, 30–32px controls, hairline borders. No Shuffle; name ideas animate in place. Walkthrough cards shrink to 232px. Each frame is drawn at real size.</p>
+  </header>
+
+  <section class="concept">
+    <h2>A · Command bar<span class="rec">RECOMMENDED</span><span>One line, like a terminal prompt: the idea rolls in as ghost text, Tab takes it.</span></h2>
+    <div class="screen">
+      <div class="bar"><img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS"><span>Leaderboard</span><span>Agents</span><span>Vaults</span><span>$SLUGS</span></div>
+      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px;max-width:760px">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:17px;font-weight:600">Deploy a slug</span><span class="dim" style="font-size:12px">Name it for what it does, then set it up by chat or in Telegram.</span></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="field" style="flex:1;border-color:#f8622e">
+            <img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="">
+            <span class="mono" style="font-size:13px">goobz<span class="dim">/</span></span>
+            <span class="mono" style="font-size:13px;display:inline-flex"><span class="ghost-roll"><b>dca-bot</b><b>hodl-bot</b><b>sniper-bot</b><b>copy-trader</b><b>spot-trader</b><b>dip-buyer</b><b>dca-bot</b></span></span>
+            <span style="margin-left:auto" class="kbd">Tab</span>
+          </div>
+          <span class="btn">💬 Chat <span class="kbd" style="border-color:#5a564f;color:#3a3732">↵</span></span>
+          <span class="btn ghost">✈ Telegram</span>
+        </div>
+        <div style="display:flex;gap:16px;font-size:11.5px" class="dim"><span><span class="faint">Strategy</span> DCA</span><span><span class="faint">Wallet</span> new, its own</span><span><span class="faint">Account</span> SLUGS + Baum, one</span></div>
+      </div>
+      <div class="ring" style="left:22px;top:91px;width:517px;height:36px"></div>
+      <div class="coach" style="left:22px;top:139px;--a:30px"><strong>Name your slug</strong><p>Type what it does. An idea rolls in; press Tab to take it.</p><div class="cf"><span>1 / 4</span><span class="s" style="margin-left:auto">Skip</span><span class="n" style="margin-left:6px">Next</span></div></div>
+    </div>
+  </section>
+
+  <section class="concept">
+    <h2>B · Side panel<span>Like Axiom’s trade panel: a narrow form on the left, a live preview of the agent on the right.</span></h2>
+    <div class="screen">
+      <div class="bar"><img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS"><span>Leaderboard</span><span>Agents</span><span>Vaults</span><span>$SLUGS</span></div>
+      <div style="display:grid;grid-template-columns:300px 1fr;gap:12px;padding:12px;height:calc(100% - 36px)">
+        <div class="panel" style="padding:12px;display:flex;flex-direction:column;gap:10px">
+          <span class="lbl">Deploy a slug</span>
+          <div class="field"><span class="mono dim" style="font-size:12.5px">goobz/</span><span class="mono" style="font-size:12.5px">dca-bot</span></div>
+          <div class="marq"><div><span class="tag">dca-bot</span><span class="tag">hodl-bot</span><span class="tag">sniper-bot</span><span class="tag">copy-trader</span><span class="tag">spot-trader</span><span class="tag">dip-buyer</span><span class="tag">dca-bot</span><span class="tag">hodl-bot</span><span class="tag">sniper-bot</span><span class="tag">copy-trader</span><span class="tag">spot-trader</span><span class="tag">dip-buyer</span></div></div>
+          <span class="lbl" style="margin-top:4px">Set it up</span>
+          <div style="display:flex;padding:2px;border:1px solid #1f1e1c;border-radius:6px;background:#111110"><span style="flex:1;height:26px;border-radius:4px;background:#262522;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">Chat here</span><span style="flex:1;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#9a978f">Telegram</span></div>
+          <span class="btn" style="width:100%;margin-top:auto">Continue</span>
+        </div>
+        <div class="panel" style="padding:14px;display:flex;flex-direction:column;gap:10px">
+          <span class="lbl">Preview</span>
+          <div style="display:flex;align-items:center;gap:10px"><img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:30px;height:30px;border-radius:7px"><span><span class="mono" style="display:block;font-size:13px">goobz<span class="dim">/dca-bot</span></span><span class="dim" style="font-size:11.5px">Spot traders · new</span></span></div>
+          <div><div class="kv"><span>Buys</span>Set in chat</div><div class="kv"><span>Every</span>Day or week</div><div class="kv"><span>Wallet</span>Its own, made by Baum</div><div class="kv"><span>Shows in</span>SLUGS and Telegram</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="concept">
+    <h2>C · Chat-first<span>The page is one line; the chat opens right away in the corner and does the rest.</span></h2>
+    <div class="screen">
+      <div class="bar"><img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS"><span>Leaderboard</span><span>Agents</span><span>Vaults</span><span>$SLUGS</span></div>
+      <div style="padding:16px 24px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:15px;font-weight:600">Deploy</span>
+        <div class="field" style="width:300px"><span class="mono dim" style="font-size:12.5px">goobz/</span><span class="mono" style="font-size:12.5px"><span class="roll"><i>dca-bot</i><i>hodl-bot</i><i>sniper-bot</i><i>copy-trader</i><i>spot-trader</i><i>dip-buyer</i></span></span></div>
+        <span class="btn ghost">✈ Telegram instead</span>
+      </div>
+      <div class="chat">
+        <div class="h"><img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt=""><span class="mono">goobz<span class="dim">/dca-bot</span></span><span class="dim" style="margin-left:auto;font-size:11px">1 / 3</span></div>
+        <div class="m"><span class="b">Hey, I’m dca-bot. What should I buy?</span><span class="y">$SLUGS and ETH</span><span class="b">How much each time?</span></div>
+        <div class="q"><span class="tag">$10</span><span class="tag" style="border-color:#5a564f;color:#f5f3ee">$25</span><span class="tag">$50</span><span class="tag">$100</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="notes">
+    <div><b>Same in all three</b>No Shuffle. The bot’s name is the only big thing; ideas animate (rolling ghost text in A and C, a slow ticker in B that pauses on hover). Buttons are 30px like the rest of the terminal.</div>
+    <div><b>Walkthrough cards</b>232px wide, 12px text, a one-line title, “1 / 4 · Skip · Next” on one row, and a thinner 1.5px highlight. Four steps instead of five: the one-account note folds into the Telegram step.</div>
+    <div><b>The chat</b>300px, 12px text, compact header with step count, answers as small tags. It sits in the bottom-left corner and doesn’t cover the name.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1760}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
