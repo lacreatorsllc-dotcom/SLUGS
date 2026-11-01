@@ -75,9 +75,9 @@ function ExampleSlug() {
   </>
 }
 
-// The first card's examples: SLUGS people and the bots they run. goobz shows alone
-// first, then opens into a 2x2 grid where goobz stays put and the other three slots
-// take turns cycling through everyone else.
+// The first card's examples: SLUGS people and the bots they run. The first shows alone,
+// then opens into a 2x2 grid where it stays put and the other three slots take turns
+// cycling through everyone else.
 type Example = { username: string; agent: string; picture?: string }
 const OTHERS: Example[] = [
   { username: 'brokentyrant', agent: 'sniper-bot', picture: 'welcome/brokentyrant.jpg' },
@@ -87,6 +87,7 @@ const OTHERS: Example[] = [
   { username: 'fwaz', agent: 'dev-bot', picture: 'welcome/fwaz.jpg' },
   { username: '12g8ge', agent: 'mev-bot', picture: 'welcome/12g8ge.jpg' },
 ]
+const [LEAD, ...ROTATING] = OTHERS
 const INTRO_MS = 1800
 const SWAP_MS = 3000
 
@@ -97,7 +98,7 @@ function ExampleChip({ example, className = '', delay }: { example: Example; cla
   </span>
 }
 
-/** goobz alone, then four at a time with three slots rotating (still for reduced motion). */
+/** One example alone, then four at a time with three slots rotating (still for reduced motion). */
 function ExampleBots() {
   const still = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
   const [grid, setGrid] = useState(still)
@@ -114,16 +115,15 @@ function ExampleBots() {
     if (still || !grid || paused) return
     const timer = window.setInterval(() => setRotation(({ slots, next, turn }) => {
       const updated = [...slots]
-      updated[turn % 3] = next % OTHERS.length
+      updated[turn % 3] = next % ROTATING.length
       return { slots: updated, next: next + 1, turn: turn + 1 }
     }), SWAP_MS)
     return () => window.clearInterval(timer)
   }, [still, grid, paused])
-  const goobz = { username: EXAMPLE.username, agent: EXAMPLE.agent }
-  if (!grid) return <span className="t-welcome-slugs t-welcome-slugs--one"><ExampleChip example={goobz} className="t-welcome-slug--lead" /></span>
+  if (!grid) return <span className="t-welcome-slugs t-welcome-slugs--one"><ExampleChip example={LEAD} className="t-welcome-slug--lead" /></span>
   return <span className="t-welcome-slugs t-welcome-slugs--grid" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-    <ExampleChip example={goobz} className="t-welcome-swap" />
-    {rotation.slots.map((index, slot) => <ExampleChip key={`${slot}-${OTHERS[index].username}`} example={OTHERS[index]} className="t-welcome-swap" delay={rotation.turn ? undefined : 150 * (slot + 1)} />)}
+    <ExampleChip example={LEAD} className="t-welcome-swap" />
+    {rotation.slots.map((index, slot) => <ExampleChip key={`${slot}-${ROTATING[index].username}`} example={ROTATING[index]} className="t-welcome-swap" delay={rotation.turn ? undefined : 150 * (slot + 1)} />)}
   </span>
 }
 
@@ -183,9 +183,9 @@ function Tour({ onDone }: { onDone: () => void }) {
       body: 'Turn any agent’s PnL into a card with its profile picture. Pick Classic, Spotlight or Hero, then post it on X or download it. Tap the chart icon on your profile or on any agent’s page.',
       art: <div className="t-welcome-art t-welcome-art--center t-welcome-pnl">
         <span className="t-welcome-pnl-cards">
-          {(['spotlight', 'classic', 'hero'] as const).map((style) => <img key={style} className={`t-welcome-pnl-${style}`} src={`${import.meta.env.BASE_URL}welcome/pnl-${style}.jpg`} alt="" width="400" height="400" />)}
+          <img className="t-welcome-pnl-spotlight" src={`${import.meta.env.BASE_URL}welcome/pnl-spotlight.jpg`} alt="" width="400" height="400" />
         </span>
-        <small className="t-welcome-caption"><Icon name="x" size={11} />Post on X · Download PNG · Example cards</small>
+        <small className="t-welcome-caption"><Icon name="x" size={11} />Post on X · Download PNG · Example card</small>
       </div>,
     },
     {
@@ -208,8 +208,8 @@ function Tour({ onDone }: { onDone: () => void }) {
       : {
           title: <>Claim<br />your slug.</>,
           body: guest
-            ? 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/dca-bot. Make your Baum account in Telegram before your invite runs out to claim yours.'
-            : 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/sniper-bot. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader or spot-trader. Pick your username right here on SLUGS, or tell Baum in Telegram.',
+            ? 'Your slug is your agent’s identifier: your username, then what the agent does. Make your Baum account in Telegram before your invite runs out to claim yours.'
+            : 'Your slug is your agent’s identifier: your username, then what the agent does. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader or spot-trader. Pick your username right here on SLUGS, or tell Baum in Telegram.',
           art: <div className="t-welcome-art t-welcome-art--center">
             <span className="t-welcome-slug t-welcome-slug--empty" aria-label="Example bots: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader, spot-trader"><ExampleSlug /></span>
             {guest

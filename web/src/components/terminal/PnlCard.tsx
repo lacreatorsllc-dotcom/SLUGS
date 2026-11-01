@@ -18,10 +18,11 @@ export default function PnlCard({ agent, range }: { agent: Agent; range: Range }
   const [error, setError] = useState('')
   const [imageError, setImageError] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [thumbsReady, setThumbsReady] = useState(false)
   const [revision, setRevision] = useState(0)
   useEffect(() => {
     const controller = new AbortController()
-    setCapture(null); setError(''); setLoaded(false); setImageError(false)
+    setCapture(null); setError(''); setLoaded(false); setThumbsReady(false); setImageError(false)
     fetch(`${import.meta.env.BASE_URL}api/pnl`, {
       method: 'POST', credentials: 'same-origin', signal: controller.signal,
       headers: { 'content-type': 'application/json' }, body: JSON.stringify({ wallet: agent.id, range }),
@@ -39,7 +40,7 @@ export default function PnlCard({ agent, range }: { agent: Agent; range: Range }
     try { localStorage.setItem('slugs.pnl.style', next) } catch { /* The choice still works for this visit. */ }
   }
   const query = capture ? new URLSearchParams({ card: capture.card, sig: capture.sig, style }) : null
-  const imageUrl = (choice: Style) => `${import.meta.env.BASE_URL}api/pnl?${new URLSearchParams({ card: capture?.card ?? '', sig: capture?.sig ?? '', style: choice, format: 'image' })}`
+  const imageUrl = (choice: Style, size?: number) => `${import.meta.env.BASE_URL}api/pnl?${new URLSearchParams({ card: capture?.card ?? '', sig: capture?.sig ?? '', style: choice, format: 'image', ...(size ? { size: String(size) } : {}) })}`
   const shareUrl = query ? `${location.origin}${import.meta.env.BASE_URL}share/pnl?${query}` : ''
   const amount = capture ? `${capture.snapshot.pnlUsd >= 0 ? '+' : '−'}$${Math.abs(capture.snapshot.pnlUsd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : ''
   const twitter = `https://twitter.com/intent/tweet?${new URLSearchParams({ text: `${capture?.snapshot.name ?? agent.name} · ${rangeLabel(range)} PnL ${amount} on @slugsrun`, url: shareUrl })}`
@@ -47,12 +48,12 @@ export default function PnlCard({ agent, range }: { agent: Agent; range: Range }
     {error ? <Callout error onRetry={() => setRevision((value) => value + 1)}>{error}</Callout> : <>
       <div className="t-pnl-preview" aria-busy={!loaded && !imageError}>
         {(!capture || !loaded) && !imageError && <div className="t-pnl-loading t-skeleton" role="status"><Icon name="chart" size={28} /><span>Preparing your PnL card…</span></div>}
-        {capture && !imageError && <img key={`${capture.sig}-${style}`} src={imageUrl(style)} width="1080" height="1080" alt={`${capture.snapshot.name}, ${rangeLabel(range)} PnL ${amount}, ${style} card`} onLoad={() => setLoaded(true)} onError={() => { setImageError(true); setLoaded(false) }} />}
+        {capture && !imageError && <img key={`${capture.sig}-${style}`} src={imageUrl(style, 540)} width="1080" height="1080" alt={`${capture.snapshot.name}, ${rangeLabel(range)} PnL ${amount}, ${style} card`} onLoad={() => { setLoaded(true); setThumbsReady(true) }} onError={() => { setImageError(true); setLoaded(false) }} />}
         {imageError && <Callout error onRetry={() => setRevision((value) => value + 1)}>Couldn’t render the card. Try again.</Callout>}
       </div>
       <div className="t-pnl-templates" role="group" aria-label="PnL card style">
         {styles.map((choice) => <button type="button" key={choice.id} aria-pressed={style === choice.id} onClick={() => choose(choice.id)} disabled={!capture}>
-          {capture ? <img src={imageUrl(choice.id)} width="1080" height="1080" alt="" loading="lazy" /> : <span className="t-skeleton" />}<span>{choice.name}{style === choice.id && <Icon name="check" size={13} />}</span>
+          {capture && thumbsReady ? <img src={imageUrl(choice.id, 240)} width="1080" height="1080" alt="" loading="lazy" /> : <span className="t-skeleton" />}<span>{choice.name}{style === choice.id && <Icon name="check" size={13} />}</span>
         </button>)}
       </div>
       {capture && <div className="t-pnl-share-actions">

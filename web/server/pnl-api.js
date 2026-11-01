@@ -54,9 +54,27 @@ async function capture(req, res) {
   return res.status(200).json({ card, sig: signature(card), snapshot })
 }
 
+// Rendering is the slow part, and one open dialog asks for the same card four times (the
+// preview and three style thumbnails), so recent pictures and finished images are kept.
+function remember(cache, key, value, max) {
+  cache.set(key, value)
+  if (cache.size > max) cache.delete(cache.keys().next().value)
+  return value
+}
+const pictures = new Map()
+const images = new Map()
+
 // Only Baum's known public avatar route is fetched; a card cannot be used as a URL proxy.
 async function picture(url) {
   if (typeof url !== 'string') return null
+  const cached = pictures.get(url)
+  if (cached && Date.now() - cached.at < 10 * 60 * 1000) return cached.value
+  const value = await fetchPicture(url)
+  if (value) remember(pictures, url, { value, at: Date.now() }, 30)
+  return value
+}
+
+async function fetchPicture(url) {
   let avatar
   try { avatar = new URL(url) } catch { return null }
   if (avatar.origin !== 'https://baumai.xyz' || !/^\/api\/avatar\/0x[0-9a-f]{40}$/i.test(avatar.pathname)) return null
@@ -94,9 +112,15 @@ export default async function handler(req, res) {
     const image = `${SITE}/api/pnl?${query}&format=image`
     const page = `${SITE}/share/pnl?${query}`
     if (req.query.format === 'image') {
-      const [[regular, bold, logo], avatar] = await Promise.all([assets(), picture(snapshot.avatarUrl)])
-      const svg = renderPnlCard(snapshot, style, { logo: `data:image/png;base64,${logo.toString('base64')}`, avatar })
-      const png = new Resvg(svg, { font: { fontBuffers: [regular, bold], loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render().asPng()
+      // Previews and thumbnails are drawn at the width they're shown; the download and the X preview stay 1080.
+      const width = [240, 540].includes(Number(req.query.size)) ? Number(req.query.size) : 1080
+      const cacheKey = `${req.query.card}|${req.query.sig}|${style}|${width}`
+      let png = images.get(cacheKey)
+      if (!png) {
+        const [[regular, bold, logo], avatar] = await Promise.all([assets(), picture(snapshot.avatarUrl)])
+        const svg = renderPnlCard(snapshot, style, { logo: `data:image/png;base64,${logo.toString('base64')}`, avatar })
+        png = remember(images, cacheKey, new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: { fontBuffers: [regular, bold], loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render().asPng(), 24)
+      }
       res.setHeader('content-type', 'image/png')
       res.setHeader('cache-control', 'public, max-age=86400, s-maxage=86400')
       res.setHeader('content-disposition', `${req.query.download === '1' ? 'attachment' : 'inline'}; filename="slugs-pnl-${style}-${snapshot.range}.png"`)

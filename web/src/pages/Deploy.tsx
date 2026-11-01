@@ -6,7 +6,7 @@ import { AvatarRing, Callout, EmptyState, IconLink } from '../components/termina
 import { call, reasonText } from '../lib/account'
 import { useAuthSession } from '../lib/auth-context'
 import { baumLinks } from '../lib/baum'
-import { MAX_NAME, MAX_TOKENS, MIN_BUY_USD, agentSlugPart, perMonthUsd, randomName, setupMessage, setupProblem, type Every, type Setup, type TokenPick } from '../lib/deploy'
+import { MAX_NAME, MAX_TOKENS, MIN_BUY_USD, SUGGESTED_AGENTS, agentSlugPart, perMonthUsd, setupMessage, setupProblem, type Every, type Setup, type TokenPick } from '../lib/deploy'
 import { money } from '../lib/terminal-format'
 import { shortAddress } from '../lib/terminal-model'
 
@@ -32,7 +32,7 @@ export function ConnectedNote() {
 
 export default function Deploy() {
   const { user, guest } = useAuthSession()
-  const [name, setName] = useState(randomName)
+  const [name, setName] = useState<string>(SUGGESTED_AGENTS[0].name)
   const [tokens, setTokens] = useState<TokenPick[]>([SUGGESTED[0]])
   const [contract, setContract] = useState('')
   const [amount, setAmount] = useState('25')
@@ -100,8 +100,11 @@ export default function Deploy() {
     <form className="t-feature-card t-deploy-form" onSubmit={deploy}>
       <div className="t-deploy-field">
         <label htmlFor="deploy-name">Name</label>
-        <div className="t-actions"><input id="deploy-name" value={name} maxLength={MAX_NAME} autoComplete="off" spellCheck={false} onChange={(event) => setName(event.target.value)} />
-          <button type="button" className="t-submit t-submit--secondary t-deploy-shuffle" onClick={() => setName(randomName())}><Icon name="refresh" size={14} />Shuffle</button></div>
+        <input id="deploy-name" value={name} maxLength={MAX_NAME} autoComplete="off" spellCheck={false} onChange={(event) => setName(event.target.value)} />
+        <div className="t-deploy-tokens" role="group" aria-label="Suggested trading agents">
+          {SUGGESTED_AGENTS.map((agent) => <button type="button" key={agent.name} className="t-chip" title={agent.about} aria-pressed={agentSlugPart(name) === agent.name} onClick={() => setName(agent.name)}>{agentSlugPart(name) === agent.name && <Icon name="check" size={12} />}{agent.name}</button>)}
+        </div>
+        <p className="t-fine">{SUGGESTED_AGENTS.find((agent) => agent.name === agentSlugPart(name))?.about ?? 'Suggested trading agents. Or name your own.'}</p>
         <div className="t-deploy-slug"><AvatarRing agent={{ id: user.wallets[0] ?? slug, name: user.username ?? 'you', avatarUrl: user.avatarUrl ?? undefined }} /><span className="t-mono">{user.username ?? 'you'}<span className="t-welcome-slug-agent">/{agentSlugPart(name) || 'your-agent'}</span></span><small>Its SLUG. You can rename it later.</small></div>
         {!user.username && <p className="t-fine t-negative">Pick your username first: your agents’ SLUGs start with it. <Link to="/profile?edit=username">Set my username</Link></p>}
       </div>
