@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
-import { BAUM } from '../../config'
+import { BAUM, BRAND } from '../../config'
 import { useAuthSession } from '../../lib/auth-context'
 import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
@@ -129,6 +129,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       <div className="t-welcome-text">
         <h2 id={titleId}>{current.title}</h2>
         <p>{current.body}</p>
+        {last && <p className="t-welcome-community"><Icon name="telegram" size={13} />Come say hi in the <a href={BRAND.telegram} target="_blank" rel="noreferrer">SLUGS Telegram</a>.</p>}
       </div>
       <div className="t-welcome-footer">
         <span className="t-welcome-progress" aria-label={`Step ${step + 1} of ${steps.length}`}>{steps.map((_, index) => <span key={index} className={index === step ? 'on' : index < step ? 'done' : ''} />)}</span>
