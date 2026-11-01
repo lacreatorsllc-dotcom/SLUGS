@@ -429,3 +429,48 @@
 .t-invites-share code { overflow-wrap: anywhere; max-width: 420px; }
 .t-invites-history ul { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .t-invites-history li { display: flex; align-items: center; gap: 12px; }
+
+/* Launch a paper trade strategy (pages/PaperCreate.tsx) */
+.t-paper-create { display: flex; flex-direction: column; gap: 36px; padding: 20px 0 80px; }
+.t-paper-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+.t-paper-hero h1 { font-size: 34px; line-height: 1.1; margin: 8px 0 12px; }
+.t-paper-hero .t-actions { margin-top: 16px; flex-wrap: wrap; }
+.t-paper-h2 { font-size: 18px; margin-bottom: 14px; }
+.t-paper-chart { margin: 0; padding: 16px; border: 1px solid var(--t-line); border-radius: 14px; background: var(--t-panel); }
+.t-paper-chart svg { width: 100%; height: auto; display: block; }
+.t-paper-chart figcaption { font-size: 12px; color: var(--t-muted); margin-top: 8px; }
+.t-paper-chart-start { stroke: var(--t-strong); stroke-dasharray: 4 4; }
+.t-paper-chart-label { fill: var(--t-faint); font-size: 9px; font-family: var(--t-mono); }
+.t-paper-chart-btc { fill: none; stroke: var(--t-gold); stroke-width: 2; opacity: .8; }
+.t-paper-chart-mine { fill: none; stroke: var(--t-up); stroke-width: 2.5; }
+.t-paper-chart-dot { fill: var(--t-up); }
+.t-paper-chart-gap { stroke: var(--t-up); stroke-width: 2; opacity: .5; }
+.t-paper-chart-tag { fill: var(--t-gold); font-size: 10px; font-weight: 600; }
+.t-paper-chart-tag--mine { fill: var(--t-up); }
+.t-paper-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.t-paper-fact { padding: 16px; border: 1px solid var(--t-line); border-radius: 14px; background: var(--t-panel); display: flex; flex-direction: column; gap: 8px; }
+.t-paper-fact h3 { font-size: 14px; } .t-paper-fact p { font-size: 13px; color: var(--t-muted); }
+.t-paper-how { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.t-paper-steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+.t-paper-step { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 14px; }
+.t-paper-step h3 { font-size: 15px; margin-bottom: 4px; } .t-paper-step p { font-size: 13px; color: var(--t-secondary); }
+.t-paper-step .t-actions, .t-paper-step .t-fine { margin-top: 10px; }
+.t-paper-step-number { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: var(--t-accent); border: 1px solid var(--t-burn-line); background: var(--t-burn-wash); }
+.t-paper-says { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 10px; font-size: 12px; }
+.t-paper-say { display: inline-flex; align-items: center; gap: 10px; max-width: 100%; padding: 7px 10px; border: 1px solid var(--t-strong); border-radius: 9px; background: var(--t-raised); color: var(--t-text); font: inherit; font-size: 12.5px; text-align: left; cursor: pointer; }
+.t-paper-say .t-mono { overflow-wrap: anywhere; }
+.t-paper-say-copy { display: inline-flex; align-items: center; gap: 4px; flex: none; color: var(--t-muted); font-size: 11px; }
+@media (hover: hover) { .t-paper-say:hover { border-color: var(--t-focus); } }
+.t-paper-chat { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 1px solid var(--t-line); border-radius: 16px; background: var(--t-card); }
+.t-paper-chat-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--t-secondary); padding-bottom: 8px; border-bottom: 1px solid var(--t-line); margin-bottom: 4px; }
+.t-paper-bubble { max-width: 85%; padding: 8px 11px; border-radius: 12px 12px 12px 4px; background: var(--t-raised); border: 1px solid var(--t-line); font-size: 12.5px; color: var(--t-text); align-self: flex-start; }
+.t-paper-bubble--you { align-self: flex-end; border-radius: 12px 12px 4px 12px; background: var(--t-burn-wash); border-color: var(--t-burn-line); font-family: var(--t-mono); font-size: 12px; }
+.t-paper-done { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 18px 20px; }
+.t-paper-done h2 { font-size: 16px; margin-bottom: 4px; } .t-paper-done p { font-size: 13px; }
+.t-paper-done .t-actions { flex-wrap: wrap; }
+@media (max-width: 767px) {
+  .t-paper-hero, .t-paper-how { grid-template-columns: minmax(0, 1fr); }
+  .t-paper-facts { grid-template-columns: minmax(0, 1fr); }
+  .t-paper-hero h1 { font-size: 28px; }
+  .t-paper-chat { position: static; }
+}
