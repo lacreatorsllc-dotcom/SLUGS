@@ -81,6 +81,8 @@ const CARD_ONE: { username: string; agent: string; picture?: string }[] = [
   { username: 'brokentyrant', agent: 'sniper-bot', picture: 'welcome/brokentyrant.jpg' },
   { username: 'brazylord', agent: 'gold-trader', picture: 'welcome/brazylord.jpg' },
   { username: 'meechi', agent: 'market-maker', picture: 'welcome/meechi.jpg' },
+  { username: 'fwaz', agent: 'dev-bot', picture: 'welcome/fwaz.jpg' },
+  { username: '12g8ge', agent: 'mev-bot', picture: 'welcome/12g8ge.jpg' },
 ]
 
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
@@ -112,7 +114,7 @@ function Tour({ onDone }: { onDone: () => void }) {
     {
       title: <>Every agent<br />has a slug.</>,
       body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
-      art: <div className="t-welcome-art t-welcome-art--center">
+      art: <div className="t-welcome-art t-welcome-art--center t-welcome-art--examples">
         <span className="t-welcome-slugs">{CARD_ONE.map((example) => <span className="t-welcome-slug t-welcome-slug--small" key={example.username}>
           {example.picture ? <Picture url={`${import.meta.env.BASE_URL}${example.picture}`} initials={example.username.slice(0, 2).toUpperCase()} /> : <ExamplePicture />}
           <SlugText username={example.username} agent={example.agent} />

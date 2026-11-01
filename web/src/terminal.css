@@ -323,3 +323,6 @@
 .t-welcome-pnl-cards .t-welcome-pnl-hero { transform: translateX(92px) rotate(8deg) scale(.9); }
 .t-welcome-pnl-cards .t-welcome-pnl-classic { z-index: 1; top: 0; width: 132px; height: 132px; margin-left: -66px; }
 .t-welcome-pnl .t-welcome-caption { display: inline-flex; align-items: center; gap: 6px; }
+.t-welcome-art--examples { gap: 10px; }.t-welcome-art--examples .t-welcome-slugs { gap: 6px 8px; }
+.t-welcome-art--examples .t-welcome-slug--small { padding: 5px 12px 5px 5px; }
+@media (max-width: 480px) { .t-welcome-art--examples { height: auto; min-height: 190px; } }
