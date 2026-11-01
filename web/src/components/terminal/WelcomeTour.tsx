@@ -52,6 +52,20 @@ function firstAgentPart(username: string, agents: { name: string; slug: string |
   return agent.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || null
 }
 
+// Agents are usually named for what they do.
+const AGENT_EXAMPLES = ['sniper-bot', 'dca-bot', 'scalper-bot', 'momentum-bot', 'grid-bot', 'copy-trading-bot']
+
+/** your-name/<agent>, cycling through the examples (held still for reduced motion). */
+function ExampleSlug() {
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setInterval(() => setIndex((value) => (value + 1) % AGENT_EXAMPLES.length), 1600)
+    return () => window.clearInterval(timer)
+  }, [])
+  return <SlugText username="your-name" agent={AGENT_EXAMPLES[index]} />
+}
+
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
 
 // The signed-in person's own picture.
@@ -123,10 +137,10 @@ function Tour({ onDone }: { onDone: () => void }) {
       : {
           title: <>Claim<br />your slug.</>,
           body: guest
-            ? 'Your slug is your username on Baum. Make your account in Telegram before your invite runs out and your slug shows up here.'
-            : 'Your slug is your username. Pick one right here on SLUGS, or tell Baum in Telegram. It’s how people find, follow and track you and your agents.',
+            ? 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/dca-bot. Make your Baum account in Telegram before your invite runs out to claim yours.'
+            : 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/sniper-bot. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot or copy-trading-bot. Pick your username right here on SLUGS, or tell Baum in Telegram.',
           art: <div className="t-welcome-art t-welcome-art--center">
-            <span className="t-welcome-slug t-welcome-slug--empty"><SlugText username="your-name" agent="your-agent" /></span>
+            <span className="t-welcome-slug t-welcome-slug--empty" aria-label="your-name/sniper-bot, your-name/dca-bot and more"><ExampleSlug /></span>
             {guest
               ? <a className="t-submit t-submit--secondary t-welcome-baum" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />Create my account on Baum</a>
               : <span className="t-welcome-claim">
