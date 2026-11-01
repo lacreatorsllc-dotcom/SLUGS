@@ -287,3 +287,4 @@
 .t-token-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; font-size: 13px; font-weight: 600; }.t-token-side small { font-size: 11.5px; color: var(--t-faint); }
 .t-welcome-community { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px; color: var(--t-muted); }.t-welcome-community a { color: var(--t-text); text-decoration: underline; }
 .t-welcome-slug-agent { color: var(--t-faint); }
+.t-welcome-slug--empty > span { color: var(--t-secondary); }.t-welcome-slug--empty .t-welcome-slug-agent { color: var(--t-faint); }
