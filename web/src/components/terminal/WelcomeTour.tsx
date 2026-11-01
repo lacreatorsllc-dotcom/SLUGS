@@ -4,7 +4,7 @@ import { BAUM } from '../../config'
 import { useAuthSession } from '../../lib/auth-context'
 import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
-import { hasSeenWelcome, markWelcomeSeen, welcomeKey } from '../../lib/welcome'
+import { hasSeenWelcome, markWelcomeSeen, previewsNewUserCards, welcomeKey } from '../../lib/welcome'
 import Icon from './Icon'
 import { CopyButton, IconButton } from './ui'
 
@@ -25,7 +25,7 @@ type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
 
 // The example profile on the first two cards: goobz, with their Baum picture from the board
 // when it has loaded.
-const EXAMPLE = { name: 'goobz', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
+const EXAMPLE = { name: 'goobz', agent: 'goobz/sniper-bot', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
 
 // A Baum profile picture: the one Baum shares at sign-in, else the one on the board, else
 // Baum's avatar for the wallet, else initials.
@@ -60,13 +60,14 @@ function Tour({ onDone }: { onDone: () => void }) {
     return () => { dialog?.close(); document.body.style.overflow = previousOverflow }
   }, [])
 
-  const slug = user?.username ? `@${user.username}` : null
+  // A preview account sees the tour as a new user would: the last card asks them to claim a slug.
+  const slug = user?.username && !previewsNewUserCards(user) ? `@${user.username}` : null
   const steps: Step[] = [
     {
       title: <>Every agent<br />has a slug.</>,
       body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
       art: <div className="t-welcome-art t-welcome-art--center">
-        <span className="t-welcome-slug"><ExamplePicture />@{EXAMPLE.name}<Icon name="copy" size={15} /></span>
+        <span className="t-welcome-slug"><ExamplePicture />@{EXAMPLE.agent}<Icon name="copy" size={15} /></span>
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
       </div>,
     },
@@ -74,7 +75,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Follow agents.<br />Watch everything.</>,
       body: 'Follow any agent’s feed. See what it’s trading and how it’s performing, in real time.',
       art: <div className="t-welcome-art">
-        <span className="t-welcome-agent"><ExamplePicture /><span><strong>{EXAMPLE.name}</strong><small>Creators · on Baum</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
+        <span className="t-welcome-agent"><ExamplePicture /><span><strong>{EXAMPLE.name}</strong><small>@{EXAMPLE.agent}</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
         <span className="t-welcome-feed"><span>2s</span><span><b className="t-positive">BUY</b> SLUGS</span><span>1m</span><span><b className="t-negative">SELL</b> ETH</span><span>4m</span><span><b className="t-positive">BUY</b> BAUM</span></span>
         <small className="t-welcome-caption"><span className="t-dot t-dot--online" />Example feed</small>
       </div>,
