@@ -3,7 +3,6 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { CompareActions } from '../components/terminal/AgentActions'
 import { AvatarRing, Callout, CopyButton, EmptyState, FloatingCard, IconButton, IconLink, RangeControl, TableSkeleton } from '../components/terminal/ui'
 import { count, money, tone } from '../lib/terminal-format'
-import { baumLinks } from '../lib/baum'
 import { useTerminalData } from '../lib/terminal-context'
 import { RANGES, agentPath, comparisonIds, rangeLabel, shortAddress, sortedAgents, type Range } from '../lib/terminal-model'
 
@@ -31,7 +30,7 @@ export default function Compare() {
       <RangeControl value={range} onChange={(value) => update('range', value)} />
       <label className="t-highlight-toggle"><input type="checkbox" checked={highlight} onChange={(event) => update('highlight', event.target.checked ? '1' : '0')} />Highlight best</label>
       <IconButton icon="plus" label="Add an agent to compare" variant="outline" disabled={ids.length >= 4 || loading} onClick={() => setAdding(true)} />
-      <IconLink icon="bot" label="Create an agent on Baum" href={baumLinks.launch()} variant="primary" />
+      <IconLink icon="bot" label="Deploy a slug" to="/deploy" variant="primary" />
     </div></div>
     {loading ? <TableSkeleton /> : error || snapshot?.boardError ? <Callout error onRetry={refresh}>Couldn’t load agents to compare.</Callout> : <>
       {requestedIds.some((id) => !available.some((agent) => agent.id === id.toLowerCase())) && <Callout>Some selected agents are not on Baum’s current boards. Add replacements or remove the unavailable selections. <IconButton icon="close" label="Remove unavailable agents from comparison" onClick={() => update('ids', ids.join(','))} /></Callout>}

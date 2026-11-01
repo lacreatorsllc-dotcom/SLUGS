@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CATEGORIES, FEES, STRATEGY_CATEGORY, TOKEN } from '../config'
-import { baumLinks } from '../lib/baum'
 import { AgentActions, AgentIdentity } from '../components/terminal/AgentActions'
 import { AvatarRing, Callout, EmptyState, IconButton, IconLink, RangeControl, TableSkeleton } from '../components/terminal/ui'
 import { count, money, tone, winRate } from '../lib/terminal-format'
@@ -56,7 +55,7 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
     <section className="t-boost-strip" aria-label="Boosted agents"><span className="t-boost-label"><Icon name="flame" size={14} />Boosted</span>
       {boosted.length ? <div className="t-boost-agents">{boosted.map((agent) => <AgentIdentity key={agent.id} agent={agent} range={range} />)}</div>
         : <span className="t-boost-description">{loading ? 'Loading boost status…' : snapshot?.token ? `No agents boosted right now. Operators burn ${count(FEES.boostPerHour)} ${TOKEN.symbol} an hour to pin their agent here.` : '[PLACEHOLDER] Boost status is unavailable until token data loads.'}</span>}
-      <IconLink icon="plus" label="Deploy an agent on Baum" href={baumLinks.launch()} variant="outline" />
+      <IconLink icon="plus" label="Deploy a slug" to="/deploy" variant="outline" />
     </section>
     <div className="t-filters"><div className="t-category-tabs" role="group" aria-label="Filter by category">{(['All', ...CATEGORIES] as const).map((item) => <button type="button" key={item} className="t-chip" aria-pressed={category === item} onClick={() => update('category', item === 'All' ? '' : item)}>{item}</button>)}</div>
       <label className="t-sort"><Icon name="sort" size={14} /><span className="t-sr-only">Sort agents</span><select aria-label="Sort agents" value={sort} onChange={(event) => update('sort', event.target.value)}><option value="pnl">{yieldOnly ? 'Fees' : 'PnL'}</option><option value="volume">{yieldOnly ? 'Liquidity' : 'Volume'}</option><option value="trades">{yieldOnly ? 'Positions' : 'Trades'}</option><option value="wins">{yieldOnly ? 'Fee APR' : 'Win rate'}</option></select></label>

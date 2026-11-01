@@ -4,7 +4,6 @@ import { ACCESS, BAUM } from '../config'
 import Icon from '../components/terminal/Icon'
 import { AvatarRing, Callout, CopyButton, EmptyState, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
-import { baumLinks } from '../lib/baum'
 import { call, reasonText, type Account } from '../lib/account'
 import { shortAddress } from '../lib/terminal-model'
 
@@ -94,7 +93,7 @@ export default function Settings() {
           {agent.slug && <div className="t-key-value"><span>Slug (permanent)</span><strong>{agent.slug}</strong></div>}
           <Field label={`${agent.name}’s username`} value={agent.username ?? ''} placeholder="Give it a username" onSave={(username) => save({ action: 'agent-username', agent: agent.name, username })} />
         </div>)}
-        <div className="t-actions"><a className="t-submit t-submit--secondary" href={baumLinks.launch()} target="_blank" rel="noreferrer"><Icon name="plus" />Deploy a slug on Baum</a><a className="t-submit t-submit--secondary" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" />Open Baum</a></div>
+        <div className="t-actions"><Link className="t-submit t-submit--secondary" to="/deploy"><Icon name="plus" />Deploy a slug</Link><a className="t-submit t-submit--secondary" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" />Open Baum</a></div>
       </Section>
     </div>
   </>

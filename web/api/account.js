@@ -6,6 +6,11 @@
 //   GET  ?action=me
 //   POST { action: 'username', username } | { action: 'agent-username', agent, username }
 //        { action: 'email', email } | { action: 'avatar', picture: <base64>, type } | { action: 'avatar-clear' }
+//        { action: 'launch-agent', name, tokens: [address | 'ETH'], amountUsd, every: 'day' | 'week' }
+//
+// launch-agent makes a DCA agent on the person's Baum account, the same one Baum makes in
+// Telegram (docs/handoffs/2026-10-31-baum-launch-request.md). Until Baum opens that to
+// partners it answers 501 pending, and the Deploy page hands the setup to Telegram.
 
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const sessionFrom = (req) => (req.headers.cookie ?? '').match(/(?:^|;\s*)slugs_session=([A-Za-z0-9_-]+)/)?.[1] ?? null
@@ -23,6 +28,20 @@ async function baum(method, action, session, body) {
     ...(body ? { body: body instanceof FormData ? body : JSON.stringify(body) } : {}),
   }).catch(() => null)
   return { status: res?.status ?? 502, json: res ? await res.json().catch(() => ({})) : { reason: 'baum-unavailable' } }
+}
+
+const TOKEN = /^(?:0x[0-9a-fA-F]{40}|ETH)$/
+
+/** A DCA setup to send Baum, or why it can't be sent. Mirrors src/lib/deploy.ts. */
+export function launchSetup(body) {
+  const name = typeof body.name === 'string' ? body.name.trim() : ''
+  if (!/^[A-Za-z0-9][A-Za-z0-9 -]{0,23}$/.test(name)) return 'Give your agent a name: letters, numbers, spaces or hyphens, up to 24.'
+  const tokens = Array.isArray(body.tokens) ? [...new Set(body.tokens.filter((token) => typeof token === 'string' && TOKEN.test(token)))] : []
+  if (!tokens.length || tokens.length > 5 || tokens.length !== body.tokens.length) return 'Pick one to five tokens by contract address.'
+  const amountUsd = Number(body.amountUsd)
+  if (!Number.isFinite(amountUsd) || amountUsd < 5 || amountUsd > 10000) return 'Each buy needs to be between $5 and $10,000.'
+  if (body.every !== 'day' && body.every !== 'week') return 'Choose daily or weekly.'
+  return { name, strategy: 'dca', tokens, amountUsd: Math.round(amountUsd * 100) / 100, every: body.every }
 }
 
 export default async function handler(req, res) {
@@ -43,6 +62,13 @@ export default async function handler(req, res) {
       return send(await baum('POST', 'agent-username', session, { agent: str(body.agent), username: str(body.username) }))
     case 'email':
       return send(await baum('POST', 'email', session, { email: str(body.email) }))
+    case 'launch-agent': {
+      const setup = launchSetup(body)
+      if (typeof setup === 'string') return res.status(400).json({ reason: setup })
+      const answer = await baum('POST', 'agents/launch', session, setup)
+      if (answer.status === 404 || answer.status === 405) return res.status(501).json({ reason: 'pending' })
+      return send(answer)
+    }
     case 'avatar-clear':
       return send(await baum('DELETE', 'avatar', session))
     case 'avatar': {

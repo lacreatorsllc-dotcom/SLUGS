@@ -21,7 +21,7 @@ const STANDALONE: Record<string, () => React.ReactElement> = {
 
 // The site's own top-level pages. Any other single segment that looks like a referral
 // code is an invite link: slugs.run/<code>.
-const PAGES = new Set(['home', 'settings', 'leaderboard', 'agents', 'vaults', 'swap', 'token', 'burn', 'login', 'connect-baum', 'profile'])
+const PAGES = new Set(['home', 'settings', 'leaderboard', 'agents', 'vaults', 'swap', 'token', 'burn', 'login', 'connect-baum', 'profile', 'deploy'])
 const INVITE_CODE = /^\/([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)$/
 
 function AppRoutes() {
