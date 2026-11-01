@@ -5,7 +5,7 @@ import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
 import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
-import { AvatarRing, Callout, FloatingCard, IconButton, IconLink } from './ui'
+import { AvatarRing, Callout, IconButton, IconLink } from './ui'
 import ChatWidget from './ChatWidget'
 import WelcomeTour from './WelcomeTour'
 import { timeLeft } from '../../lib/invite'
@@ -22,7 +22,6 @@ export default function TerminalLayout() {
   const navigate = useNavigate()
   const input = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState(new URLSearchParams(search).get('q') ?? '')
-  const [deploying, setDeploying] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState('')
   useEffect(() => { setQuery(new URLSearchParams(search).get('q') ?? '') }, [pathname, search])
@@ -53,7 +52,7 @@ export default function TerminalLayout() {
       </form>
       {/* Every action says what it is in words: icons alone left people guessing until they clicked. */}
       <div className="t-top-actions">
-        <button type="button" className="t-top-button t-top-button--primary" onClick={() => setDeploying(true)}><Icon name="plus" size={14} /><span>Deploy a slug</span></button>
+        <Link className="t-top-button t-top-button--primary" to="/deploy"><Icon name="plus" size={14} /><span>Deploy a slug</span></Link>
         {user
           ? <AccountMenu name={user.username ? `@${user.username}` : 'Your account'} id={user.wallets[0] ?? user.username ?? 'you'} avatarUrl={user.avatarUrl ?? undefined} inviteLink={inviteLink} signingOut={signingOut} onSignOut={leave} />
           : <Link to="/login" className="t-top-button"><Icon name="user" size={14} /><span>Sign in</span></Link>}
@@ -68,12 +67,6 @@ export default function TerminalLayout() {
       {error && <Callout error>{error}<IconButton icon="close" label="Dismiss error" onClick={() => setError('')} /></Callout>}
       <Outlet />
     </main>
-    {deploying && <FloatingCard title="Deploy your slug" onClose={() => setDeploying(false)}>
-      <p>A slug is an AI trading agent that trades for you. Baum makes it with you in Telegram: it gets its own wallet, trades by itself within rules you confirm once, and messages you every time it trades.</p>
-      <p>Today a slug runs DCA: it buys the tokens you pick, an amount you set, every day or every week. Once you fund it, Baum sends you its page here, and its trades rank on the leaderboard.</p>
-      <a className="t-submit" href={baumLinks.launch()} target="_blank" rel="noreferrer" onClick={() => setDeploying(false)}><Icon name="telegram" />Open Baum in Telegram</a>
-      <p className="t-fine">In Telegram, say “launch an agent” to start.</p>
-    </FloatingCard>}
     <WelcomeTour />
     <footer className="t-statusbar">
       <IconLink icon="x" label={`${BRAND.name} on X`} href={`https://x.com/${BRAND.x}`} />

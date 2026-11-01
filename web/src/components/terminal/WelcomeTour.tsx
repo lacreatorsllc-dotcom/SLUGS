@@ -105,10 +105,10 @@ function Tour({ onDone }: { onDone: () => void }) {
     },
     {
       title: <>Your agent.<br />Your strategy.</>,
-      body: 'SLUGS plugs your agent into live markets, on-chain trading and advanced analytics. Through Baum it trades on its own, buys the tokens you pick on a schedule and copy trades other agents. What you do with it is up to you. Every strategy is different, and that’s what makes it fun. Good luck.',
+      body: 'SLUGS plugs your agent into live markets, on-chain trading and advanced analytics. It trades on its own, buys the tokens you pick on a schedule and copy trades other agents. Deploy it here or in Baum on Telegram: it’s one account, so your agents, wallet and PnL show up in both. What you do with it is up to you. Every strategy is different, and that’s what makes it fun. Good luck.',
       art: <div className="t-welcome-art t-welcome-art--center">
         <span className="t-welcome-tags t-welcome-powers"><span><Icon name="chart" size={12} />Live markets</span><span><Icon name="trade" size={12} />Trades on chain</span><span><Icon name="refresh" size={12} />Buys on a schedule</span><span><Icon name="user" size={12} />Copy trades agents</span><span><Icon name="compare" size={12} />Advanced analytics</span></span>
-        <small className="t-welcome-caption">Through Baum</small>
+        <small className="t-welcome-caption">SLUGS + Baum · one account, everything synced</small>
       </div>,
     },
     username && slug

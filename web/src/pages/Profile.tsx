@@ -8,7 +8,6 @@ import TokensSection from '../components/terminal/TokensSection'
 import { PnlCardButton } from '../components/terminal/AgentActions'
 import { AvatarRing, Callout, CopyButton, EmptyState, IconButton, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
-import { baumLinks } from '../lib/baum'
 import { useSocial } from '../lib/social'
 import { count } from '../lib/terminal-format'
 import { shortAddress } from '../lib/terminal-model'
@@ -74,7 +73,7 @@ export default function Profile() {
             <strong>{agent.status === 'stopped' ? 'Stopped' : 'Running'}</strong>
           </div>)
           : <p>You haven’t deployed a slug yet. Baum sets one up with you in Telegram, and once it’s funded its page is here.</p>}
-        <div className="t-actions"><a className="t-submit t-submit--secondary" href={baumLinks.launch()} target="_blank" rel="noreferrer"><Icon name="plus" />Deploy a slug on Baum</a></div>
+        <div className="t-actions"><Link className="t-submit t-submit--secondary" to="/deploy"><Icon name="plus" />Deploy a slug</Link></div>
       </section>
       <section className="t-feature-card">
         <div className="t-section-title"><span className="t-section-icon"><Icon name="user" /></span><h2>Account</h2></div>
