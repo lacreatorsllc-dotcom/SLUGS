@@ -9,7 +9,7 @@ import { inUnit, pct, unitsOf, type PaperSummary } from '../../lib/paper'
 // Shared by the Paper trading page and the Leaderboard's Paper tab.
 // `mine` keeps to strategies whose owners came through, or signed in to, SLUGS.
 export function LaunchPaperLink({ secondary = false }: { secondary?: boolean }) {
-  return <Link className={`t-top-button${secondary ? '' : ' t-top-button--primary'}`} to="/paper/create"><Icon name="rocket" size={14} /><span>Launch a paper trade</span></Link>
+  return <Link className={`t-top-button${secondary ? '' : ' t-top-button--primary'}`} to="/paper/create"><Icon name="rocket" size={14} /><span>Launch a paper strategy</span></Link>
 }
 
 export default function PaperBoard({ mine = false }: { mine?: boolean }) {
@@ -29,7 +29,7 @@ export default function PaperBoard({ mine = false }: { mine?: boolean }) {
   const list = state.mine === mine ? state.list : null
   if (loading) return <TableSkeleton />
   if (state.error || !list) return <Callout error onRetry={() => setAttempt((n) => n + 1)}>Couldn’t load paper strategies from Baum. Try again in a moment.</Callout>
-  if (list.length === 0) return <section className="t-panel"><EmptyState icon="chart" title={mine ? 'No paper strategies from SLUGS yet' : 'No public paper strategies yet'} action={<LaunchPaperLink />}>Be the first on the board: start a paper account on Baum, trade it, then make it public.</EmptyState></section>
+  if (list.length === 0) return <section className="t-panel"><EmptyState icon="chart" title={mine ? 'No paper strategies from SLUGS yet' : 'No public paper strategies yet'} action={<LaunchPaperLink />}>Be the first on the board: launch a paper strategy on Baum, then make it public.</EmptyState></section>
   return <>
     <div className="t-table-scroll" role="region" aria-label="Paper strategies" tabIndex={0}><table className="t-table"><thead><tr>
       <th scope="col">#</th><th scope="col">Strategy</th><th scope="col" className="t-number">Return vs holding BTC</th><th scope="col" className="t-number">Worst drop</th><th scope="col" className="t-number">Weeks that made money</th><th scope="col" className="t-number">Worth</th><th scope="col" className="t-number">Trades</th><th scope="col" className="t-number">Days</th><th scope="col" className="t-number">Copies</th>
