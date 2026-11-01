@@ -288,3 +288,5 @@
 .t-welcome-community { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px; color: var(--t-muted); }.t-welcome-community a { color: var(--t-text); text-decoration: underline; }
 .t-welcome-slug-agent { color: var(--t-faint); }
 .t-welcome-slug--empty > span { color: var(--t-secondary); }.t-welcome-slug--empty .t-welcome-slug-agent { color: var(--t-faint); }
+.t-welcome-claim { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.t-welcome-or { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--t-muted); text-decoration: underline; text-underline-offset: 3px; }.t-welcome-or:hover { color: var(--t-text); }
