@@ -12,6 +12,7 @@ import Home from './pages/Home'
 import Leaderboard from './pages/Leaderboard'
 import PaperList from './pages/PaperList'
 import PaperStrategy from './pages/PaperStrategy'
+import PaperCreate from './pages/PaperCreate'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 import Swap from './pages/Swap'
@@ -31,7 +32,7 @@ export default function TerminalApp() {
       <Route path="/home" element={<Home />} /><Route path="/leaderboard" element={<Leaderboard />} />
       <Route path="/agents" element={<Browse />} /><Route path="/agents/compare" element={<Compare />} /><Route path="/agents/:id" element={<AgentPage />} />
       <Route path="/vaults" element={<Vaults />} /><Route path="/swap" element={<Swap />} /><Route path="/token" element={<Token />} /><Route path="/profile" element={<Profile />} /><Route path="/settings" element={<Settings />} /><Route path="/deploy" element={<Deploy />} />
-      <Route path="/paper" element={<PaperList />} /><Route path="/paper/:id" element={<PaperStrategy />} />
+      <Route path="/paper" element={<PaperList />} /><Route path="/paper/create" element={<PaperCreate />} /><Route path="/paper/:id" element={<PaperStrategy />} />
       <Route path="*" element={<p>Page not found. <Link to="/home">Return to the leaderboard</Link>.</p>} />
     </Route>
   </Routes></AgentOverlayProvider></div></TerminalDataProvider>

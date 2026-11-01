@@ -6,6 +6,7 @@ import { AvatarRing, Callout, EmptyState, IconButton, IconLink, RangeControl, Ta
 import { count, money, tone, winRate } from '../lib/terminal-format'
 import Icon from '../components/terminal/Icon'
 import { useTerminalData } from '../lib/terminal-context'
+import PaperBoard, { LaunchPaperLink } from '../components/terminal/PaperBoard'
 import { RANGES, agentPath, foundAgents, isBoosted, matchesSearch, sortedAgents, type Agent, type Range } from '../lib/terminal-model'
 
 // Baum's AI agents matching a search, for the ones the boards don't have: an agent
@@ -33,6 +34,9 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
   const sort = ['pnl', 'volume', 'trades', 'wins'].includes(params.get('sort') ?? '') ? params.get('sort')! : 'pnl'
   const query = (params.get('q') ?? '').trim().toLowerCase()
   const yieldOnly = category === 'Yield'
+  // Paper strategies aren't agents on the boards: the tab after Custom shows Baum's
+  // paper board instead (components/terminal/PaperBoard.tsx), ranked against holding BTC.
+  const paper = params.get('category') === 'Paper'
   function update(key: string, value: string) { setParams((previous) => { const next = new URLSearchParams(previous); if (value) next.set(key, value); else next.delete(key); return next }, { replace: true }) }
   // A search looks at every agent on the boards, whatever the range: one that didn't
   // trade this week is still the one being looked for. Its metrics show as —.
@@ -48,18 +52,19 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
   const minutes = updatedAt ? Math.max(0, Math.floor((Date.now() - updatedAt) / 60_000)) : null
   const updated = minutes === null ? 'Snapshot time unavailable' : minutes < 1 ? 'Updated just now' : minutes < 60 ? `Updated ${minutes}m ago` : minutes < 1440 ? `Updated ${Math.floor(minutes / 60)}h ago` : `Updated ${Math.floor(minutes / 1440)}d ago`
   return <>
-    <div className="t-page-heading"><div><h1>{browse ? 'Agents' : 'Leaderboard'}</h1><p>{yieldOnly ? 'Liquidity providers ranked by fees earned on Baum.' : `Ranked by PnL. The top 3 strategies each week split the ${TOKEN.symbol} prize pool.`}</p></div><div className="t-heading-actions">
+    <div className="t-page-heading"><div><h1>{browse ? 'Agents' : 'Leaderboard'}</h1><p>{paper ? 'Paper strategies on Baum ranked by return over holding BTC. Pretend money, real prices.' : yieldOnly ? 'Liquidity providers ranked by fees earned on Baum.' : `Ranked by PnL. The top 3 strategies each week split the ${TOKEN.symbol} prize pool.`}</p></div><div className="t-heading-actions">
       {updatedAt && <span className="t-updated" title={`${new Date(updatedAt).toLocaleString()} · server cache: 30 minutes`}><span className={`t-dot${minutes !== null && minutes < 120 ? ' t-dot--online' : ''}`} />{updated} · refreshes every 30 min</span>}
-      <RangeControl value={range} onChange={(value) => update('range', value)} /><IconButton icon="refresh" label="Refresh Baum data" onClick={refresh} disabled={loading} /><IconLink icon="compare" label="Compare agents" to="/agents/compare" variant="outline" />
+      {paper ? <LaunchPaperLink /> : <><RangeControl value={range} onChange={(value) => update('range', value)} /><IconButton icon="refresh" label="Refresh Baum data" onClick={refresh} disabled={loading} /><IconLink icon="compare" label="Compare agents" to="/agents/compare" variant="outline" /></>}
     </div></div>
     <section className="t-boost-strip" aria-label="Boosted agents"><span className="t-boost-label"><Icon name="flame" size={14} />Boosted</span>
       {boosted.length ? <div className="t-boost-agents">{boosted.map((agent) => <AgentIdentity key={agent.id} agent={agent} range={range} />)}</div>
         : <span className="t-boost-description">{loading ? 'Loading boost status…' : snapshot?.token ? `No agents boosted right now. Operators burn ${count(FEES.boostPerHour)} ${TOKEN.symbol} an hour to pin their agent here.` : '[PLACEHOLDER] Boost status is unavailable until token data loads.'}</span>}
       <IconLink icon="plus" label="Deploy a slug" to="/deploy" variant="outline" />
     </section>
-    <div className="t-filters"><div className="t-category-tabs" role="group" aria-label="Filter by category">{(['All', ...CATEGORIES] as const).map((item) => <button type="button" key={item} className="t-chip" aria-pressed={category === item} onClick={() => update('category', item === 'All' ? '' : item)}>{item}</button>)}</div>
-      <label className="t-sort"><Icon name="sort" size={14} /><span className="t-sr-only">Sort agents</span><select aria-label="Sort agents" value={sort} onChange={(event) => update('sort', event.target.value)}><option value="pnl">{yieldOnly ? 'Fees' : 'PnL'}</option><option value="volume">{yieldOnly ? 'Liquidity' : 'Volume'}</option><option value="trades">{yieldOnly ? 'Positions' : 'Trades'}</option><option value="wins">{yieldOnly ? 'Fee APR' : 'Win rate'}</option></select></label>
+    <div className="t-filters"><div className="t-category-tabs" role="group" aria-label="Filter by category">{(['All', ...CATEGORIES, 'Paper'] as const).map((item) => <button type="button" key={item} className="t-chip" aria-pressed={item === 'Paper' ? paper : !paper && category === item} onClick={() => update('category', item === 'All' ? '' : item)}>{item}</button>)}</div>
+      {!paper && <label className="t-sort"><Icon name="sort" size={14} /><span className="t-sr-only">Sort agents</span><select aria-label="Sort agents" value={sort} onChange={(event) => update('sort', event.target.value)}><option value="pnl">{yieldOnly ? 'Fees' : 'PnL'}</option><option value="volume">{yieldOnly ? 'Liquidity' : 'Volume'}</option><option value="trades">{yieldOnly ? 'Positions' : 'Trades'}</option><option value="wins">{yieldOnly ? 'Fee APR' : 'Win rate'}</option></select></label>}
     </div>
+    {paper ? <PaperBoard /> : <>
     {query && <div className="t-actions t-muted">Results for “{params.get('q')}”<IconButton icon="close" label="Clear search" onClick={() => update('q', '')} /></div>}
     {notTrading.length > 0 && <section className="t-panel t-not-trading" aria-label="Agents that haven't traded yet">
       <div className="t-not-trading-head"><h2>Not trading yet <span className="t-muted">· {notTrading.length}</span></h2><p className="t-fine">Made on Baum. They join the leaderboard after their first trade.</p></div>
@@ -83,6 +88,7 @@ export default function Leaderboard({ browse = false }: { browse?: boolean }) {
         </tbody></table></div>
         <div className="t-fine">{count(agents.length)} agents · {range === 'all' ? 'All-time' : range.toUpperCase()} data · {yieldOnly ? 'Fees, liquidity, and positions' : 'PnL, volume, trades, and win rate'} from the same Baum snapshot. Missing metrics appear as —.</div>
       </>}
+    </>}
     </>}
   </>
 }
