@@ -408,3 +408,27 @@
 .t-coach-back { width: 30px; height: 30px; border: 1px solid var(--t-strong); border-radius: 8px; background: transparent; color: var(--t-secondary); display: inline-flex; align-items: center; justify-content: center; }
 .t-coach-next { height: 30px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--t-ivory); color: var(--t-bg); font: 600 12.5px var(--t-font); }
 @media (prefers-reduced-motion: reduce) { .t-coach, .t-deploy-chat, .t-deploy-msg, .t-deploy-plan, .t-deploy-slugbox { animation: none !important; } .t-coach-ring { transition: none; } }
+
+/* Personal invitations (admin) */
+.t-invites { margin: 16px 0 24px; gap: 14px; }
+.t-invites-form { display: flex; flex-direction: column; gap: 14px; }
+.t-invites-form label { display: flex; flex-direction: column; gap: 6px; margin: 0; }
+.t-invites-form textarea { font: 13px/1.5 var(--t-font); border: 1px solid var(--t-strong); border-radius: 10px; background: var(--t-bg); color: var(--t-text); padding: 10px 12px; resize: vertical; }
+.t-invites-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.t-invites-block { display: flex; flex-direction: column; gap: 8px; }
+.t-invites-label { font-size: 12px; color: var(--t-muted); }
+.t-invites-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.t-invites-inline { display: flex; gap: 8px; flex-wrap: wrap; }.t-invites-inline input { flex: 1; min-width: 180px; }
+.t-invites-profiles { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.t-invites-profiles li { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid var(--t-line); border-radius: 10px; background: var(--t-raised); }
+.t-invites-profiles li:first-child { border-color: var(--t-burn-line); }
+.t-invite-face { width: 28px; height: 28px; flex: none; border-radius: 50%; object-fit: cover; border: 1px solid var(--t-strong); display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--t-secondary); }
+.t-invites-slug { flex: 1; display: flex; align-items: center; min-width: 0; font-size: 13.5px; color: var(--t-faint); }.t-invites-slug b { color: var(--t-text); font-weight: 600; }
+.terminal .t-invites-slug input { border: 0; background: transparent; padding: 4px 2px; color: var(--t-faint); min-width: 0; flex: 1; }
+.t-invites-actions { display: flex; gap: 4px; }
+.t-invites-made { display: flex; flex-direction: column; gap: 10px; padding-top: 14px; border-top: 1px solid var(--t-line); }
+.t-invites-made img { width: 100%; max-width: 720px; height: auto; border-radius: 12px; border: 1px solid var(--t-strong); }
+.t-invites-share { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }.t-invites-share .t-submit { width: auto; }
+.t-invites-share code { overflow-wrap: anywhere; max-width: 420px; }
+.t-invites-history ul { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.t-invites-history li { display: flex; align-items: center; gap: 12px; }

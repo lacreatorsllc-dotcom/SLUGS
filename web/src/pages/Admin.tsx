@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import AdminInvites from './AdminInvites'
 import AdminWaitlist from './AdminWaitlist'
 import { BAUM } from '../config'
 import { count } from '../lib/terminal-format'
@@ -208,6 +209,8 @@ function Dashboard({ who, onOut }: { who: string | null; onOut: () => void }) {
       </div>
     </div>
     {error && <p className="t-callout t-callout--error" role="alert">{error}</p>}
+
+    <AdminInvites call={call} say={say} onOut={onOut} />
 
     <AdminWaitlist call={call} say={say} onOut={onOut} />
 

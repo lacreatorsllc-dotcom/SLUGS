@@ -17,6 +17,12 @@
 //        { action: 'review', id, decision: 'approve' | 'reject', score }
 //        { action: 'draw' }  (picks one approved person, weighted by tickets)
 //        { action: 'auto', on }  (one draw a day, until nobody approved is left)
+//
+// Personal invitations (server/invitation.js): signs one for a person, after Baum
+// confirms the caller is an admin.
+//        { action: 'invitation', to, handle?, note?, from, code, bots: [], profiles: [{ u, a, w? }] }
+
+import { invitationFrom, linkFor, signingReady, tokenFor } from '../server/invitation.js'
 
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const ADMIN = 'slugs_admin'
@@ -135,6 +141,16 @@ export default async function handler(req, res) {
       if (answer.status !== 200 || !answer.json.id) return res.status(answer.status === 200 ? 502 : answer.status).json({ reason: answer.json.reason ?? 'failed' })
       res.setHeader('set-cookie', cookie(DEVICE, `${answer.json.id}.${answer.json.poll}`, 10 * 60))
       return res.status(200).json({ state: 'waiting' })
+    }
+    case 'invitation': {
+      if (!admin) return res.status(401).json({ reason: 'signed-out' })
+      const check = await baum('GET', '/api/partner/admin/me', { admin })
+      if (check.status !== 200) return res.status(check.status === 401 ? 401 : 502).json({ reason: check.status === 401 ? 'signed-out' : 'baum-unavailable' })
+      if (!signingReady()) return res.status(503).json({ reason: 'not-configured' })
+      const invitation = invitationFrom(body)
+      if (typeof invitation === 'string') return res.status(400).json({ reason: invitation })
+      const token = tokenFor(invitation)
+      return res.status(200).json({ invitation, token, url: linkFor(token) })
     }
     case 'refresh': {
       if (!admin) return res.status(401).json({ reason: 'signed-out' })

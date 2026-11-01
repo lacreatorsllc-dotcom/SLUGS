@@ -9,6 +9,8 @@
   "rewrites": [
     { "source": "/share/pnl", "destination": "/api/data?pnl=1" },
     { "source": "/api/pnl", "destination": "/api/data?pnl=1" },
+    { "source": "/i/:token", "destination": "/api/data?invitation=page&token=:token" },
+    { "source": "/api/invitation", "destination": "/api/data?invitation=1" },
     { "source": "/data/:file.json", "destination": "/api/data?file=:file" },
     { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
   ],

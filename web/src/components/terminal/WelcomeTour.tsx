@@ -4,6 +4,7 @@ import { BAUM, BRAND } from '../../config'
 import { useAuthSession } from '../../lib/auth-context'
 import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
+import { DEFAULT_PROFILES, pictureOf, savedInvitation, type InvitationProfile } from '../../lib/invitation'
 import { hasSeenWelcome, markWelcomeSeen, previewsNewUserCards, welcomeKey } from '../../lib/welcome'
 import Icon from './Icon'
 import { CopyButton, IconButton } from './ui'
@@ -52,78 +53,64 @@ function firstAgentPart(username: string, agents: { name: string; slug: string |
   return agent.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || null
 }
 
-// Bots people can create, named for what they do. Each can carry its own example
-// username and Baum picture; until then they show as your-name with no picture.
-type BotExample = { agent: string; username?: string; picture?: string }
-const BOT_EXAMPLES: BotExample[] = [
-  { agent: 'sniper-bot' }, { agent: 'dca-bot' }, { agent: 'scalper-bot' }, { agent: 'momentum-bot' },
-  { agent: 'grid-bot' }, { agent: 'copy-trader' }, { agent: 'spot-trader' },
-]
+// Bots people can create, named for what they do: the ones the owner suggested in a
+// personal invitation first (lib/invitation.ts), then the usual examples.
+const BOT_EXAMPLES = ['sniper-bot', 'dca-bot', 'scalper-bot', 'momentum-bot', 'grid-bot', 'copy-trader', 'spot-trader']
 
 /** One example bot after another (held still for reduced motion). */
 function ExampleSlug() {
+  const [bots] = useState(() => { const suggested = savedInvitation()?.bots ?? []; return [...suggested, ...BOT_EXAMPLES.filter((bot) => !suggested.includes(bot))] })
   const [index, setIndex] = useState(0)
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
-    const timer = window.setInterval(() => setIndex((value) => (value + 1) % BOT_EXAMPLES.length), 1600)
+    const timer = window.setInterval(() => setIndex((value) => (value + 1) % bots.length), 1600)
     return () => window.clearInterval(timer)
-  }, [])
-  const example = BOT_EXAMPLES[index]
-  return <>
-    {example.picture && <img className="t-welcome-avatar t-welcome-picture" src={example.picture} alt="" />}
-    <SlugText username={example.username ?? 'your-name'} agent={example.agent} />
-  </>
+  }, [bots])
+  return <SlugText username="your-name" agent={bots[index]} />
 }
 
-// The first card's examples: SLUGS people and the bots they run. goobz shows alone
-// first, then opens into a 2x2 grid where goobz stays put and the other three slots
-// take turns cycling through everyone else.
-type Example = { username: string; agent: string; picture?: string }
-const OTHERS: Example[] = [
-  { username: 'brokentyrant', agent: 'sniper-bot', picture: 'welcome/brokentyrant.jpg' },
-  { username: 'brazylord', agent: 'gold-trader', picture: 'welcome/brazylord.jpg' },
-  { username: 'bagcalls', agent: 'hodl-bot', picture: 'welcome/bagcalls.jpg' },
-  { username: 'meechi', agent: 'market-maker', picture: 'welcome/meechi.jpg' },
-  { username: 'fwaz', agent: 'dev-bot', picture: 'welcome/fwaz.jpg' },
-  { username: '12g8ge', agent: 'mev-bot', picture: 'welcome/12g8ge.jpg' },
-]
+// The first card's examples: SLUGS people and the bots they run, or the ones chosen for
+// this person in their invitation. The first shows alone, then it opens into a 2x2 grid
+// where the first stays put and the other three slots take turns with everyone else.
 const INTRO_MS = 1800
 const SWAP_MS = 3000
 
-function ExampleChip({ example, className = '', delay }: { example: Example; className?: string; delay?: number }) {
+function ExampleChip({ example, className = '', delay }: { example: InvitationProfile; className?: string; delay?: number }) {
   return <span className={`t-welcome-slug t-welcome-slug--small ${className}`} style={delay ? { animationDelay: `${delay}ms` } : undefined}>
-    {example.picture ? <Picture url={`${import.meta.env.BASE_URL}${example.picture}`} initials={example.username.slice(0, 2).toUpperCase()} /> : <ExamplePicture />}
-    <SlugText username={example.username} agent={example.agent} />
+    <Picture url={pictureOf(example)} initials={example.u.slice(0, 2).toUpperCase()} />
+    <SlugText username={example.u} agent={example.a} />
   </span>
 }
 
-/** goobz alone, then four at a time with three slots rotating (still for reduced motion). */
+/** The first profile alone, then four at a time with three slots rotating (still for reduced motion). */
 function ExampleBots() {
+  const [[first, ...others]] = useState(() => { const chosen = savedInvitation()?.profiles; return chosen?.length ? chosen : DEFAULT_PROFILES })
   const still = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  const [grid, setGrid] = useState(still)
+  const shown = Math.min(3, others.length)
+  const rotates = others.length > shown
+  const [grid, setGrid] = useState(still || !others.length)
   const [paused, setPaused] = useState(false)
-  // The three rotating slots, and the next example to bring in. A window of three over
-  // six never shows anyone twice.
-  const [rotation, setRotation] = useState({ slots: [0, 1, 2], next: 3, turn: 0 })
+  // The rotating slots, and the next example to bring in. A sliding window of three
+  // never shows anyone twice.
+  const [rotation, setRotation] = useState({ slots: Array.from({ length: shown }, (_, i) => i), next: shown, turn: 0 })
   useEffect(() => {
-    if (still) return
+    if (still || !others.length) return
     const timer = window.setTimeout(() => setGrid(true), INTRO_MS)
     return () => window.clearTimeout(timer)
-  }, [still])
+  }, [still, others.length])
   useEffect(() => {
-    if (still || !grid || paused) return
+    if (still || !grid || paused || !rotates) return
     const timer = window.setInterval(() => setRotation(({ slots, next, turn }) => {
       const updated = [...slots]
-      updated[turn % 3] = next % OTHERS.length
+      updated[turn % shown] = next % others.length
       return { slots: updated, next: next + 1, turn: turn + 1 }
     }), SWAP_MS)
     return () => window.clearInterval(timer)
-  }, [still, grid, paused])
-  const goobz = { username: EXAMPLE.username, agent: EXAMPLE.agent }
-  if (!grid) return <span className="t-welcome-slugs t-welcome-slugs--one"><ExampleChip example={goobz} className="t-welcome-slug--lead" /></span>
+  }, [still, grid, paused, rotates, shown, others.length])
+  if (!grid) return <span className="t-welcome-slugs t-welcome-slugs--one"><ExampleChip example={first} className="t-welcome-slug--lead" /></span>
   return <span className="t-welcome-slugs t-welcome-slugs--grid" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-    <ExampleChip example={goobz} className="t-welcome-swap" />
-    {rotation.slots.map((index, slot) => <ExampleChip key={`${slot}-${OTHERS[index].username}`} example={OTHERS[index]} className="t-welcome-swap" delay={rotation.turn ? undefined : 150 * (slot + 1)} />)}
+    <ExampleChip example={first} className="t-welcome-swap" />
+    {rotation.slots.map((index, slot) => <ExampleChip key={`${slot}-${others[index].u}`} example={others[index]} className="t-welcome-swap" delay={rotation.turn ? undefined : 150 * (slot + 1)} />)}
   </span>
 }
 

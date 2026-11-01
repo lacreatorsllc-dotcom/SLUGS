@@ -6,6 +6,7 @@ import Icon from '../components/terminal/Icon'
 import { EmptyState, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
 import { baumLinks } from '../lib/baum'
+import { savedInvitation } from '../lib/invitation'
 import { MAX_NAME, NAME_IDEAS, agentSlugPart, suggestName } from '../lib/deploy'
 import { markTourSeen, shouldShowTour } from '../lib/tour'
 
@@ -23,7 +24,12 @@ const TOUR: CoachStep[] = [
 
 export default function Deploy() {
   const { user, guest } = useAuthSession()
-  const [name, setName] = useState('dca-bot')
+  // Bots the owner suggested in a personal invitation (lib/invitation.ts): the first is the
+  // starting name, and they lead the ideas.
+  const [invitation] = useState(() => savedInvitation())
+  const suggested = invitation?.bots ?? []
+  const ideas = [...suggested, ...NAME_IDEAS.filter((idea) => !suggested.includes(idea))].slice(0, 6)
+  const [name, setName] = useState(() => suggested[0] ?? 'dca-bot')
   const [chat, setChat] = useState(false)
   const [telegram, setTelegram] = useState(false)
   const [tour, setTour] = useState(false)
@@ -70,8 +76,8 @@ export default function Deploy() {
         <button type="button" className="t-chip" onClick={() => setName(suggestName(name))}><Icon name="refresh" size={12} />Shuffle</button>
       </div>
       <div className="t-deploy-ideas" data-tour="deploy-ideas">
-        <span className="t-faint">Ideas</span>
-        {NAME_IDEAS.map((idea) => <button type="button" key={idea} className="t-chip" aria-pressed={name === idea} onClick={() => setName(idea)}>{idea}</button>)}
+        <span className="t-faint">{suggested.length ? `Suggested by ${invitation!.from}` : 'Ideas'}</span>
+        {ideas.map((idea) => <button type="button" key={idea} className="t-chip" aria-pressed={name === idea} onClick={() => setName(idea)}>{idea}</button>)}
       </div>
       {!username && <p className="t-fine t-negative">Pick your username first: your agents’ SLUGs start with it. <Link to="/profile?edit=username">Set my username</Link></p>}
 
