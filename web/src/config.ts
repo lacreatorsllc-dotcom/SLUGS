@@ -55,6 +55,15 @@ export const BAUM = {
   referralCode: import.meta.env.VITE_BAUM_REF || 'SLUGS',
 }
 
+// Paper strategies launched from SLUGS: the starting balances SLUGS offers, the first the
+// default. Baum enforces the same list for a launch from here (baum-monorepo lib/paper-view.ts
+// SLUGS_PAPER_CAPITAL_CHOICES), so open another size there first, then add it here.
+// A strategy doesn't have to spend all of it: it can use all or part, the rest stays as paper cash.
+export const PAPER_LAUNCH = {
+  sizes: [10_000, 100_000] as readonly number[],
+  defaultSize: 10_000,
+}
+
 export const FEES = {
   // Burned to boost a listing to the top of its category and the vaults page.
   boostPerHour: 100_000,
