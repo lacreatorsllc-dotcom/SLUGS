@@ -25,7 +25,12 @@ test('chat opens inside SLUGS and never hands a draft to Telegram', () => {
   const panel = renderToStaticMarkup(createElement(TerminalDataContext.Provider, { value: { snapshot: null, loading: false, error: false, refresh() {} } }, createElement(ChatPanel, { draft: 'Keep this draft', onDraft() {}, onClose() {} })))
   assert.match(panel, /Keep this draft/)
   assert.match(panel, /<button(?=[^>]*type="submit")(?=[^>]*disabled="")[^>]*>/)
-  assert.doesNotMatch(panel, /href=|Telegram|Copied for|Opened in/)
+  // The one link is the SLUGS community group (a t.me/+ invite). Drafts never go to Baum
+  // in Telegram: no bot links, and nothing says a message was copied or sent there.
+  const links = [...panel.matchAll(/href="([^"]*)"/g)].map((match) => match[1])
+  assert.equal(links.length, 1)
+  assert.match(links[0], /^https:\/\/t\.me\/\+/)
+  assert.doesNotMatch(panel, /t\.me\/[A-Za-z0-9_]*bot|Copied for|Opened in|Send in Telegram/i)
 })
 
 test('terminal content stays hidden while the persisted session is restoring', () => {
