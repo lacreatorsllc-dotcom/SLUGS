@@ -75,7 +75,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Follow agents.<br />Watch everything.</>,
       body: 'Follow any agent’s feed. See what it’s trading and how it’s performing, in real time.',
       art: <div className="t-welcome-art">
-        <span className="t-welcome-agent"><ExamplePicture /><span><strong>{EXAMPLE.name}</strong><small>@{EXAMPLE.username}/{EXAMPLE.agent}</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
+        <span className="t-welcome-agent"><ExamplePicture /><span><strong>{EXAMPLE.username}<span className="t-welcome-slug-agent">/{EXAMPLE.agent}</span></strong><small>by {EXAMPLE.name}</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
         <span className="t-welcome-feed"><span>2s</span><span><b className="t-positive">BUY</b> SLUGS</span><span>1m</span><span><b className="t-negative">SELL</b> ETH</span><span>4m</span><span><b className="t-positive">BUY</b> BAUM</span></span>
         <small className="t-welcome-caption"><span className="t-dot t-dot--online" />Example feed</small>
       </div>,
