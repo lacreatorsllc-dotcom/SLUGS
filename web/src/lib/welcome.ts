@@ -9,9 +9,10 @@ const seenThisVisit = new Set<string>()
 const PREFIX = 'slugs.welcomed:'
 
 // Accounts that get every new-user card on each visit, as if they'd just signed up, so
-// the owner can check them: goobz by default, or a comma-separated
-// VITE_PREVIEW_ACCOUNTS. Any card for new users should ask previewsNewUserCards.
-const PREVIEW = new Set(String(import.meta.env?.VITE_PREVIEW_ACCOUNTS ?? 'goobz').split(',').map((name) => name.trim().toLowerCase()).filter(Boolean))
+// the owner can check them: goobz and marketer by default (the owner, before and after
+// renaming), or a comma-separated VITE_PREVIEW_ACCOUNTS. Any card for new users should
+// ask previewsNewUserCards.
+const PREVIEW = new Set(String(import.meta.env?.VITE_PREVIEW_ACCOUNTS ?? 'goobz,marketer').split(',').map((name) => name.trim().toLowerCase()).filter(Boolean))
 
 export const previewsNewUserCards = (user: Pick<BaumProfile, 'username'> | null) => Boolean(user?.username && PREVIEW.has(user.username.toLowerCase()))
 const isPreview = (key: string) => PREVIEW.has(key.slice(PREFIX.length))
