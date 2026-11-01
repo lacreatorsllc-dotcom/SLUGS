@@ -336,3 +336,11 @@
 @media (max-width: 480px) { .t-welcome-slugs--grid { grid-template-columns: auto; } }
 .t-welcome-slugs--grid { gap: 8px 6px; }
 .t-welcome-slugs--grid .t-welcome-slug--small { white-space: nowrap; font-size: 12.5px; max-width: 100%; }
+
+/* An agent's creator, and the AI agents a person launched */
+.t-launched-by { margin-top: 4px; }.t-launched-by a { color: var(--t-text); text-decoration: underline; text-underline-offset: 3px; }
+.t-launched { padding: 14px 16px; margin-bottom: 16px; }
+.t-launched-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.t-launched-item { display: inline-flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 12px 6px 6px; border: 1px solid var(--t-line); border-radius: 10px; color: var(--t-text); text-decoration: none; }.t-launched-item:hover { border-color: var(--t-strong); }
+.t-launched-item span { display: flex; flex-direction: column; min-width: 0; }.t-launched-item small { color: var(--t-muted); font: 500 11px var(--t-mono); overflow-wrap: anywhere; }
+.t-chat-community { display: flex; justify-content: center; margin-top: 8px; }
