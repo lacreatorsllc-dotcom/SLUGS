@@ -316,3 +316,10 @@
 .t-welcome-slug--small:first-child { animation: t-pulse-ring 1.8s .6s ease-out infinite; }
 .t-welcome-slug--small .t-welcome-avatar { width: 24px; height: 24px; font-size: 9px; }
 @media (max-width: 480px) { .t-welcome-slugs { grid-template-columns: auto; } }
+.t-welcome-pnl { gap: 10px; padding-top: 16px; }
+.t-welcome-pnl-cards { position: relative; width: 300px; height: 132px; }
+.t-welcome-pnl-cards img { position: absolute; top: 4px; left: 50%; width: 124px; height: 124px; margin-left: -62px; border-radius: 10px; border: 1px solid var(--t-strong); box-shadow: 0 10px 24px rgba(0,0,0,.55); }
+.t-welcome-pnl-cards .t-welcome-pnl-spotlight { transform: translateX(-92px) rotate(-8deg) scale(.9); }
+.t-welcome-pnl-cards .t-welcome-pnl-hero { transform: translateX(92px) rotate(8deg) scale(.9); }
+.t-welcome-pnl-cards .t-welcome-pnl-classic { z-index: 1; top: 0; width: 132px; height: 132px; margin-left: -66px; }
+.t-welcome-pnl .t-welcome-caption { display: inline-flex; align-items: center; gap: 6px; }
