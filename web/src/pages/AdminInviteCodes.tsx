@@ -28,7 +28,7 @@ function Copy({ text, label }: { text: string; label: string }) {
   return <button type="button" className="t-chip" onClick={copy}>{done ? 'Copied' : label}</button>
 }
 
-export default function AdminInvites({ call, say, onOut }: { call: Call; say: (r: unknown) => string; onOut: () => void }) {
+export default function AdminInviteCodes({ call, say, onOut }: { call: Call; say: (r: unknown) => string; onOut: () => void }) {
   const [list, setList] = useState<List | null>(null)
   const [name, setName] = useState('')
   const [note, setNote] = useState('')
@@ -72,12 +72,12 @@ export default function AdminInvites({ call, say, onOut }: { call: Call; say: (r
     load()
   }
 
-  if (!list) return error ? <section className="t-waitlist"><h2>Personal invites</h2><p className="t-callout t-callout--error" role="alert">{error}</p></section> : null
+  if (!list) return error ? <section className="t-waitlist"><h2>One-time invite codes</h2><p className="t-callout t-callout--error" role="alert">{error}</p></section> : null
   const linkOf = (i: Invite) => i.links.site ?? i.links.telegram
 
   return <section className="t-waitlist">
     <div className="t-page-heading">
-      <div><h2>Personal invites</h2><p className="t-muted">A one-time link for someone you choose. Opening it lets them into SLUGS and Baum, and counts as SLUGS’ referral.</p></div>
+      <div><h2>One-time invite codes</h2><p className="t-muted">A one-time link for someone you choose. Opening it lets them into SLUGS and Baum, and counts as SLUGS’ referral.</p></div>
       {!list.enabled && <div className="t-heading-actions">
         <button type="button" className="t-submit" onClick={enable} disabled={busy}>Turn on · {list.prices.enable.toLocaleString()} credits</button>
       </div>}
