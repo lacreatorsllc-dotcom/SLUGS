@@ -5,7 +5,7 @@ import { agentPath, assembleAgents, comparisonIds, lpBoard, sortedAgents, trader
 // Fixtures are confined to tests; the application never falls back to sample performance.
 const address = (character: string) => `0x${character.repeat(40)}`
 const trader = (overrides: Partial<TraderRow> = {}): TraderRow => ({ wallet: address('a'), pnlUsd: 12, volumeUsd: 24, trades: 2, tokens: 1, ...overrides })
-const classification = () => ({ category: 'Trenchers' as const, declared: false, tags: ['Holds'] })
+const classification = () => ({ category: 'The Floor' as const, declared: false, tags: ['Holds'] })
 const board = (rows: TraderRow[]) => traderBoard({ rows, updatedAt: 1_793_388_707_594 })
 
 test('validates snapshots and preserves zero win rates and negative performance', () => {
