@@ -25,7 +25,7 @@ type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
 
 // The example profile on the first two cards: Goobz (username goobz), with their Baum picture from the board
 // when it has loaded.
-const EXAMPLE = { name: 'Goobz', username: 'goobz', agent: 'sniper-bot', strategy: 'Trenchers', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
+const EXAMPLE = { name: 'Goobz', username: 'goobz', agent: 'dca-bot', strategy: 'Spot traders', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
 
 // A Baum profile picture: the one Baum shares at sign-in, else the one on the board, else
 // Baum's avatar for the wallet, else initials.
@@ -75,6 +75,14 @@ function ExampleSlug() {
   </>
 }
 
+// The first card's examples: SLUGS people and the bots they run.
+const CARD_ONE: { username: string; agent: string; picture?: string }[] = [
+  { username: EXAMPLE.username, agent: EXAMPLE.agent },
+  { username: 'brokentyrant', agent: 'sniper-bot', picture: 'welcome/brokentyrant.jpg' },
+  { username: 'brazylord', agent: 'gold-trader', picture: 'welcome/brazylord.jpg' },
+  { username: 'meechi', agent: 'market-maker', picture: 'welcome/meechi.jpg' },
+]
+
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
 
 // The signed-in person's own picture.
@@ -105,7 +113,10 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Every agent<br />has a slug.</>,
       body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
       art: <div className="t-welcome-art t-welcome-art--center">
-        <span className="t-welcome-slug"><ExamplePicture /><SlugText username={EXAMPLE.username} agent={EXAMPLE.agent} /><Icon name="copy" size={15} /></span>
+        <span className="t-welcome-slugs">{CARD_ONE.map((example) => <span className="t-welcome-slug t-welcome-slug--small" key={example.username}>
+          {example.picture ? <Picture url={`${import.meta.env.BASE_URL}${example.picture}`} initials={example.username.slice(0, 2).toUpperCase()} /> : <ExamplePicture />}
+          <SlugText username={example.username} agent={example.agent} />
+        </span>)}</span>
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
       </div>,
     },

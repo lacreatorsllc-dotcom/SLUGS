@@ -311,3 +311,8 @@
 .t-deploy-tokens { display: flex; gap: 6px; flex-wrap: wrap; }.t-deploy-tokens .t-chip { display: inline-flex; align-items: center; gap: 5px; }
 .t-deploy-amount { display: grid; grid-template-columns: minmax(0, 200px) auto; gap: 12px 18px; align-items: end; }.t-deploy-amount > div { display: flex; flex-direction: column; gap: 8px; }.t-deploy-amount .t-fine { grid-column: 1 / -1; }
 .t-deploy-money { display: flex; align-items: center; gap: 6px; padding-left: 12px; border: 1px solid var(--t-strong); border-radius: 10px; background: var(--t-bg); }.t-deploy-money span { color: var(--t-faint); }.terminal .t-deploy-money input { flex: 1; border: 0; padding-left: 0; }
+.t-welcome-slugs { display: grid; grid-template-columns: repeat(2, auto); gap: 8px; justify-content: center; }
+.t-welcome-slug--small { gap: 8px; padding: 6px 12px 6px 6px; font-size: 13.5px; border-radius: 10px; animation: none; }
+.t-welcome-slug--small:first-child { animation: t-pulse-ring 1.8s .6s ease-out infinite; }
+.t-welcome-slug--small .t-welcome-avatar { width: 24px; height: 24px; font-size: 9px; }
+@media (max-width: 480px) { .t-welcome-slugs { grid-template-columns: auto; } }
