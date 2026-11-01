@@ -23,9 +23,9 @@ export default function WelcomeTour() {
 
 type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
 
-// The example profile on the first two cards: Goobz (username marketer), with their Baum picture from the board
+// The example profile on the first two cards: Goobz (username goobz), with their Baum picture from the board
 // when it has loaded.
-const EXAMPLE = { name: 'Goobz', username: 'marketer', agent: 'sniper-bot', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
+const EXAMPLE = { name: 'Goobz', username: 'goobz', agent: 'sniper-bot', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
 
 // A Baum profile picture: the one Baum shares at sign-in, else the one on the board, else
 // Baum's avatar for the wallet, else initials.
