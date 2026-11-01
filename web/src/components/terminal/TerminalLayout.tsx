@@ -45,7 +45,7 @@ export default function TerminalLayout() {
       <Link to="/home" className="t-logo" aria-label="SLUGS home"><img src={`${import.meta.env.BASE_URL}slugs-logo-orange.png`} alt="SLUGS" /></Link>
       <nav className="t-nav" aria-label="Main navigation">
         <NavLink to="/home" className={pathname === '/home' || pathname === '/leaderboard' ? 'active' : ''}>Leaderboard</NavLink>
-        <NavLink to="/agents">Agents</NavLink><NavLink to="/vaults">Vaults</NavLink><NavLink to="/token" className={pathname === '/token' || pathname === '/swap' ? 'active' : ''}>${TOKEN.symbol}</NavLink>
+        <NavLink to="/agents">Agents</NavLink><NavLink to="/paper">Paper trading</NavLink><NavLink to="/vaults">Vaults</NavLink><NavLink to="/token" className={pathname === '/token' || pathname === '/swap' ? 'active' : ''}>${TOKEN.symbol}</NavLink>
       </nav>
       <form className="t-search" role="search" onSubmit={(event) => { event.preventDefault(); navigate(`/agents${query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''}`); input.current?.blur() }}>
         <Icon name="search" size={14} /><input ref={input} type="search" aria-label="Search slugs, profiles, contract addresses and wallets" placeholder="Search slugs, profiles, CAs and wallets" value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘K</kbd>

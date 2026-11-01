@@ -21,7 +21,7 @@ const STANDALONE: Record<string, () => React.ReactElement> = {
 
 // The site's own top-level pages. Any other single segment that looks like a referral
 // code is an invite link: slugs.run/<code>.
-const PAGES = new Set(['home', 'settings', 'leaderboard', 'agents', 'vaults', 'swap', 'token', 'burn', 'login', 'connect-baum', 'profile', 'deploy'])
+const PAGES = new Set(['home', 'settings', 'leaderboard', 'agents', 'vaults', 'swap', 'token', 'burn', 'login', 'connect-baum', 'profile', 'deploy', 'paper'])
 const INVITE_CODE = /^\/([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)$/
 
 function AppRoutes() {
@@ -31,7 +31,9 @@ function AppRoutes() {
   const invite = INVITE_CODE.exec(pathname)?.[1]
   if (invite && !PAGES.has(invite.toLowerCase())) return <InviteLink code={invite} />
   const terminal = <Suspense fallback={<div className="invite-page" role="status" aria-label="Loading SLUGS" />}><TerminalApp /></Suspense>
-  return pathname === '/burn' ? terminal : <RequireAuth>{terminal}</RequireAuth>
+  // Paper strategy pages are for sharing, so anybody can open them, signed in or not.
+  const open = pathname === '/burn' || pathname === '/paper' || pathname.startsWith('/paper/')
+  return open ? terminal : <RequireAuth>{terminal}</RequireAuth>
 }
 
 export default function App() {
