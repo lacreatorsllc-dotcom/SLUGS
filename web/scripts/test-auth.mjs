@@ -19,6 +19,7 @@ try {
     plugins: [{
       name: 'observe-auth-navigation',
       setup(plugin) {
+        plugin.onLoad({ filter: /\.css$/ }, () => ({ contents: '', loader: 'js' }))
         // Record the route requested by the real view; routing itself belongs to React Router.
         plugin.onResolve({ filter: /^react-router-dom$/ }, () => ({ path: 'router', namespace: 'auth-test' }))
         plugin.onLoad({ filter: /.*/, namespace: 'auth-test' }, () => ({

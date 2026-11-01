@@ -68,7 +68,7 @@
 .t-table td { height: 52px; padding: 0 16px; border-bottom: 1px solid var(--t-row-line); font-weight: 400; }.t-table tr:last-child td { border-bottom: 0; }.t-table .t-number { text-align: right; }.t-table .t-pnl { font-weight: 600; }
 .t-rank { color: var(--t-faint); width: 52px; }.t-rank--top { color: var(--t-accent); font-weight: 600; }
 .t-identity { display: flex; gap: 8px; align-items: center; width: max-content; min-width: 190px; }.t-agent-name { font-weight: 600; font-size: 13px; }.t-avatar-trigger { border: 0; background: transparent; padding: 0; border-radius: 50%; }
-.t-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid currentColor; display: inline-flex; justify-content: center; align-items: center; font-size: 11px; font-weight: 700; flex: none; }.t-avatar--large { width: 46px; height: 46px; font-size: 15px; }.t-avatar { overflow: hidden; }.t-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.t-avatar { width: 30px; height: 30px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 1.5px solid currentColor; display: inline-flex; justify-content: center; align-items: center; font-size: 11px; font-weight: 700; flex: none; }.t-avatar--large { width: 46px; height: 46px; font-size: 15px; }.t-avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; object-position: center; display: block; }
 .t-ring-0 { color: #a78bfa; }.t-ring-1 { color: #60a5fa; }.t-ring-2 { color: #e879a8; }.t-ring-3 { color: #5eb6c9; }.t-ring-4 { color: #fbbf24; }.t-ring-5 { color: #f0a35e; }.t-ring-6 { color: #2fd39a; }
 .t-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }.t-tag { display: inline-flex; font-size: 11px; padding: 2px 7px; border: 1px solid var(--t-strong); border-radius: 5px; color: var(--t-muted); white-space: nowrap; }.t-category { color: var(--t-secondary); font-size: 12px; }.t-suggested { font-size: 11px; color: var(--t-faint); }
 .t-row-actions { display: flex; align-items: center; justify-content: flex-end; gap: 2px; }
@@ -119,7 +119,7 @@
 .t-welcome-art { height: 190px; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--t-line); border-radius: 14px; background: var(--t-bg); overflow: hidden; }
 .t-welcome-art--center { align-items: center; justify-content: center; gap: 18px; background-image: radial-gradient(#1c1b19 1px, transparent 1px); background-size: 16px 16px; }
 .t-welcome-art--split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 10px; }
-.t-welcome-avatar { width: 28px; height: 28px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: 1.5px solid var(--t-up); border-radius: 50%; color: var(--t-up); font-size: 10.5px; font-weight: 700; }
+.t-welcome-avatar { width: 28px; height: 28px; aspect-ratio: 1; overflow: hidden; flex: none; display: inline-flex; align-items: center; justify-content: center; border: 1.5px solid var(--t-up); border-radius: 50%; color: var(--t-up); font-size: 10.5px; font-weight: 700; }
 .t-welcome-slug { display: inline-flex; align-items: center; gap: 10px; padding: 9px 12px 9px 9px; border: 1px solid var(--t-burn-line); border-radius: 12px; background: #140d0a; font-size: 17px; font-weight: 600; letter-spacing: -.01em; color: var(--t-text); }
 .t-welcome-slug > svg { color: var(--t-muted); }
 .t-welcome-slug--own .t-welcome-avatar { border-color: var(--t-accent); color: var(--t-accent); }
@@ -129,7 +129,7 @@
 .t-welcome-tips { flex-direction: column; gap: 6px; font-size: 12px; color: var(--t-muted); }.t-welcome-tips > span { display: inline-flex; align-items: center; gap: 8px; }
 .t-welcome-agent { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--t-strong); border-radius: 10px; background: var(--t-card); }
 .t-welcome-agent > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; font-size: 13px; }.t-welcome-agent small { color: var(--t-faint); font-size: 11px; }
-.t-welcome-agent .t-welcome-avatar { border-color: var(--t-strong); color: var(--t-secondary); }.t-welcome-picture { object-fit: cover; padding: 0; border-width: 1px; border-color: var(--t-strong) !important; }
+.t-welcome-agent .t-welcome-avatar { border-color: var(--t-strong); color: var(--t-secondary); }.t-welcome-picture { object-fit: cover; object-position: center; padding: 0; border-width: 1px; border-color: var(--t-strong) !important; }
 .t-welcome-following { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 7px; background: var(--t-ivory); color: var(--t-bg); font-size: 11.5px; font-weight: 600; }
 .t-welcome-feed { display: grid; grid-template-columns: 40px 1fr; gap: 6px 10px; padding: 2px 4px; font-size: 12px; }.t-welcome-feed > span:nth-child(odd) { color: #6f6c65; }.t-welcome-feed b { font-weight: 600; }
 .t-welcome-caption { margin-top: auto; display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--t-faint); }
@@ -297,11 +297,8 @@
 .t-welcome-slug--small .t-welcome-avatar { width: 24px; height: 24px; font-size: 9px; }
 @media (max-width: 480px) { .t-welcome-slugs { grid-template-columns: auto; } }
 .t-welcome-pnl { gap: 10px; padding-top: 16px; }
-.t-welcome-pnl-cards { position: relative; width: 300px; height: 132px; }
-.t-welcome-pnl-cards img { position: absolute; top: 4px; left: 50%; width: 124px; height: 124px; margin-left: -62px; border-radius: 10px; border: 1px solid var(--t-strong); box-shadow: 0 10px 24px rgba(0,0,0,.55); }
-.t-welcome-pnl-cards .t-welcome-pnl-spotlight { transform: translateX(-92px) rotate(-8deg) scale(.9); }
-.t-welcome-pnl-cards .t-welcome-pnl-hero { transform: translateX(92px) rotate(8deg) scale(.9); }
-.t-welcome-pnl-cards .t-welcome-pnl-classic { z-index: 1; top: 0; width: 132px; height: 132px; margin-left: -66px; }
+.t-welcome-pnl-cards { display: flex; justify-content: center; }
+.t-welcome-pnl-cards img { width: 160px; height: 160px; border-radius: 12px; border: 1px solid var(--t-strong); box-shadow: 0 10px 24px rgba(0,0,0,.55); }
 .t-welcome-pnl .t-welcome-caption { display: inline-flex; align-items: center; gap: 6px; }
 .t-welcome-art--examples { gap: 10px; }.t-welcome-art--examples .t-welcome-slugs { gap: 6px 8px; }
 .t-welcome-art--examples .t-welcome-slug--small { padding: 5px 12px 5px 5px; }

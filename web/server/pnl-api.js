@@ -55,9 +55,29 @@ async function capture(req, res) {
   return res.status(200).json({ card, sig: signature(card), snapshot })
 }
 
+// Share previews and downloads can request the same image concurrently. Reuse their
+// avatar fetches and PNG renders; the interactive dialog draws SVG in the browser.
+function remember(cache, key, value, max) {
+  cache.set(key, value)
+  if (cache.size > max) cache.delete(cache.keys().next().value)
+  return value
+}
+const pictures = new Map()
+const images = new Map()
+
 // Only Baum's known public avatar route is fetched; a card cannot be used as a URL proxy.
 async function picture(url) {
   if (typeof url !== 'string') return null
+  const cached = pictures.get(url)
+  if (cached && Date.now() - cached.at < 10 * 60 * 1000) return cached.value
+  const value = fetchPicture(url)
+  remember(pictures, url, { value, at: Date.now() }, 12)
+  const loaded = await value
+  if (!loaded && pictures.get(url)?.value === value) pictures.delete(url)
+  return loaded
+}
+
+async function fetchPicture(url) {
   let avatar
   try { avatar = new URL(url) } catch { return null }
   if (avatar.origin !== 'https://baumai.xyz' || !/^\/api\/avatar\/0x[0-9a-f]{40}$/i.test(avatar.pathname)) return null
@@ -83,11 +103,11 @@ function assets() {
   return resources
 }
 
-export async function renderPnlImage(snapshot, style) {
+export async function renderPnlImage(snapshot, style, width = 1080) {
   const [[, , logo], avatar] = await Promise.all([assets(), picture(snapshot.avatarUrl)])
   const svg = renderPnlCard(snapshot, style, { logo: `data:image/png;base64,${logo.toString('base64')}`, avatar })
   // fontBuffers belongs to resvg's WASM build. The native Node renderer needs file paths.
-  return new Resvg(svg, { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render()
+  return new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render()
 }
 
 export default async function handler(req, res) {
@@ -100,10 +120,16 @@ export default async function handler(req, res) {
     const style = String(req.query.style ?? 'classic')
     if (!snapshot || !STYLES.includes(style)) return res.status(400).json({ reason: 'This card link is invalid.' })
     const query = new URLSearchParams({ card: String(req.query.card), sig: String(req.query.sig), style })
-    const image = `${SITE}/api/pnl?${query}&format=image&v=2`
+    const image = `${SITE}/api/pnl?${query}&format=image&v=3`
     const page = `${SITE}/share/pnl?${query}`
     if (req.query.format === 'image') {
-      const png = (await renderPnlImage(snapshot, style)).asPng()
+      // Optional smaller exports; downloads and X previews default to 1080px.
+      const width = [240, 540].includes(Number(req.query.size)) ? Number(req.query.size) : 1080
+      const cacheKey = `${req.query.card}|${req.query.sig}|${style}|${width}`
+      const pending = images.get(cacheKey) ?? remember(images, cacheKey, renderPnlImage(snapshot, style, width).then((image) => image.asPng()), 24)
+      let png
+      try { png = await pending }
+      catch (error) { if (images.get(cacheKey) === pending) images.delete(cacheKey); throw error }
       res.setHeader('content-type', 'image/png')
       res.setHeader('cache-control', 'public, max-age=86400, s-maxage=86400')
       res.setHeader('content-disposition', `${req.query.download === '1' ? 'attachment' : 'inline'}; filename="slugs-pnl-${style}-${snapshot.range}.png"`)

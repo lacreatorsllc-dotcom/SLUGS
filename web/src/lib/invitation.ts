@@ -21,9 +21,9 @@ export const PICTURES: Record<string, string> = {
 }
 const WALLETS: Record<string, string> = { goobz: GOOBZ_WALLET }
 
-/** The welcome tour's examples when there's no invitation: goobz first. */
+/** The welcome tour's examples when there's no personal invitation. */
 export const DEFAULT_PROFILES: InvitationProfile[] = [
-  { u: 'goobz', a: 'dca-bot' }, { u: 'brokentyrant', a: 'sniper-bot' }, { u: 'brazylord', a: 'gold-trader' },
+  { u: 'brokentyrant', a: 'sniper-bot' }, { u: 'brazylord', a: 'gold-trader' },
   { u: 'bagcalls', a: 'hodl-bot' }, { u: 'meechi', a: 'market-maker' }, { u: 'fwaz', a: 'dev-bot' }, { u: '12g8ge', a: 'mev-bot' },
 ]
 

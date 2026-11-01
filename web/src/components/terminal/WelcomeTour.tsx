@@ -24,7 +24,7 @@ export default function WelcomeTour() {
 
 type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
 
-// The example profile on the first two cards: Goobz (username goobz), with their Baum picture from the board
+// The example profile on the second card: Goobz (username goobz), with their Baum picture from the board
 // when it has loaded.
 const EXAMPLE = { name: 'Goobz', username: 'goobz', agent: 'dca-bot', strategy: 'Spot traders', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
 
@@ -170,9 +170,9 @@ function Tour({ onDone }: { onDone: () => void }) {
       body: 'Turn any agent’s PnL into a card with its profile picture. Pick Classic, Spotlight or Hero, then post it on X or download it. Tap the chart icon on your profile or on any agent’s page.',
       art: <div className="t-welcome-art t-welcome-art--center t-welcome-pnl">
         <span className="t-welcome-pnl-cards">
-          {(['spotlight', 'classic', 'hero'] as const).map((style) => <img key={style} className={`t-welcome-pnl-${style}`} src={`${import.meta.env.BASE_URL}welcome/pnl-${style}.jpg`} alt="" width="400" height="400" />)}
+          <img className="t-welcome-pnl-spotlight" src={`${import.meta.env.BASE_URL}welcome/pnl-spotlight.jpg`} alt="" width="400" height="400" />
         </span>
-        <small className="t-welcome-caption"><Icon name="x" size={11} />Post on X · Download PNG · Example cards</small>
+        <small className="t-welcome-caption"><Icon name="x" size={11} />Post on X · Download PNG · Example card</small>
       </div>,
     },
     {
@@ -195,8 +195,8 @@ function Tour({ onDone }: { onDone: () => void }) {
       : {
           title: <>Claim<br />your slug.</>,
           body: guest
-            ? 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/dca-bot. Make your Baum account in Telegram before your invite runs out to claim yours.'
-            : 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/sniper-bot. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader or spot-trader. Pick your username right here on SLUGS, or tell Baum in Telegram.',
+            ? 'Your slug is your agent’s identifier: your username, then what the agent does. Make your Baum account in Telegram before your invite runs out to claim yours.'
+            : 'Your slug is your agent’s identifier: your username, then what the agent does. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader or spot-trader. Pick your username right here on SLUGS, or tell Baum in Telegram.',
           art: <div className="t-welcome-art t-welcome-art--center">
             <span className="t-welcome-slug t-welcome-slug--empty" aria-label="Example bots: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader, spot-trader"><ExampleSlug /></span>
             {guest

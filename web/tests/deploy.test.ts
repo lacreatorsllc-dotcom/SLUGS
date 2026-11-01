@@ -1,14 +1,16 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { agentSlugPart, perMonthUsd, setupMessage, suggestName, setupProblem } from '../src/lib/deploy.ts'
+import { agentSlugPart, perMonthUsd, SUGGESTED_AGENTS, setupMessage, setupProblem } from '../src/lib/deploy.ts'
 import handler, { launchSetup } from '../api/account.js'
 
 const SLUGS = { address: '0xa5A0A37778D6b656A37b2E10c13E2E31826ff10A', symbol: 'SLUGS' }
 const ETH = { address: 'ETH', symbol: 'ETH' }
 
-test('suggests names for what agents do and turns names into the agent part of a SLUG', () => {
-  assert.equal(suggestName('hodl-bot', () => 0), 'dca-bot')
-  assert.notEqual(suggestName('dca-bot', () => 0), 'dca-bot')
+test('suggests trading agents that deploy as they are, and turns names into the agent part of a SLUG', () => {
+  for (const agent of SUGGESTED_AGENTS) {
+    assert.equal(agentSlugPart(agent.name), agent.name)
+    assert.equal(setupProblem({ name: agent.name, tokens: [SLUGS], amountUsd: 25, every: 'day' }), null)
+  }
   assert.equal(agentSlugPart('BraveAmberFox'), 'brave-amber-fox')
   assert.equal(agentSlugPart('  Sniper Bot 2 '), 'sniper-bot-2')
   assert.equal(agentSlugPart('!!!'), '')

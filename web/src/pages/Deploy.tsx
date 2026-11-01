@@ -7,7 +7,7 @@ import { EmptyState, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
 import { baumLinks } from '../lib/baum'
 import { savedInvitation } from '../lib/invitation'
-import { MAX_NAME, NAME_IDEAS, agentSlugPart, suggestName } from '../lib/deploy'
+import { MAX_NAME, SUGGESTED_AGENTS, agentSlugPart } from '../lib/deploy'
 import { markTourSeen, shouldShowTour } from '../lib/tour'
 
 // Deploy a slug: name it, then set it up by chat right here (bottom left) or in Baum on
@@ -16,7 +16,7 @@ import { markTourSeen, shouldShowTour } from '../lib/tour'
 
 const TOUR: CoachStep[] = [
   { target: 'deploy-name', title: 'Name your slug', body: 'Its SLUG is your username, then what it does, like goobz/dca-bot. You can rename it later.' },
-  { target: 'deploy-ideas', title: 'Stuck on a name?', body: 'Tap an idea, or Shuffle for more. Names say what the bot does: dca-bot, hodl-bot, sniper-bot.' },
+  { target: 'deploy-ideas', title: 'Choose a trading agent', body: 'Pick a suggested trading agent, or type your own name. Set its tokens and buying schedule in chat.' },
   { target: 'deploy-chat-button', title: 'Set it up in chat', body: 'Your bot pops up in the corner and asks what to buy, how much and how often. About a minute.' },
   { target: 'deploy-telegram', title: 'Or use Telegram', body: 'Prefer Baum in Telegram? It opens with your bot’s name ready. Same agent either way.' },
   { target: 'deploy-account', title: 'One account', body: 'SLUGS and Baum share your agents, wallet and PnL. An agent made here shows in Telegram, and the other way round.' },
@@ -24,12 +24,11 @@ const TOUR: CoachStep[] = [
 
 export default function Deploy() {
   const { user, guest } = useAuthSession()
-  // Bots the owner suggested in a personal invitation (lib/invitation.ts): the first is the
-  // starting name, and they lead the ideas.
+  // Invitation suggestions lead the choices; the person chooses the name themselves.
   const [invitation] = useState(() => savedInvitation())
   const suggested = invitation?.bots ?? []
-  const ideas = [...suggested, ...NAME_IDEAS.filter((idea) => !suggested.includes(idea))].slice(0, 6)
-  const [name, setName] = useState(() => suggested[0] ?? 'dca-bot')
+  const ideas = [...suggested, ...SUGGESTED_AGENTS.map((agent) => agent.name).filter((idea) => !suggested.includes(idea))].slice(0, 6)
+  const [name, setName] = useState('')
   const [chat, setChat] = useState(false)
   const [telegram, setTelegram] = useState(false)
   const [tour, setTour] = useState(false)
@@ -71,21 +70,21 @@ export default function Deploy() {
       <div className="t-deploy-slugbox" data-tour="deploy-name">
         {user.avatarUrl ? <img src={user.avatarUrl} alt="" /> : <span className="t-deploy-face">{(username ?? 'you').slice(0, 2).toUpperCase()}</span>}
         <span className="t-mono t-deploy-owner">{username ?? 'you'}<span className="t-welcome-slug-agent">/</span></span>
-        <input id="deploy-name" className="t-mono" value={name} maxLength={MAX_NAME} autoComplete="off" spellCheck={false}
+        <input id="deploy-name" className="t-mono" value={name} maxLength={MAX_NAME} autoComplete="off" spellCheck={false} placeholder="Name your agent or choose a suggestion"
           onChange={(event) => setName(event.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+/, ''))} />
-        <button type="button" className="t-chip" onClick={() => setName(suggestName(name))}><Icon name="refresh" size={12} />Shuffle</button>
       </div>
       <div className="t-deploy-ideas" data-tour="deploy-ideas">
-        <span className="t-faint">{suggested.length ? `Suggested by ${invitation!.from}` : 'Ideas'}</span>
-        {ideas.map((idea) => <button type="button" key={idea} className="t-chip" aria-pressed={name === idea} onClick={() => setName(idea)}>{idea}</button>)}
+        <span className="t-faint">{suggested.length ? `Trading agents suggested by ${invitation!.from}` : 'Suggested trading agents'}</span>
+        {ideas.map((idea) => <button type="button" key={idea} className="t-chip" title={SUGGESTED_AGENTS.find((agent) => agent.name === idea)?.about} aria-pressed={name === idea} onClick={() => setName(idea)}>{idea}</button>)}
       </div>
+      <p className="t-fine t-faint">Choose a suggestion or name your own. Set up the tokens, amount and buying schedule in chat.</p>
       {!username && <p className="t-fine t-negative">Pick your username first: your agents’ SLUGs start with it. <Link to="/profile?edit=username">Set my username</Link></p>}
 
       <div className="t-deploy-choices">
         <button type="button" className="t-submit t-deploy-choice" data-tour="deploy-chat-button" disabled={!username || !agentSlugPart(name)} onClick={() => { setChat(true); setTelegram(false) }}>
           <Icon name="message" size={16} />Set it up in chat
         </button>
-        <button type="button" className="t-submit t-submit--secondary t-deploy-choice" data-tour="deploy-telegram" onClick={openTelegram}>
+        <button type="button" className="t-submit t-submit--secondary t-deploy-choice" data-tour="deploy-telegram" disabled={!username || !agentSlugPart(name)} onClick={openTelegram}>
           <Icon name="telegram" size={16} />Set it up in Telegram
         </button>
       </div>

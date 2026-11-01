@@ -31,7 +31,9 @@ function AppRoutes() {
   const invite = inviteFromPath(pathname)
   if (invite) return <InviteLink code={invite} />
   const terminal = <Suspense fallback={<div className="invite-page" role="status" aria-label="Loading SLUGS" />}><TerminalApp /></Suspense>
-  return pathname === '/burn' ? terminal : <RequireAuth>{terminal}</RequireAuth>
+  // Paper strategy pages are for sharing, so anybody can open them, signed in or not.
+  const open = pathname === '/burn' || pathname === '/paper' || pathname.startsWith('/paper/')
+  return open ? terminal : <RequireAuth>{terminal}</RequireAuth>
 }
 
 export default function App() {
