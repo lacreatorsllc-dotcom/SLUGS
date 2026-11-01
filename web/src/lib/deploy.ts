@@ -12,18 +12,16 @@ export const MAX_BUY_USD = 10_000
 export const MAX_TOKENS = 5
 export const MAX_NAME = 24
 
-// Agents are named for what they do. The first few are the one-tap ideas; Shuffle draws
-// from all of them.
-export const NAME_IDEAS = ['dca-bot', 'hodl-bot', 'sniper-bot', 'copy-trader', 'spot-trader']
-const MORE_NAMES = ['slugs-stacker', 'eth-stacker', 'weekly-bags', 'dip-buyer', 'quiet-compounder', 'steady-stacker', 'daily-dca']
+// Trading agents to start from, named for what they do. All of them buy on a schedule,
+// which is what deploying from SLUGS sets up today.
+export const SUGGESTED_AGENTS = [
+  { name: 'dca-bot', about: 'Buys the same amount on a schedule' },
+  { name: 'spot-trader', about: 'Builds a basket of tokens you pick' },
+  { name: 'hodl-bot', about: 'Builds a long-term position in your chosen tokens' },
+  { name: 'stack-bot', about: 'Adds to a position on your chosen schedule' },
+] as const
 
-/** Another name idea, never the current one. */
-export function suggestName(current: string, random = Math.random) {
-  const pool = [...NAME_IDEAS, ...MORE_NAMES].filter((name) => name !== current)
-  return pool[Math.floor(random() * pool.length)]
-}
-
-/** The agent's part of its SLUG: Sniper Bot → sniper-bot, BraveAmberFox → brave-amber-fox. */
+/** The agent's part of its SLUG: DcaBot → dca-bot. */
 export function agentSlugPart(name: string) {
   return name.trim()
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
