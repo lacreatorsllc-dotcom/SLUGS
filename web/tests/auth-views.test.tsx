@@ -5,6 +5,9 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import ChatWidget, { ChatPanel } from '../src/components/terminal/ChatWidget'
 import PnlCard from '../src/components/terminal/PnlCard'
 import Deploy from '../src/pages/Deploy'
+import DeployEntry from '../src/components/terminal/DeployEntry'
+import DeployChat from '../src/components/terminal/DeployChat'
+import { markWelcomeSeen, welcomeKey } from '../src/lib/welcome'
 import type { Agent } from '../src/lib/terminal-model'
 import { TerminalDataContext } from '../src/lib/terminal-context'
 import RequireAuth from '../src/components/RequireAuth'
@@ -47,6 +50,11 @@ test('chat opens inside SLUGS and never hands a draft to Telegram', () => {
   assert.doesNotMatch(launcher, /href=|t\.me/)
   const panel = renderToStaticMarkup(createElement(TerminalDataContext.Provider, { value: { snapshot: null, loading: false, error: false, refresh() {} } }, createElement(ChatPanel, { draft: 'Keep this draft', onDraft() {}, onClose() {} })))
   assert.match(panel, /Keep this draft/)
+  assert.match(panel, /class="t-deploy-chat t-baum-chat"[^>]*role="dialog" aria-modal="false" aria-label="Chat with Baum"/)
+  assert.match(panel, /class="t-deploy-chat-head"/)
+  assert.match(panel, /class="t-deploy-msg t-deploy-msg--bot"/)
+  assert.match(panel, /class="t-deploy-chat-foot"/)
+  assert.doesNotMatch(panel, /<dialog|t-floating-inner|t-chat-dialog/)
   assert.match(panel, /<button(?=[^>]*type="submit")(?=[^>]*disabled="")[^>]*>/)
   // The one link is the SLUGS community group (a t.me/+ invite). Drafts never go to Baum
   // in Telegram: no bot links, and nothing says a message was copied or sent there.
@@ -54,6 +62,28 @@ test('chat opens inside SLUGS and never hands a draft to Telegram', () => {
   assert.equal(links.length, 1)
   assert.match(links[0], /^https:\/\/t\.me\/\+/)
   assert.doesNotMatch(panel, /t\.me\/[A-Za-z0-9_]*bot|Copied for|Opened in|Send in Telegram/i)
+})
+
+test('the deploy explanation appears by its button after the welcome tour', () => {
+  const first = { ...user, username: 'entry-preview', wallets: ['0xentry-preview'] }
+  markWelcomeSeen(welcomeKey(first, null)!)
+  const html = render(createElement(DeployEntry, { welcomeOpen: false }), { user: first })
+  assert.match(html, /href="\/deploy"[^>]*aria-describedby=/)
+  assert.match(html, /Create your own trading agent/)
+  assert.match(html, /Use “Deploy a slug” to name your agent/)
+  assert.match(html, /aria-label="Dismiss deploy explanation"/)
+  const covered = render(createElement(DeployEntry, { welcomeOpen: true }), { user: first })
+  assert.doesNotMatch(covered, /Create your own trading agent/)
+  assert.doesNotMatch(render(createElement(DeployEntry, { welcomeOpen: false })), /Create your own trading agent/)
+})
+
+test('setup chat retains its left corner window and guided first step', () => {
+  const html = renderToStaticMarkup(createElement(DeployChat, { username: 'slug', name: 'dca-bot', onClose() {} }))
+  assert.match(html, /class="t-deploy-chat"[^>]*role="dialog" aria-modal="false" aria-label="Set up slug\/dca-bot"/)
+  assert.match(html, /Setting up · step 1 of 3/)
+  assert.match(html, /What should I buy/)
+  assert.match(html, /data-chat-input="true"/)
+  assert.doesNotMatch(html, /t-baum-chat/)
 })
 
 test('terminal content stays hidden while the persisted session is restoring', () => {

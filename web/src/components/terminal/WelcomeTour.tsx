@@ -12,14 +12,18 @@ import { CopyButton, IconButton } from './ui'
 // The first-time tour: what a slug is, then the person's own slug. Shown once per
 // account in each browser (lib/welcome.ts), over whichever terminal page they land on.
 // Any terminal page with ?welcome opens it again.
-export default function WelcomeTour() {
+export default function WelcomeTour({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
   const { user, guest } = useAuthSession()
   const replay = new URLSearchParams(useLocation().search).has('welcome')
   const key = welcomeKey(user, guest)
   const [open, setOpen] = useState(false)
-  useEffect(() => { setOpen(key !== null && (replay || !hasSeenWelcome(key))) }, [key, replay])
+  useEffect(() => {
+    const next = key !== null && (replay || !hasSeenWelcome(key))
+    setOpen(next)
+    onOpenChange?.(next)
+  }, [key, replay, onOpenChange])
   if (!open || !key) return null
-  return <Tour onDone={() => { markWelcomeSeen(key); setOpen(false) }} />
+  return <Tour onDone={() => { markWelcomeSeen(key); setOpen(false); onOpenChange?.(false) }} />
 }
 
 type Step = { title: ReactNode; body: ReactNode; art: ReactNode }

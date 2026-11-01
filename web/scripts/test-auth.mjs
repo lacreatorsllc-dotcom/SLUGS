@@ -25,7 +25,8 @@ try {
         plugin.onLoad({ filter: /.*/, namespace: 'auth-test' }, () => ({
           contents: `import React from 'react';
             export function Navigate({ to, replace }) { return React.createElement('span', { 'data-navigate': to, 'data-replace': String(Boolean(replace)) }); }
-            export function Link({ to, state, children, ...props }) { return React.createElement('a', { href: to, ...props }, children); }`,
+            export function Link({ to, state, children, ...props }) { return React.createElement('a', { href: to, ...props }, children); }
+            export function useLocation() { return { pathname: '/home', search: '' }; }`,
           loader: 'js',
         }))
       },

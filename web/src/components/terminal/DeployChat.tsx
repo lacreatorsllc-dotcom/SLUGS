@@ -7,6 +7,7 @@ import { MAX_TOKENS, MIN_BUY_USD, perMonthUsd, setupMessage, setupProblem, type 
 import { money } from '../../lib/terminal-format'
 import { shortAddress } from '../../lib/terminal-model'
 import Icon from './Icon'
+import AgentChatWindow from './AgentChatWindow'
 
 // Setting up a slug by chat, from the Deploy page's bottom-left corner. The agent the
 // person just named asks what to buy, how much and how often, then deploys it through
@@ -109,13 +110,11 @@ export default function DeployChat({ username, name, picture, onClose }: { usern
   }
 
   const typing = stage === 'tokens' || stage === 'amount' || stage === 'every'
-  return <section className="t-deploy-chat" role="dialog" aria-label={`Set up ${slug}`} data-tour="deploy-chat">
-    <header className="t-deploy-chat-head">
-      {picture ? <img src={picture} alt="" /> : <span className="t-deploy-chat-face">{username.slice(0, 2).toUpperCase()}</span>}
-      <span className="t-deploy-chat-who"><span className="t-mono">{username}<span className="t-welcome-slug-agent">/{name}</span></span><small>{stage === 'done' ? 'Live' : stage === 'handoff' ? 'Finishing in Telegram' : `Setting up · step ${stage === 'tokens' ? 1 : stage === 'amount' ? 2 : 3} of 3`}</small></span>
-      <a className="t-chip" href={baumLinks.launch()} target="_blank" rel="noreferrer">Telegram instead</a>
-      <button type="button" className="t-deploy-chat-close" onClick={onClose} aria-label="Close setup chat"><Icon name="close" size={14} /></button>
-    </header>
+  return <AgentChatWindow label={`Set up ${slug}`} tour="deploy-chat" onClose={onClose}
+    title={<>{username}<span className="t-welcome-slug-agent">/{name}</span></>}
+    status={stage === 'done' ? 'Live' : stage === 'handoff' ? 'Finishing in Telegram' : `Setting up · step ${stage === 'tokens' ? 1 : stage === 'amount' ? 2 : 3} of 3`}
+    avatar={picture ? <img src={picture} alt="" /> : <span className="t-deploy-chat-face">{username.slice(0, 2).toUpperCase()}</span>}
+    actions={<a className="t-chip" href={baumLinks.launch()} target="_blank" rel="noreferrer">Telegram instead</a>}>
     <div className="t-deploy-chat-thread" ref={thread} aria-live="polite">
       {lines.map((line, i) => <p key={i} className={`t-deploy-msg t-deploy-msg--${line.who}`}>{line.text}</p>)}
       {(stage === 'review' || stage === 'deploying') && <div className="t-deploy-plan">
@@ -143,10 +142,10 @@ export default function DeployChat({ username, name, picture, onClose }: { usern
         {stage === 'handoff' && <a className="t-chip t-chip--go" href={baumLinks.launch()} target="_blank" rel="noreferrer"><Icon name="telegram" size={12} />Open Baum again</a>}
       </div>
       {typing && <form className="t-deploy-chat-input" onSubmit={send}>
-        <input value={draft} onChange={(event) => setDraft(event.target.value)} aria-label="Reply"
+        <input data-chat-input value={draft} onChange={(event) => setDraft(event.target.value)} aria-label="Reply"
           placeholder={stage === 'tokens' ? 'Or paste a contract (0x…)' : stage === 'amount' ? 'Or type an amount' : 'Daily or weekly?'} />
         <button type="submit" className="t-chip" disabled={!draft.trim()}>Send</button>
       </form>}
     </footer>
-  </section>
+  </AgentChatWindow>
 }
