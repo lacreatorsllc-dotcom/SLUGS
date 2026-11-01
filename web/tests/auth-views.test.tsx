@@ -3,6 +3,9 @@ import { test } from 'node:test'
 import { createElement, type ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import ChatWidget, { ChatPanel } from '../src/components/terminal/ChatWidget'
+import PnlCard from '../src/components/terminal/PnlCard'
+import Deploy from '../src/pages/Deploy'
+import type { Agent } from '../src/lib/terminal-model'
 import { TerminalDataContext } from '../src/lib/terminal-context'
 import RequireAuth from '../src/components/RequireAuth'
 import Login from '../src/pages/Login'
@@ -17,6 +20,26 @@ function render(children: ReactNode, session: Partial<AuthSession> = {}) {
 const privateContent = createElement('div', null, 'PRIVATE TERMINAL')
 const guard = () => createElement(RequireAuth, { children: privateContent })
 const user: BaumProfile = { username: 'slug', wallets: ['0x0000000000000000000000000000000000000001'], strategy: null, copy: null }
+
+test('PnL artwork and all three choices appear before a share request can finish', () => {
+  const agent: Agent = { id: user.wallets[0], name: '@slug', categories: ['Custom'], declared: true, tags: [], trading: { '7d': { wallet: user.wallets[0], pnlUsd: 12.5, volumeUsd: 250, trades: 4, tokens: 1 } }, liquidity: {} }
+  const snapshot = { agents: [agent], traders: { '7d': { rows: [agent.trading['7d']!], updatedAt: 1793400000000 } }, lps: {}, token: null, boardError: false, partial: false }
+  const html = render(createElement(TerminalDataContext.Provider, { value: { snapshot, loading: false, error: false, refresh() {} } }, createElement(PnlCard, { agent, range: '7d' })), { user })
+  assert.match(html, /role="img" aria-label="@slug, 7D PnL \+\$12\.50, classic card"/)
+  assert.match(html, /Classic/); assert.match(html, /Spotlight/); assert.match(html, /Hero/)
+  assert.doesNotMatch(html, /Preparing your PnL card|generating|<img[^>]*api\/pnl/i)
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1])
+  assert.equal(new Set(ids).size, ids.length, 'Inline cards must not share gradient or circle-clip IDs')
+  assert.match(html, /aria-disabled="true"/, 'Sharing waits for the verified server snapshot')
+})
+
+test('deploy starts with a blank name and offers named trading agents without a shuffle control', () => {
+  const html = render(createElement(Deploy), { user })
+  assert.match(html, /id="deploy-name"[^>]*value=""/)
+  assert.match(html, /Suggested trading agents/)
+  for (const name of ['dca-bot', 'spot-trader', 'hodl-bot', 'stack-bot']) assert.match(html, new RegExp(name))
+  assert.doesNotMatch(html, /Shuffle|BraveAmberFox|QuietJadeOtter/)
+})
 
 test('chat opens inside SLUGS and never hands a draft to Telegram', () => {
   const launcher = renderToStaticMarkup(createElement(ChatWidget))

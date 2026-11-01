@@ -15,3 +15,11 @@ Share on X opens the user's composer with the public card link; it never posts a
 The bottom-right chat action opens the existing in-app panel. Its draft and quick actions stay in SLUGS, with no Telegram links, window opening, clipboard forwarding, or claims that a message was sent. Message sending and copy confirmation are disabled until Baum supplies its chat contract; the partner API request is documented separately.
 
 Verification: tests cover reported-only snapshots, current owner pictures/referrals, public X metadata, tamper rejection, all three actual PNG outputs, avatar URL restrictions, negative PnL/text escaping, and the in-app chat behavior. Run `npm test`, `npm run build`, and ESLint on the changed React files from `web/`.
+
+## Onboarding, deployment suggestions, and preview speed
+
+The owner requested one PnL example on tour card 04, circular profile pictures in every card style, removal of the Goobz introduction on card 01 and the “like goobz/sniper-bot” phrase on card 06, and trading-agent suggestions on `/deploy` without generated names. The tour now uses one Spotlight example and starts with the other example agents. Deploy starts with a blank name and offers DCA, spot, HODL, and stack names; their supported behavior remains scheduled buys with editable tokens, size, and frequency.
+
+PnL previews now render the shared SVG artwork directly in the browser from the reported row already on screen. All three styles are available on first render, independent of signing or PNG generation. Sharing is signed in the background and updates the preview to the captured snapshot when ready. Inline SVG gradients, filters, and circular avatar clips have unique IDs for each preview and thumbnail. Names are XML-escaped; preview avatar URLs are restricted to Baum's public avatar route. Server PNG exports retain the native Inter font fix, 1080px output, and signed financial data.
+
+Avatar requests and concurrent exports reuse in-flight work, with bounded caches. This avoids starting FFmpeg or waiting for multiple PNG requests to display a static card. A local benchmark measured about 0.04ms to prepare preview SVG markup versus about 115ms for a full PNG render, excluding network time. UI tests verify that artwork appears before the signing request completes; export tests cover shared fetches, cached PNG reuse, and rendered text.

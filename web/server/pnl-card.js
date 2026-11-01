@@ -5,7 +5,15 @@ const text = (x, y, value, size = 32, fill = '#f5f3ee', weight = 400, extra = ''
 const money = (value, signed = false) => `${signed ? value >= 0 ? '+' : '−' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 const clipName = (name, max = 30) => [...name].slice(0, max).join('')
 
-export function renderPnlCard(card, style, { logo, avatar } = {}) {
+export function renderPnlCard(card, style, assets = {}) {
+  const prefix = /^[a-z][a-z0-9-]{0,80}$/i.test(assets.prefix ?? '') ? assets.prefix : 'pnl'
+  // Inline previews share a document; keep every gradient, filter and avatar clip local.
+  return cardMarkup(card, style, assets)
+    .replace(/id="(bg|glow|portrait)"/g, `id="${prefix}-$1"`)
+    .replace(/url\(#(bg|glow|portrait)\)/g, `url(#${prefix}-$1)`)
+}
+
+function cardMarkup(card, style, { logo, avatar } = {}) {
   if (!STYLES.includes(style)) throw new Error('Unknown PnL style')
   const color = card.pnlUsd >= 0 ? '#37d773' : '#f87171'
   const amount = money(card.pnlUsd, true)

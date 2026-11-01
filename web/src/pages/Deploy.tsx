@@ -32,7 +32,7 @@ export function ConnectedNote() {
 
 export default function Deploy() {
   const { user, guest } = useAuthSession()
-  const [name, setName] = useState<string>(SUGGESTED_AGENTS[0].name)
+  const [name, setName] = useState('')
   const [tokens, setTokens] = useState<TokenPick[]>([SUGGESTED[0]])
   const [contract, setContract] = useState('')
   const [amount, setAmount] = useState('25')
@@ -100,11 +100,12 @@ export default function Deploy() {
     <form className="t-feature-card t-deploy-form" onSubmit={deploy}>
       <div className="t-deploy-field">
         <label htmlFor="deploy-name">Name</label>
-        <input id="deploy-name" value={name} maxLength={MAX_NAME} autoComplete="off" spellCheck={false} onChange={(event) => setName(event.target.value)} />
+        <input id="deploy-name" value={name} placeholder="Name your agent or choose a suggestion" maxLength={MAX_NAME} autoComplete="off" spellCheck={false} onChange={(event) => setName(event.target.value)} />
+        <span className="t-deploy-label">Suggested trading agents</span>
         <div className="t-deploy-tokens" role="group" aria-label="Suggested trading agents">
           {SUGGESTED_AGENTS.map((agent) => <button type="button" key={agent.name} className="t-chip" title={agent.about} aria-pressed={agentSlugPart(name) === agent.name} onClick={() => setName(agent.name)}>{agentSlugPart(name) === agent.name && <Icon name="check" size={12} />}{agent.name}</button>)}
         </div>
-        <p className="t-fine">{SUGGESTED_AGENTS.find((agent) => agent.name === agentSlugPart(name))?.about ?? 'Suggested trading agents. Or name your own.'}</p>
+        <p className="t-fine">{SUGGESTED_AGENTS.find((agent) => agent.name === agentSlugPart(name))?.about ?? 'Choose a suggestion or name your own.'} All start with scheduled buys; customize the tokens and frequency below.</p>
         <div className="t-deploy-slug"><AvatarRing agent={{ id: user.wallets[0] ?? slug, name: user.username ?? 'you', avatarUrl: user.avatarUrl ?? undefined }} /><span className="t-mono">{user.username ?? 'you'}<span className="t-welcome-slug-agent">/{agentSlugPart(name) || 'your-agent'}</span></span><small>Its SLUG. You can rename it later.</small></div>
         {!user.username && <p className="t-fine t-negative">Pick your username first: your agents’ SLUGs start with it. <Link to="/profile?edit=username">Set my username</Link></p>}
       </div>

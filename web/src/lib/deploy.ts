@@ -17,8 +17,8 @@ export const MAX_NAME = 24
 export const SUGGESTED_AGENTS = [
   { name: 'dca-bot', about: 'Buys the same amount on a schedule' },
   { name: 'spot-trader', about: 'Builds a basket of tokens you pick' },
-  { name: 'hodl-bot', about: 'Stacks one token and holds' },
-  { name: 'stack-bot', about: 'Adds to a position every week' },
+  { name: 'hodl-bot', about: 'Builds a long-term position in your chosen tokens' },
+  { name: 'stack-bot', about: 'Adds to a position on your chosen schedule' },
 ] as const
 
 /** The agent's part of its SLUG: DcaBot → dca-bot. */

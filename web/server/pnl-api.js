@@ -70,9 +70,11 @@ async function picture(url) {
   if (typeof url !== 'string') return null
   const cached = pictures.get(url)
   if (cached && Date.now() - cached.at < 10 * 60 * 1000) return cached.value
-  const value = await fetchPicture(url)
-  if (value) remember(pictures, url, { value, at: Date.now() }, 30)
-  return value
+  const value = fetchPicture(url)
+  remember(pictures, url, { value, at: Date.now() }, 12)
+  const loaded = await value
+  if (!loaded && pictures.get(url)?.value === value) pictures.delete(url)
+  return loaded
 }
 
 async function fetchPicture(url) {
@@ -118,13 +120,16 @@ export default async function handler(req, res) {
     const style = String(req.query.style ?? 'classic')
     if (!snapshot || !STYLES.includes(style)) return res.status(400).json({ reason: 'This card link is invalid.' })
     const query = new URLSearchParams({ card: String(req.query.card), sig: String(req.query.sig), style })
-    const image = `${SITE}/api/pnl?${query}&format=image&v=2`
+    const image = `${SITE}/api/pnl?${query}&format=image&v=3`
     const page = `${SITE}/share/pnl?${query}`
     if (req.query.format === 'image') {
       // Previews and thumbnails are drawn at the width they're shown; the download and the X preview stay 1080.
       const width = [240, 540].includes(Number(req.query.size)) ? Number(req.query.size) : 1080
       const cacheKey = `${req.query.card}|${req.query.sig}|${style}|${width}`
-      const png = images.get(cacheKey) ?? remember(images, cacheKey, (await renderPnlImage(snapshot, style, width)).asPng(), 24)
+      const pending = images.get(cacheKey) ?? remember(images, cacheKey, renderPnlImage(snapshot, style, width).then((image) => image.asPng()), 24)
+      let png
+      try { png = await pending }
+      catch (error) { if (images.get(cacheKey) === pending) images.delete(cacheKey); throw error }
       res.setHeader('content-type', 'image/png')
       res.setHeader('cache-control', 'public, max-age=86400, s-maxage=86400')
       res.setHeader('content-disposition', `${req.query.download === '1' ? 'attachment' : 'inline'}; filename="slugs-pnl-${style}-${snapshot.range}.png"`)

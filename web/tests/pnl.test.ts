@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { after, test } from 'node:test'
+import { readFile } from 'node:fs/promises'
 import handler, { renderPnlImage } from '../server/pnl-api.js'
 import { renderPnlCard, STYLES } from '../server/pnl-card.js'
 
@@ -107,6 +108,26 @@ test('the native renderer draws the PnL text with its bundled Inter font', async
     if (pixels[i + 1] > 120 && pixels[i + 1] > pixels[i] * 1.5 && pixels[i + 1] > pixels[i + 2] * 1.3 && pixels[i + 3] > 128) green++
   }
   assert.ok(green > 10000, `The PnL text must be drawn, found ${green} green pixels`)
+})
+
+test('concurrent exports share their avatar fetch and reuse the same finished PNG', async (context) => {
+  const image = await readFile(new URL('../server-assets/slugs-logo-orange.png', import.meta.url))
+  const avatarUrl = `https://baumai.xyz/api/avatar/${wallet}?cache-test=${Date.now()}`
+  let avatarCalls = 0
+  context.mock.method(globalThis, 'fetch', async (url) => {
+    if (String(url).includes('/api/avatar/')) {
+      avatarCalls++
+      await new Promise((resolve) => setImmediate(resolve))
+      return new Response(image, { headers: { 'content-type': 'image/png' } })
+    }
+    return { ok: true, json: async () => ({ ...board, rows: [{ ...board.rows[0], avatarUrl }] }) }
+  })
+  const { card, sig } = (await capture()).body
+  const responses = [response(), response(), response()]
+  await Promise.all(responses.map((res, index) => handler({ method: 'GET', headers: {}, query: { card, sig, style: index === 2 ? 'spotlight' : 'classic', format: 'image' } }, res)))
+  assert.equal(avatarCalls, 1)
+  assert.strictEqual(responses[0].body, responses[1].body)
+  assert.notDeepEqual(responses[0].body, responses[2].body)
 })
 
 test('an avatar cannot make the renderer fetch a private or arbitrary URL', async (context) => {
