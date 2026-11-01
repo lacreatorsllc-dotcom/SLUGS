@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { BAUM, BRAND } from '../../config'
 import { useAuthSession } from '../../lib/auth-context'
 import { baumLinks } from '../../lib/baum'
@@ -114,7 +114,7 @@ function Tour({ onDone }: { onDone: () => void }) {
     username && slug
       ? {
           title: <>This is<br />your slug.</>,
-          body: 'Your slug is your identity in the agent network. People find you, follow you and track your agents by it. It’s your Baum username.',
+          body: 'Your slug is your identity in the agent network. People find you, follow you and track your agents by it. Change it anytime on your profile here, or in Telegram with Baum.',
           art: <div className="t-welcome-art t-welcome-art--center">
             <span className="t-welcome-slug t-welcome-slug--own"><OwnPicture initials={username.slice(0, 2).toUpperCase()} /><SlugText username={username} agent={ownAgent} /><CopyButton value={slug} label={`Copy ${slug}`} /></span>
             <span className="t-welcome-tips"><span><Icon name="search" size={13} />Anyone can find you with ⌘K</span><span><Icon name="copy" size={13} />Anyone can copy your SLUG in one click</span></span>
@@ -124,10 +124,15 @@ function Tour({ onDone }: { onDone: () => void }) {
           title: <>Claim<br />your slug.</>,
           body: guest
             ? 'Your slug is your username on Baum. Make your account in Telegram before your invite runs out and your slug shows up here.'
-            : 'Your slug is your username on Baum. Set one in Telegram and it shows up here, where people find, follow and track you by it.',
+            : 'Your slug is your username. Pick one right here on SLUGS, or tell Baum in Telegram. It’s how people find, follow and track you and your agents.',
           art: <div className="t-welcome-art t-welcome-art--center">
             <span className="t-welcome-slug t-welcome-slug--empty"><SlugText username="your-name" agent="your-agent" /></span>
-            <a className="t-submit t-submit--secondary t-welcome-baum" href={guest ? baumLinks.join(guest.code) : `https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />{guest ? 'Create my account on Baum' : 'Set my username on Baum'}</a>
+            {guest
+              ? <a className="t-submit t-submit--secondary t-welcome-baum" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />Create my account on Baum</a>
+              : <span className="t-welcome-claim">
+                <Link className="t-submit t-welcome-baum" to="/profile?edit=username" onClick={onDone}><Icon name="user" size={14} />Set my username here</Link>
+                <a className="t-welcome-or" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" size={13} />or set it in Telegram</a>
+              </span>}
           </div>,
         },
   ]

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { BAUM, BRAND } from '../config'
 import Icon from '../components/terminal/Icon'
 import { SocialBar } from '../components/terminal/Follows'
@@ -20,7 +20,14 @@ export default function Profile() {
   const { user, signOut } = useAuthSession()
   const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState('')
+  // ?edit=username opens the username editor, e.g. from the welcome tour's last card.
+  const [params, setParams] = useSearchParams()
   const [editing, setEditing] = useState<'username' | 'name' | null>(null)
+  useEffect(() => {
+    if (params.get('edit') !== 'username') return
+    setEditing('username')
+    setParams((previous) => { const next = new URLSearchParams(previous); next.delete('edit'); return next }, { replace: true })
+  }, [params, setParams])
   const social = useSocial(user?.wallets[0])
   const { snapshot } = useTerminalData()
   if (!user) return <EmptyState title="Not signed in" icon="user" action={<IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}>Sign in with Baum to see your profile.</EmptyState>
