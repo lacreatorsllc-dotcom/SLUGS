@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import Invite from './pages/Invite'
 import InviteLink from './pages/InviteLink'
 import AuthSessionProvider from './components/AuthSessionProvider'
 import RequireAuth from './components/RequireAuth'
 import { track } from './lib/funnel'
+import { inviteFromPath, refRedirect } from './lib/invite-path'
 
 // Keep the terminal out of the public invite page bundle.
 const Login = lazy(() => import('./pages/Login'))
@@ -19,17 +20,16 @@ const STANDALONE: Record<string, () => React.ReactElement> = {
   '/admin': () => <Admin />,
 }
 
-// The site's own top-level pages. Any other single segment that looks like a referral
-// code is an invite link: slugs.run/<code>.
-const PAGES = new Set(['home', 'settings', 'leaderboard', 'agents', 'vaults', 'swap', 'token', 'burn', 'login', 'connect-baum', 'profile', 'deploy', 'paper'])
-const INVITE_CODE = /^\/([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)$/
-
 function AppRoutes() {
-  const pathname = useLocation().pathname.replace(/\/$/, '') || '/'
+  const location = useLocation()
+  // ?ref=<code> on any page is the same invite link as slugs.run/<code> (lib/invite-path.ts).
+  const fromRef = refRedirect(location.search)
+  if (fromRef) return <Navigate to={fromRef} replace />
+  const pathname = location.pathname.replace(/\/$/, '') || '/'
   const standalone = STANDALONE[pathname]
   if (standalone) return <Suspense fallback={<div className="invite-page" />}>{standalone()}</Suspense>
-  const invite = INVITE_CODE.exec(pathname)?.[1]
-  if (invite && !PAGES.has(invite.toLowerCase())) return <InviteLink code={invite} />
+  const invite = inviteFromPath(pathname)
+  if (invite) return <InviteLink code={invite} />
   const terminal = <Suspense fallback={<div className="invite-page" role="status" aria-label="Loading SLUGS" />}><TerminalApp /></Suspense>
   // Paper strategy pages are for sharing, so anybody can open them, signed in or not.
   const open = pathname === '/burn' || pathname === '/paper' || pathname.startsWith('/paper/')
