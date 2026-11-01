@@ -52,18 +52,27 @@ function firstAgentPart(username: string, agents: { name: string; slug: string |
   return agent.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || null
 }
 
-// Agents are usually named for what they do.
-const AGENT_EXAMPLES = ['sniper-bot', 'dca-bot', 'scalper-bot', 'momentum-bot', 'grid-bot', 'copy-trading-bot']
+// Bots people can create, named for what they do. Each can carry its own example
+// username and Baum picture; until then they show as your-name with no picture.
+type BotExample = { agent: string; username?: string; picture?: string }
+const BOT_EXAMPLES: BotExample[] = [
+  { agent: 'sniper-bot' }, { agent: 'dca-bot' }, { agent: 'scalper-bot' }, { agent: 'momentum-bot' },
+  { agent: 'grid-bot' }, { agent: 'copy-trader' }, { agent: 'spot-trader' },
+]
 
-/** your-name/<agent>, cycling through the examples (held still for reduced motion). */
+/** One example bot after another (held still for reduced motion). */
 function ExampleSlug() {
   const [index, setIndex] = useState(0)
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
-    const timer = window.setInterval(() => setIndex((value) => (value + 1) % AGENT_EXAMPLES.length), 1600)
+    const timer = window.setInterval(() => setIndex((value) => (value + 1) % BOT_EXAMPLES.length), 1600)
     return () => window.clearInterval(timer)
   }, [])
-  return <SlugText username="your-name" agent={AGENT_EXAMPLES[index]} />
+  const example = BOT_EXAMPLES[index]
+  return <>
+    {example.picture && <img className="t-welcome-avatar t-welcome-picture" src={example.picture} alt="" />}
+    <SlugText username={example.username ?? 'your-name'} agent={example.agent} />
+  </>
 }
 
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
@@ -138,9 +147,9 @@ function Tour({ onDone }: { onDone: () => void }) {
           title: <>Claim<br />your slug.</>,
           body: guest
             ? 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/dca-bot. Make your Baum account in Telegram before your invite runs out to claim yours.'
-            : 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/sniper-bot. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot or copy-trading-bot. Pick your username right here on SLUGS, or tell Baum in Telegram.',
+            : 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/sniper-bot. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader or spot-trader. Pick your username right here on SLUGS, or tell Baum in Telegram.',
           art: <div className="t-welcome-art t-welcome-art--center">
-            <span className="t-welcome-slug t-welcome-slug--empty" aria-label="your-name/sniper-bot, your-name/dca-bot and more"><ExampleSlug /></span>
+            <span className="t-welcome-slug t-welcome-slug--empty" aria-label="Example bots: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader, spot-trader"><ExampleSlug /></span>
             {guest
               ? <a className="t-submit t-submit--secondary t-welcome-baum" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />Create my account on Baum</a>
               : <span className="t-welcome-claim">
