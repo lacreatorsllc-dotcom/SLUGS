@@ -55,8 +55,8 @@ async function capture(req, res) {
   return res.status(200).json({ card, sig: signature(card), snapshot })
 }
 
-// Rendering is the slow part, and one open dialog asks for the same card four times (the
-// preview and three style thumbnails), so recent pictures and finished images are kept.
+// Share previews and downloads can request the same image concurrently. Reuse their
+// avatar fetches and PNG renders; the interactive dialog draws SVG in the browser.
 function remember(cache, key, value, max) {
   cache.set(key, value)
   if (cache.size > max) cache.delete(cache.keys().next().value)
@@ -123,7 +123,7 @@ export default async function handler(req, res) {
     const image = `${SITE}/api/pnl?${query}&format=image&v=3`
     const page = `${SITE}/share/pnl?${query}`
     if (req.query.format === 'image') {
-      // Previews and thumbnails are drawn at the width they're shown; the download and the X preview stay 1080.
+      // Optional smaller exports; downloads and X previews default to 1080px.
       const width = [240, 540].includes(Number(req.query.size)) ? Number(req.query.size) : 1080
       const cacheKey = `${req.query.card}|${req.query.sig}|${style}|${width}`
       const pending = images.get(cacheKey) ?? remember(images, cacheKey, renderPnlImage(snapshot, style, width).then((image) => image.asPng()), 24)

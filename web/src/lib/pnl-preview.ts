@@ -16,7 +16,7 @@ export function avatarForCard(value: unknown): string | undefined {
 export function pnlPreview(agent: Agent, range: Range, updatedAt: number | null | undefined, user: BaumProfile | null): PnlPreview | null {
   const row = agent.trading[range]
   if (!row) return null
-  const own = user?.wallets.some((wallet) => wallet.toLowerCase() === agent.id)
+  const own = user?.wallets.some((wallet) => wallet.toLowerCase() === agent.id.toLowerCase())
   const invite = user?.invites?.[0]
   const ref = invite?.aliases?.[0] || invite?.code || 'SLUGS'
   return {

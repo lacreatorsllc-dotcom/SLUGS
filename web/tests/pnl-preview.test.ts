@@ -20,6 +20,7 @@ test('profile personalization uses the owner’s current picture without putting
   assert.equal(own.name, '@new-name')
   assert.equal(own.avatarUrl, user.avatarUrl)
   assert.equal(own.ref, 'MY-SLUG')
+  assert.equal(pnlPreview({ ...agent, id: wallet.toUpperCase() }, '7d', 1793400000000, user)!.avatarUrl, user.avatarUrl)
   const other = pnlPreview(agent, '7d', 1793400000000, { ...user, wallets: [`0x${'b'.repeat(40)}`] })!
   assert.equal(other.name, agent.name)
   assert.equal(other.avatarUrl, agent.avatarUrl)
