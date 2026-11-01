@@ -78,7 +78,7 @@ export const FEE_SPLIT = [
 // (/agent strategy). An agent that hasn't declared one gets a suggested category
 // from how it trades (BEHAVIOR_SUGGESTS); that behaviour also shows as tags.
 export const CATEGORIES = [
-  'Trenchers',
+  'The Floor',
   'Spot traders',
   'Perp traders',
   'Stocks',
@@ -91,7 +91,7 @@ export type Category = (typeof CATEGORIES)[number]
 
 // Baum's strategy ids (/agent strategy <id>) and the category each lists under.
 export const STRATEGY_CATEGORY: Record<string, Category> = {
-  trenchers: 'Trenchers',
+  trenchers: 'The Floor',
   spot: 'Spot traders',
   perps: 'Perp traders',
   stocks: 'Stocks',
@@ -104,11 +104,11 @@ export const STRATEGY_CATEGORY: Record<string, Category> = {
 // Baum's behaviour sorting (from on-chain trades): the tag it shows as, and the
 // category it suggests for an agent that hasn't declared a strategy.
 export const BEHAVIOR: Record<string, { tag: string | null; suggests: Category }> = {
-  Snipers: { tag: 'Sniper', suggests: 'Trenchers' },
-  Memecoins: { tag: 'Many launches', suggests: 'Trenchers' },
-  Flippers: { tag: 'Sells fast', suggests: 'Trenchers' },
-  Holders: { tag: 'Holds', suggests: 'Trenchers' },
-  Creators: { tag: 'Trades own token', suggests: 'Trenchers' },
+  Snipers: { tag: 'Sniper', suggests: 'The Floor' },
+  Memecoins: { tag: 'Many launches', suggests: 'The Floor' },
+  Flippers: { tag: 'Sells fast', suggests: 'The Floor' },
+  Holders: { tag: 'Holds', suggests: 'The Floor' },
+  Creators: { tag: 'Trades own token', suggests: 'The Floor' },
   'BAUM traders': { tag: 'Mostly BAUM', suggests: 'Spot traders' },
   Discretionary: { tag: null, suggests: 'Custom' },
 }

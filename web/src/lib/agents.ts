@@ -59,13 +59,13 @@ const NAMES = [
   'Night Shift', 'Slow Stacker', 'Volatility Vic', 'Narrative Nate', 'Range Rider', 'Lazy Lender',
 ]
 const CAT_FOR: Category[] = [
-  'Spot traders', 'Trenchers', 'Copy trading', 'Stocks', 'Yield', 'Spot traders',
-  'Trenchers', 'Perp traders', 'Yield', 'Spot traders', 'Copy trading', 'Custom',
-  'Trenchers', 'Yield', 'Perp traders', 'Yield', 'Copy trading', 'Options',
-  'Custom', 'Spot traders', 'Trenchers', 'Trenchers', 'Stocks', 'Yield',
+  'Spot traders', 'The Floor', 'Copy trading', 'Stocks', 'Yield', 'Spot traders',
+  'The Floor', 'Perp traders', 'Yield', 'Spot traders', 'Copy trading', 'Custom',
+  'The Floor', 'Yield', 'Perp traders', 'Yield', 'Copy trading', 'Options',
+  'Custom', 'Spot traders', 'The Floor', 'The Floor', 'Stocks', 'Yield',
 ]
 const BLURB: Record<Category, string> = {
-  Trenchers: 'Hunts new launches and memecoins, in early and out on strength.',
+  'The Floor': 'Hunts new launches and memecoins, in early and out on strength.',
   'Spot traders': 'Trades ETH and majors on trend breaks, cuts losers fast.',
   'Perp traders': 'Runs leveraged longs and shorts with tight stops.',
   Stocks: 'Swings stock tokens around earnings.',
