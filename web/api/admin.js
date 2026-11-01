@@ -17,6 +17,9 @@
 //        { action: 'review', id, decision: 'approve' | 'reject', score }
 //        { action: 'draw' }  (picks one approved person, weighted by tickets)
 //        { action: 'auto', on }  (one draw a day, until nobody approved is left)
+//
+// Personal invites (one-time links for someone an admin names; GET ?action=invites lists them):
+//        { action: 'invites-enable' }  | { action: 'invite-create', name, note } | { action: 'invite-revoke', code }
 
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const ADMIN = 'slugs_admin'
@@ -96,7 +99,7 @@ export default async function handler(req, res) {
       if (state !== 'waiting') res.setHeader('set-cookie', cookie(DEVICE, '', 0))
       return res.status(200).json({ state: state ?? 'expired' })
     }
-    if (!['me', 'report', 'logins', 'review', 'funnel'].includes(action)) return res.status(404).json({ reason: 'unknown-action' })
+    if (!['me', 'report', 'logins', 'review', 'funnel', 'invites'].includes(action)) return res.status(404).json({ reason: 'unknown-action' })
     if (!admin) return res.status(401).json({ reason: 'signed-out' })
     const answer = await baum('GET', `/api/partner/admin/${action}`, { admin })
     if (answer.status === 401) res.setHeader('set-cookie', cookie(ADMIN, '', 0))
@@ -148,6 +151,18 @@ export default async function handler(req, res) {
       const sent = body.action === 'review'
         ? { id: str(body.id), decision: body.decision === 'approve' ? 'approve' : 'reject', score: scoreOf(body.score) }
         : body.action === 'auto' ? { on: body.on === true } : {}
+      const answer = await baum('POST', `/api/partner/admin/${body.action}`, { admin, body: sent })
+      if (answer.status === 401) res.setHeader('set-cookie', cookie(ADMIN, '', 0))
+      return res.status(answer.status).json(answer.json)
+    }
+    case 'invites-enable':
+    case 'invite-create':
+    case 'invite-revoke': {
+      // Personal invites: one-time links for someone an admin names (Baum's personal invites).
+      if (!admin) return res.status(401).json({ reason: 'signed-out' })
+      const sent = body.action === 'invite-create'
+        ? { name: str(body.name).slice(0, 80), note: str(body.note).slice(0, 280) }
+        : body.action === 'invite-revoke' ? { code: str(body.code) } : {}
       const answer = await baum('POST', `/api/partner/admin/${body.action}`, { admin, body: sent })
       if (answer.status === 401) res.setHeader('set-cookie', cookie(ADMIN, '', 0))
       return res.status(answer.status).json(answer.json)
