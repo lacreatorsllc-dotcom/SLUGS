@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
 import { Resvg } from '@resvg/resvg-js'
 import { escapeXml, renderPnlCard, STYLES } from './pnl-card.js'
 
@@ -94,9 +95,17 @@ async function fetchPicture(url) {
 }
 
 let resources
+const fontFiles = ['Inter-Regular.ttf', 'Inter-Bold.ttf'].map((file) => fileURLToPath(new URL(`../server-assets/${file}`, import.meta.url)))
 function assets() {
   resources ??= Promise.all(['Inter-Regular.ttf', 'Inter-Bold.ttf', 'slugs-logo-orange.png'].map((file) => readFile(new URL(`../server-assets/${file}`, import.meta.url))))
   return resources
+}
+
+export async function renderPnlImage(snapshot, style, width = 1080) {
+  const [[, , logo], avatar] = await Promise.all([assets(), picture(snapshot.avatarUrl)])
+  const svg = renderPnlCard(snapshot, style, { logo: `data:image/png;base64,${logo.toString('base64')}`, avatar })
+  // fontBuffers belongs to resvg's WASM build. The native Node renderer needs file paths.
+  return new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render()
 }
 
 export default async function handler(req, res) {
@@ -109,18 +118,13 @@ export default async function handler(req, res) {
     const style = String(req.query.style ?? 'classic')
     if (!snapshot || !STYLES.includes(style)) return res.status(400).json({ reason: 'This card link is invalid.' })
     const query = new URLSearchParams({ card: String(req.query.card), sig: String(req.query.sig), style })
-    const image = `${SITE}/api/pnl?${query}&format=image`
+    const image = `${SITE}/api/pnl?${query}&format=image&v=2`
     const page = `${SITE}/share/pnl?${query}`
     if (req.query.format === 'image') {
       // Previews and thumbnails are drawn at the width they're shown; the download and the X preview stay 1080.
       const width = [240, 540].includes(Number(req.query.size)) ? Number(req.query.size) : 1080
       const cacheKey = `${req.query.card}|${req.query.sig}|${style}|${width}`
-      let png = images.get(cacheKey)
-      if (!png) {
-        const [[regular, bold, logo], avatar] = await Promise.all([assets(), picture(snapshot.avatarUrl)])
-        const svg = renderPnlCard(snapshot, style, { logo: `data:image/png;base64,${logo.toString('base64')}`, avatar })
-        png = remember(images, cacheKey, new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: { fontBuffers: [regular, bold], loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render().asPng(), 24)
-      }
+      const png = images.get(cacheKey) ?? remember(images, cacheKey, (await renderPnlImage(snapshot, style, width)).asPng(), 24)
       res.setHeader('content-type', 'image/png')
       res.setHeader('cache-control', 'public, max-age=86400, s-maxage=86400')
       res.setHeader('content-disposition', `${req.query.download === '1' ? 'attachment' : 'inline'}; filename="slugs-pnl-${style}-${snapshot.range}.png"`)

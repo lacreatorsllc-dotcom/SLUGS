@@ -4,6 +4,7 @@ import { baumLinks } from '../../lib/baum'
 import { agentPath, rangeLabel, shortAddress, type Agent, type Range } from '../../lib/terminal-model'
 import { AvatarRing, CopyButton, FloatingCard, IconButton, IconLink, StatGrid } from './ui'
 import { count, money, tone } from '../../lib/terminal-format'
+import Icon from './Icon'
 import PnlCard from './PnlCard'
 
 type Overlay = { kind: 'pnl' | 'copy'; agent: Agent; range: Range }
@@ -37,8 +38,9 @@ export function CopyTradeButton({ agent, range }: { agent: Agent; range: Range }
   return <IconButton icon="trade" label={`Copy ${agent.name} on Baum`} variant="primary" className="t-wide" onClick={() => open({ kind: 'copy', agent, range })} />
 }
 
-export function PnlCardButton({ agent, range }: { agent: Agent; range: Range }) {
+export function PnlCardButton({ agent, range, labelled = false }: { agent: Agent; range: Range; labelled?: boolean }) {
   const open = useContext(Context)!
+  if (labelled) return <button type="button" className="t-submit t-submit--secondary t-share-pnl" onClick={() => open({ kind: 'pnl', agent, range })}><Icon name="share" size={14} />Share PnL</button>
   return <IconButton icon="chart" label={`Create a PnL card for ${agent.name}`} variant="outline" onClick={() => open({ kind: 'pnl', agent, range })} />
 }
 

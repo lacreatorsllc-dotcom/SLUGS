@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { CHAIN, FEES, STRATEGY_CATEGORY, TOKEN } from '../config'
 import { AgentActions, CopyTradeButton } from '../components/terminal/AgentActions'
 import { SocialBar } from '../components/terminal/Follows'
@@ -9,7 +9,7 @@ import { AvatarRing, Callout, CopyButton, EmptyState, FloatingCard, IconButton, 
 import { count, money, tone, winRate } from '../lib/terminal-format'
 import { recordLanding } from '../lib/attribution'
 import { useTerminalData } from '../lib/terminal-context'
-import { RANGES, isBoosted, isSlug, launchedAgent, rangeLabel, shortAddress, type Agent, type Range } from '../lib/terminal-model'
+import { RANGES, creatorOf, foundAgents, isBoosted, isSlug, launchedAgent, rangeLabel, shortAddress, type Agent, type Range } from '../lib/terminal-model'
 import { vaultOpenTokens } from '../lib/token'
 import { burnBoost, connect, hasWallet, txUrl } from '../lib/wallet'
 
@@ -50,7 +50,28 @@ function LaunchedAgentPage({ id }: { id: string }) {
   return state.agent ? <AgentView agent={state.agent} /> : notFound
 }
 
+type Lineage = { creator: { wallet: string; username: string | null } | null; launched: Agent[] }
+
+// Who launched an AI agent, or the AI agents a person launched: from Baum, for the page heading.
+function useLineage(agent: Agent): Lineage {
+  const [found, setFound] = useState<Lineage & { id: string }>({ id: '', creator: null, launched: [] })
+  useEffect(() => {
+    let live = true
+    const query = agent.slug ? `id=${encodeURIComponent(agent.slug)}` : `by=${agent.id}`
+    fetch(`${import.meta.env.BASE_URL}api/agent?${query}`)
+      .then((response) => response.ok ? response.json() : null)
+      .then((body) => {
+        if (!live) return
+        if (agent.slug) setFound({ id: agent.id, creator: creatorOf(body), launched: [] })
+        else setFound({ id: agent.id, creator: null, launched: foundAgents(body, (strategy) => STRATEGY_CATEGORY[strategy]) })
+      }, () => {})
+    return () => { live = false }
+  }, [agent.id, agent.slug])
+  return found.id === agent.id ? found : { creator: null, launched: [] }
+}
+
 function AgentView({ agent }: { agent: Agent }) {
+  const { creator, launched } = useLineage(agent)
   const [params, setParams] = useSearchParams()
   const { snapshot } = useTerminalData()
   const range = RANGES.includes(params.get('range') as Range) ? params.get('range') as Range : '7d'
@@ -60,12 +81,16 @@ function AgentView({ agent }: { agent: Agent }) {
   const token = snapshot?.token
   const cost = vaultOpenTokens(token?.priceUsd)
   return <>
-    <div className="t-agent-heading"><AvatarRing agent={agent} large /><div className="t-agent-heading-info"><div className="t-tags"><h1>{agent.name}</h1>{agent.categories.length > 0 && <span className="t-tag">{agent.categories.join(' · ')}{agent.declared ? '' : ' · suggested'}</span>}{agent.tags.map((tag) => <span className="t-tag" key={tag}>{tag}</span>)}{isBoosted(agent) && <span className="t-tag t-accent">Boosted</span>}</div><div className="t-actions t-fine">{agent.slug && <span className="t-tag" title="An AI agent's permanent slug: who made it and what it was first called. It never changes.">AI agent · {agent.slug}</span>}<span title={agent.id}>{shortAddress(agent.id)} · Trades through Baum{row ? ` · ${row.tokens} ${row.tokens === 1 ? 'token' : 'tokens'} traded` : ''}</span><CopyButton value={agent.id} /></div><SocialBar wallet={agent.id} name={agent.slug ?? agent.name.replace(/^@/, '')} /></div><RangeControl value={range} onChange={(value) => setParams((previous) => { const next = new URLSearchParams(previous); next.set('range', value); return next }, { replace: true })} /></div>
+    <div className="t-agent-heading"><AvatarRing agent={agent} large /><div className="t-agent-heading-info"><div className="t-tags"><h1>{agent.name}</h1>{agent.categories.length > 0 && <span className="t-tag">{agent.categories.join(' · ')}{agent.declared ? '' : ' · suggested'}</span>}{agent.tags.map((tag) => <span className="t-tag" key={tag}>{tag}</span>)}{isBoosted(agent) && <span className="t-tag t-accent">Boosted</span>}</div><div className="t-actions t-fine">{agent.slug && <span className="t-tag" title="An AI agent's permanent slug: who made it and what it was first called. It never changes.">AI agent · {agent.slug}</span>}<span title={agent.id}>{shortAddress(agent.id)} · Trades through Baum{row ? ` · ${row.tokens} ${row.tokens === 1 ? 'token' : 'tokens'} traded` : ''}</span><CopyButton value={agent.id} /></div>{creator && <p className="t-fine t-launched-by">Launched by <Link to={`/agents/${creator.wallet}`}>{creator.username ? `@${creator.username}` : shortAddress(creator.wallet)}</Link></p>}<SocialBar wallet={agent.id} name={agent.slug ?? agent.name.replace(/^@/, '')} /></div><RangeControl value={range} onChange={(value) => setParams((previous) => { const next = new URLSearchParams(previous); next.set('range', value); return next }, { replace: true })} /></div>
     <StatGrid stats={[{ label: `PnL · ${rangeLabel(range)}`, value: money(row?.pnlUsd, true), tone: tone(row?.pnlUsd) }, { label: 'Volume', value: money(row?.volumeUsd) }, { label: 'Trades', value: count(row?.trades) }, { label: 'Win rate', value: winRate(row?.winRate) }]} />
     {!traded && <Callout>New agent: it hasn’t traded yet. Its trades show here, and it joins the leaderboard, once it makes its first one.</Callout>}
     {traded && !row && <Callout>[PLACEHOLDER] This wallet has no reported trading metrics for {rangeLabel(range)}. Liquidity data is shown below when available.</Callout>}
     {lp && <StatGrid stats={[{ label: `LP fees · ${rangeLabel(range)}`, value: money(lp.feesUsd, true), tone: tone(lp.feesUsd) }, { label: 'Liquidity', value: money(lp.liquidityUsd) }, { label: 'Fee APR', value: lp.feeAprPercent === null ? '—' : `${lp.feeAprPercent.toFixed(1)}%` }, { label: 'Positions', value: count(lp.positions) }]} />}
     {traded && !agent.declared && <Callout>Listed under {agent.categories.join(' and ')} from its activity. Own this wallet? Send <code>/agent strategy</code> to Baum in Telegram to choose its category.</Callout>}
+    {launched.length > 0 && <section className="t-panel t-launched">
+      <div className="t-section-title"><span className="t-section-icon"><Icon name="bot" /></span><h2>AI agents launched</h2></div>
+      <div className="t-launched-list">{launched.map((item) => <Link key={item.id} to={`/agents/${item.slug ?? item.id}`} className="t-launched-item"><AvatarRing agent={item} /><span><strong>{item.name}</strong>{item.slug && <small>{item.slug}</small>}</span></Link>)}</div>
+    </section>}
     <div className="t-grid-three">
       <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="trade" /></span><h2>Copy this agent</h2></div><p>Baum opens in Telegram with a copy agent set up for this wallet: $25 a buy, inside limits you can change. Once you confirm, it copies their buys and sells on its own.</p><div className="t-actions"><CopyTradeButton agent={agent} range={range} /><IconButton icon="counter" label="Counter trading · coming soon on Baum" variant="outline" disabled /></div></section>
       <section className="t-feature-card"><div className="t-section-title"><span className="t-section-icon"><Icon name="vault" /></span><h2>Vault</h2><span className="t-tag">PLANNED</span></div><p>This agent doesn’t take deposits yet. Once vaults open, its operator will be able to open one for {count(cost)} {TOKEN.symbol}{token?.priceUsd ? `, about ${money(cost * token.priceUsd)}` : ` or $${FEES.vaultOpenUsd} of it, whichever is less`}.</p><div className="t-actions"><IconLink icon="arrow" label="About vaults" to="/vaults" variant="outline" className="t-wide" /></div></section>

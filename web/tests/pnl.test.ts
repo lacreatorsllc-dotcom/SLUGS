@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { after, test } from 'node:test'
-import handler from '../server/pnl-api.js'
+import handler, { renderPnlImage } from '../server/pnl-api.js'
 import { renderPnlCard, STYLES } from '../server/pnl-card.js'
 
 const originalSecret = process.env.PNL_SHARE_SECRET
@@ -97,6 +97,16 @@ test('all three designs produce distinct, downloadable 1080px PNGs', async (cont
   }
   assert.notDeepEqual(images[0], images[1])
   assert.notDeepEqual(images[1], images[2])
+})
+
+test('the native renderer draws the PnL text with its bundled Inter font', async () => {
+  const rendered = await renderPnlImage({ wallet, name: '@alice', pnlUsd: 1250, volumeUsd: 250, trades: 4, range: '7d', ref: 'SLUGS', updatedAt: board.updatedAt, avatarUrl: null }, 'classic')
+  const pixels = rendered.pixels
+  let green = 0
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (pixels[i + 1] > 120 && pixels[i + 1] > pixels[i] * 1.5 && pixels[i + 1] > pixels[i + 2] * 1.3 && pixels[i + 3] > 128) green++
+  }
+  assert.ok(green > 10000, `The PnL text must be drawn, found ${green} green pixels`)
 })
 
 test('an avatar cannot make the renderer fetch a private or arbitrary URL', async (context) => {

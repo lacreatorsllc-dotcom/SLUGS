@@ -40,7 +40,7 @@ export default function PnlCard({ agent, range }: { agent: Agent; range: Range }
     try { localStorage.setItem('slugs.pnl.style', next) } catch { /* The choice still works for this visit. */ }
   }
   const query = capture ? new URLSearchParams({ card: capture.card, sig: capture.sig, style }) : null
-  const imageUrl = (choice: Style, size?: number) => `${import.meta.env.BASE_URL}api/pnl?${new URLSearchParams({ card: capture?.card ?? '', sig: capture?.sig ?? '', style: choice, format: 'image', ...(size ? { size: String(size) } : {}) })}`
+  const imageUrl = (choice: Style, size?: number) => `${import.meta.env.BASE_URL}api/pnl?${new URLSearchParams({ card: capture?.card ?? '', sig: capture?.sig ?? '', style: choice, format: 'image', v: '2', ...(size ? { size: String(size) } : {}) })}`
   const shareUrl = query ? `${location.origin}${import.meta.env.BASE_URL}share/pnl?${query}` : ''
   const amount = capture ? `${capture.snapshot.pnlUsd >= 0 ? '+' : '−'}$${Math.abs(capture.snapshot.pnlUsd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : ''
   const twitter = `https://twitter.com/intent/tweet?${new URLSearchParams({ text: `${capture?.snapshot.name ?? agent.name} · ${rangeLabel(range)} PnL ${amount} on @slugsrun`, url: shareUrl })}`

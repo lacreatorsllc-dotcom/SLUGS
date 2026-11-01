@@ -333,3 +333,29 @@
 @media (max-width: 480px) { .t-welcome-slugs--grid { grid-template-columns: auto; } }
 .t-welcome-slugs--grid { gap: 8px 6px; }
 .t-welcome-slugs--grid .t-welcome-slug--small { white-space: nowrap; font-size: 12.5px; max-width: 100%; }
+
+/* An agent's creator, and the AI agents a person launched */
+.t-launched-by { margin-top: 4px; }.t-launched-by a { color: var(--t-text); text-decoration: underline; text-underline-offset: 3px; }
+.t-launched { padding: 14px 16px; margin-bottom: 16px; }
+.t-launched-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.t-launched-item { display: inline-flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 12px 6px 6px; border: 1px solid var(--t-line); border-radius: 10px; color: var(--t-text); text-decoration: none; }.t-launched-item:hover { border-color: var(--t-strong); }
+.t-launched-item span { display: flex; flex-direction: column; min-width: 0; }.t-launched-item small { color: var(--t-muted); font: 500 11px var(--t-mono); overflow-wrap: anywhere; }
+.t-chat-community { display: flex; justify-content: center; margin-top: 8px; }
+/* Profile header */
+.t-profile-head { display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.t-profile-head .t-avatar--large { width: 64px; height: 64px; }
+.t-profile-who { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 6px; }
+.t-profile-ids { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; }
+.t-profile-ids .t-social-bar { margin-top: 0; }
+.terminal .t-profile-meta { font-size: 12.5px; color: var(--t-faint); }
+.t-profile-actions { display: flex; align-items: center; gap: 8px; }
+.t-profile-actions .t-submit, .t-share-pnl { width: auto; min-height: 36px; padding: 7px 14px; }
+.t-menu { position: relative; }
+.t-menu > summary { list-style: none; cursor: pointer; }.t-menu > summary::-webkit-details-marker { display: none; }
+.t-menu-list { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 220px; display: flex; flex-direction: column; padding: 6px; border: 1px solid var(--t-strong); border-radius: 12px; background: var(--t-card); box-shadow: var(--t-card-shadow); }
+.t-menu-list > * { display: block; width: 100%; padding: 9px 10px; border: 0; border-radius: 8px; background: transparent; color: var(--t-text); font: inherit; font-size: 13px; text-align: left; }
+.t-menu-list > *:hover { background: #1a1918; }
+.t-menu-list > :last-child { color: var(--t-down); }
+.t-profile-stats { display: flex; flex-direction: column; gap: 10px; margin: 18px 0; }
+.t-profile-stats-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+@media (max-width: 767px) { .t-profile-actions { width: 100%; } .t-profile-actions > * { flex: 1; } .t-profile-actions .t-submit { width: 100%; } }
