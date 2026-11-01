@@ -156,6 +156,13 @@ export function launchedAgent(body: unknown, categoryOf: (strategy: string) => C
   }
 }
 
+/** Who launched an AI agent, from Baum's answer for it (api/agent.js?id=): their wallet and username, or null. */
+export function creatorOf(body: unknown): { wallet: string; username: string | null } | null {
+  if (!record(body) || !record(body.creator) || !wallet(body.creator.wallet)) return null
+  const username = plainText(body.creator.username, 48)
+  return { wallet: body.creator.wallet.toLowerCase(), username: username || null }
+}
+
 /** Baum's AI agents matching a search (api/agent.js?q=), as agents; anything malformed is left out. */
 export function foundAgents(body: unknown, categoryOf: (strategy: string) => Category | undefined): Agent[] {
   if (!record(body) || !Array.isArray(body.agents)) return []

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
-import { TOKEN } from '../../config'
+import { BRAND, TOKEN } from '../../config'
 import { useTerminalData } from '../../lib/terminal-context'
 import { money, tone } from '../../lib/terminal-format'
 import Icon from './Icon'
@@ -60,5 +60,6 @@ export function ChatPanel({ draft, onDraft, onClose }: { draft: string; onDraft:
       <button type="submit" className="t-submit" disabled><Icon name="message" size={14} />Send · coming soon</button>
     </form>
     <p id="chat-send-note" className="t-fine t-chat-foot">Your draft stays here when you close the panel. Sending is not available yet.</p>
+    <a className="t-submit t-submit--secondary t-chat-community" href={BRAND.telegram} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />Talk to people now in the SLUGS Telegram</a>
   </FloatingCard>
 }

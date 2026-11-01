@@ -133,3 +133,11 @@ test('search finds agents by @username, slug or wallet, and Baum’s agents that
   for (const query of ['kyle', '@hornygoat', 'HORNYGOAT-KYLE', '0x6deaf7', '']) assert.equal(matchesSearch(kyle, query), true, query)
   assert.equal(matchesSearch(kyle, 'oak'), false)
 })
+
+test('who launched an AI agent, from Baum', async () => {
+  const { creatorOf } = await import('../src/lib/terminal-model.ts')
+  assert.deepEqual(creatorOf({ wallet: '0x' + '1'.repeat(40), creator: { wallet: '0x' + 'A'.repeat(40), username: 'hornygoat' } }), { wallet: '0x' + 'a'.repeat(40), username: 'hornygoat' })
+  assert.deepEqual(creatorOf({ creator: { wallet: '0x' + '2'.repeat(40), username: null } }), { wallet: '0x' + '2'.repeat(40), username: null })
+  assert.equal(creatorOf({ creator: null }), null)
+  assert.equal(creatorOf({ creator: { wallet: 'nope' } }), null)
+})
