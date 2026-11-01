@@ -225,32 +225,12 @@
 .t-account-menu > :last-child { margin-top: 4px; border-top: 1px solid var(--t-line); border-radius: 0 0 8px 8px; padding-top: 11px; }
 @media (pointer: coarse), (max-width: 767px) { .t-top-button { height: 40px; } .t-account-button .t-avatar { width: 26px; height: 26px; } }
 @media (max-width: 767px) { .t-account-name { display: none; } .t-found-agent .t-tag { display: none; } }
-/* Chat with Baum */
-.t-dialog.t-chat-dialog { width: min(460px, calc(100vw - 24px)); }
-.t-chat-dialog .t-floating-inner { gap: 12px; }
-.t-chat-heading { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid var(--t-line); }
-.t-chat-heading > div { flex: 1; min-width: 0; }.t-chat-heading strong { font-size: 14px; }.t-chat-heading p { font-size: 12px; }
-.t-chat-avatar { width: 34px; height: 34px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--t-ivory); color: var(--t-bg); font-weight: 800; }
-.t-chat-badge { margin-left: 6px; padding: 1px 6px; border: 1px solid var(--t-strong); border-radius: 999px; font-size: 9.5px; letter-spacing: .1em; color: var(--t-faint); vertical-align: 2px; }
-.t-chat-thread { display: flex; flex-direction: column; gap: 10px; min-height: 180px; max-height: min(44dvh, 380px); overflow: auto; padding: 2px; }
-.t-chat-message { max-width: 86%; padding: 9px 12px; border-radius: 14px; }
-.terminal .t-chat-message p, .t-dialog .t-chat-message p { color: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
-.t-chat-message--baum { align-self: flex-start; background: var(--t-raised); border: 1px solid var(--t-line); border-bottom-left-radius: 4px; color: var(--t-secondary); }
-.t-chat-message--you { align-self: flex-end; background: var(--t-selected); border-bottom-right-radius: 4px; color: var(--t-text); }
-.t-chat-message small { display: block; margin-top: 4px; font-size: 11px; color: var(--t-faint); }
+/* Baum copy-trade drafts inside the shared agent chat window. */
 .t-chat-card { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--t-strong); border-radius: 12px; background: var(--t-panel); }
 .t-chat-card label { margin: 0; }
 .t-chat-card-heading { display: flex; align-items: center; justify-content: space-between; font-size: 10.5px; letter-spacing: .14em; color: var(--t-faint); }
 .t-chat-chosen { display: flex; align-items: center; gap: 8px; }.t-chat-chosen strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.t-chat-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-.t-chat-actions button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 1px solid var(--t-strong); border-radius: 999px; background: transparent; color: var(--t-secondary); font: 500 12px var(--t-font); }
-.t-chat-actions button:hover, .t-chat-actions button[aria-pressed=true] { border-color: #5a564f; color: var(--t-text); background: var(--t-selected); }
-.t-chat-composer { display: flex; flex-direction: column; gap: 8px; }
-.t-chat-composer textarea { resize: none; font: 13px/1.5 var(--t-font); border: 1px solid var(--t-strong); border-radius: 10px; background: var(--t-bg); color: var(--t-text); padding: 10px 12px; }
-.t-chat-composer textarea::placeholder { color: var(--t-faint); }
-.t-chat-composer textarea:focus-visible { outline: 2px solid var(--t-focus); outline-offset: 2px; }
-.terminal .t-chat-notice, .t-dialog .t-chat-notice { color: var(--t-up); }
-.t-chat-foot { text-align: center; }
+.t-chat-foot { font-size: 11px; line-height: 1.5; }
 .t-welcome-powers { flex-wrap: wrap; justify-content: center; max-width: 320px; }
 
 /* Profile names, follows and tokens */
@@ -429,3 +409,31 @@
 .t-invites-share code { overflow-wrap: anywhere; max-width: 420px; }
 .t-invites-history ul { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .t-invites-history li { display: flex; align-items: center; gap: 12px; }
+
+/* The entry explanation stays attached to its button without blocking the terminal. */
+.t-deploy-entry { position: relative; flex: none; }
+.t-deploy-entry--hint > a { position: relative; }
+.t-deploy-entry--hint > a::after { content: ''; position: absolute; left: calc(50% - 6px); top: calc(100% + 7px); z-index: 61; width: 12px; height: 12px; transform: rotate(45deg); background: var(--t-card); border-top: 1px solid var(--t-strong); border-left: 1px solid var(--t-strong); }
+.t-deploy-hint { position: absolute; top: calc(100% + 14px); right: 0; z-index: 60; box-sizing: border-box; width: min(300px, calc(100vw - 24px)); display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 1px solid var(--t-strong); border-radius: 14px; background: var(--t-card); box-shadow: var(--t-card-shadow); white-space: normal; font: 13px/1.5 var(--t-font); }
+.t-deploy-hint-head { display: flex; align-items: center; gap: 8px; }
+.t-deploy-hint-head strong { flex: 1; font-size: 14px; font-weight: 600; }
+.t-deploy-hint-head button { width: 40px; height: 40px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: var(--t-selected); color: var(--t-secondary); }
+.terminal .t-deploy-hint p { color: var(--t-secondary); }
+.t-deploy-hint-done { align-self: flex-end; min-height: 40px; padding: 0 16px; }
+
+/* Baum uses the deploy agent's frame, bubbles, replies and composer, on the right. */
+.t-deploy-chat.t-baum-chat { left: auto; right: 20px; }
+.t-deploy-chat .t-deploy-chat-close { width: 40px; height: 40px; flex: none; background: var(--t-selected); }
+.t-deploy-chat-head .t-chip { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; white-space: nowrap; }
+.t-deploy-chat-input textarea { flex: 1; min-width: 0; min-height: 40px; max-height: 96px; box-sizing: border-box; resize: none; padding: 8px 10px; font: 13px/1.5 var(--t-font); border: 1px solid var(--t-strong); border-radius: 10px; background: var(--t-bg); color: var(--t-text); }
+.t-deploy-chat-input textarea::placeholder { color: var(--t-faint); }
+.t-deploy-chat-input > button { align-self: flex-end; min-height: 40px; }
+@media (prefers-reduced-motion: no-preference) { .t-deploy-hint { animation: t-coach-in .2s ease-out both; } }
+@media (pointer: coarse), (max-width: 767px) {
+  .t-deploy-chat-head .t-chip, .t-deploy-replies .t-chip { min-height: 40px; }
+}
+@media (max-width: 767px) {
+  .t-top-actions { position: relative; }
+  .t-deploy-entry { position: static; }
+  .t-deploy-chat.t-baum-chat { left: 8px; right: 8px; bottom: max(8px, env(safe-area-inset-bottom)); width: auto; max-height: calc(100dvh - 32px - env(safe-area-inset-bottom)); }
+}

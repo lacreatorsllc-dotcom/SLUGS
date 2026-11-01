@@ -1,5 +1,5 @@
 import type { BaumProfile } from './auth-context'
-import { previewsNewUserCards } from './welcome'
+import { previewsNewUserCards } from './welcome.ts'
 
 // Whether someone has seen a page's first-time walkthrough (components/terminal/Coachmarks).
 // Kept per browser; the owner's preview accounts see it on every visit, like the welcome tour.
