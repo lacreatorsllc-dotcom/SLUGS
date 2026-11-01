@@ -75,15 +75,57 @@ function ExampleSlug() {
   </>
 }
 
-// The first card's examples: SLUGS people and the bots they run.
-const CARD_ONE: { username: string; agent: string; picture?: string }[] = [
-  { username: EXAMPLE.username, agent: EXAMPLE.agent },
+// The first card's examples: SLUGS people and the bots they run. goobz shows alone
+// first, then opens into a 2x2 grid where goobz stays put and the other three slots
+// take turns cycling through everyone else.
+type Example = { username: string; agent: string; picture?: string }
+const OTHERS: Example[] = [
   { username: 'brokentyrant', agent: 'sniper-bot', picture: 'welcome/brokentyrant.jpg' },
   { username: 'brazylord', agent: 'gold-trader', picture: 'welcome/brazylord.jpg' },
+  { username: 'bagcalls', agent: 'hodl-bot', picture: 'welcome/bagcalls.jpg' },
   { username: 'meechi', agent: 'market-maker', picture: 'welcome/meechi.jpg' },
   { username: 'fwaz', agent: 'dev-bot', picture: 'welcome/fwaz.jpg' },
   { username: '12g8ge', agent: 'mev-bot', picture: 'welcome/12g8ge.jpg' },
 ]
+const INTRO_MS = 1800
+const SWAP_MS = 3000
+
+function ExampleChip({ example, className = '', delay }: { example: Example; className?: string; delay?: number }) {
+  return <span className={`t-welcome-slug t-welcome-slug--small ${className}`} style={delay ? { animationDelay: `${delay}ms` } : undefined}>
+    {example.picture ? <Picture url={`${import.meta.env.BASE_URL}${example.picture}`} initials={example.username.slice(0, 2).toUpperCase()} /> : <ExamplePicture />}
+    <SlugText username={example.username} agent={example.agent} />
+  </span>
+}
+
+/** goobz alone, then four at a time with three slots rotating (still for reduced motion). */
+function ExampleBots() {
+  const still = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  const [grid, setGrid] = useState(still)
+  const [paused, setPaused] = useState(false)
+  // The three rotating slots, and the next example to bring in. A window of three over
+  // six never shows anyone twice.
+  const [rotation, setRotation] = useState({ slots: [0, 1, 2], next: 3, turn: 0 })
+  useEffect(() => {
+    if (still) return
+    const timer = window.setTimeout(() => setGrid(true), INTRO_MS)
+    return () => window.clearTimeout(timer)
+  }, [still])
+  useEffect(() => {
+    if (still || !grid || paused) return
+    const timer = window.setInterval(() => setRotation(({ slots, next, turn }) => {
+      const updated = [...slots]
+      updated[turn % 3] = next % OTHERS.length
+      return { slots: updated, next: next + 1, turn: turn + 1 }
+    }), SWAP_MS)
+    return () => window.clearInterval(timer)
+  }, [still, grid, paused])
+  const goobz = { username: EXAMPLE.username, agent: EXAMPLE.agent }
+  if (!grid) return <span className="t-welcome-slugs t-welcome-slugs--one"><ExampleChip example={goobz} className="t-welcome-slug--lead" /></span>
+  return <span className="t-welcome-slugs t-welcome-slugs--grid" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <ExampleChip example={goobz} className="t-welcome-swap" />
+    {rotation.slots.map((index, slot) => <ExampleChip key={`${slot}-${OTHERS[index].username}`} example={OTHERS[index]} className="t-welcome-swap" delay={rotation.turn ? undefined : 150 * (slot + 1)} />)}
+  </span>
+}
 
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
 
@@ -115,10 +157,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Every agent<br />has a slug.</>,
       body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
       art: <div className="t-welcome-art t-welcome-art--center t-welcome-art--examples">
-        <span className="t-welcome-slugs">{CARD_ONE.map((example) => <span className="t-welcome-slug t-welcome-slug--small" key={example.username}>
-          {example.picture ? <Picture url={`${import.meta.env.BASE_URL}${example.picture}`} initials={example.username.slice(0, 2).toUpperCase()} /> : <ExamplePicture />}
-          <SlugText username={example.username} agent={example.agent} />
-        </span>)}</span>
+        <ExampleBots />
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
       </div>,
     },

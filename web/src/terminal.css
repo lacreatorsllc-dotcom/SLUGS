@@ -326,3 +326,13 @@
 .t-welcome-art--examples { gap: 10px; }.t-welcome-art--examples .t-welcome-slugs { gap: 6px 8px; }
 .t-welcome-art--examples .t-welcome-slug--small { padding: 5px 12px 5px 5px; }
 @media (max-width: 480px) { .t-welcome-art--examples { height: auto; min-height: 190px; } }
+.t-welcome-slugs--grid { width: 100%; grid-template-columns: 1fr 1fr; justify-items: center; }
+.t-welcome-slugs--grid .t-welcome-slug--small { animation: none; }
+.t-welcome-swap { animation: t-swap-in .45s ease-out both !important; }
+.t-welcome-slugs--grid > .t-welcome-swap:first-child { animation: t-swap-in .45s ease-out both, t-pulse-ring 1.8s .6s ease-out infinite !important; }
+.t-welcome-slug--lead { gap: 10px; padding: 9px 14px 9px 9px; font-size: 17px; animation: t-pulse-ring 1.8s .6s ease-out infinite; }
+.t-welcome-slug--lead .t-welcome-avatar { width: 28px; height: 28px; }
+@keyframes t-swap-in { from { opacity: 0; transform: translateY(4px) scale(.97); } }
+@media (max-width: 480px) { .t-welcome-slugs--grid { grid-template-columns: auto; } }
+.t-welcome-slugs--grid { gap: 8px 6px; }
+.t-welcome-slugs--grid .t-welcome-slug--small { white-space: nowrap; font-size: 12.5px; max-width: 100%; }
