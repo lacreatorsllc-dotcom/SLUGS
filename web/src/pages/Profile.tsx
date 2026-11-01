@@ -56,7 +56,7 @@ export default function Profile() {
         <div className="t-actions t-fine">
           {user.username && <span className="t-slug-chip">{user.username}<CopyButton value={user.username} label={`Copy ${user.username}`} /></span>}
           <button type="button" className="t-link-button" onClick={() => setEditing('username')}>{user.username ? 'Edit username' : 'Pick a username'}</button>
-          {wallet && <><span title={wallet}>{shortAddress(wallet)} · Baum wallet</span><CopyButton value={wallet} /></>}
+          {wallet && <><span title={wallet}>{shortAddress(wallet)}</span><CopyButton value={wallet} /></>}
         </div>
         {wallet && <SocialBar wallet={wallet} name={user.username ?? 'You'} />}
       </div>
