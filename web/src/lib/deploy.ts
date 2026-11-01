@@ -12,17 +12,18 @@ export const MAX_BUY_USD = 10_000
 export const MAX_TOKENS = 5
 export const MAX_NAME = 24
 
-// Pons-style names: an adjective, a colour and an animal (BraveAmberFox).
-const ADJECTIVES = ['Brave', 'Quiet', 'Lucky', 'Swift', 'Sly', 'Bold', 'Calm', 'Wild', 'Sharp', 'Steady', 'Clever', 'Patient']
-const COLOURS = ['Amber', 'Jade', 'Crimson', 'Cobalt', 'Ivory', 'Onyx', 'Coral', 'Violet', 'Golden', 'Silver', 'Teal', 'Rust']
-const ANIMALS = ['Fox', 'Otter', 'Hawk', 'Lynx', 'Heron', 'Badger', 'Wolf', 'Raven', 'Gecko', 'Moose', 'Shark', 'Owl']
+// Agents are named for what they do. The first few are the one-tap ideas; Shuffle draws
+// from all of them.
+export const NAME_IDEAS = ['dca-bot', 'hodl-bot', 'sniper-bot', 'copy-trader', 'spot-trader']
+const MORE_NAMES = ['slugs-stacker', 'eth-stacker', 'weekly-bags', 'dip-buyer', 'quiet-compounder', 'steady-stacker', 'daily-dca']
 
-export function randomName(random = Math.random) {
-  const pick = (list: string[]) => list[Math.floor(random() * list.length)]
-  return `${pick(ADJECTIVES)}${pick(COLOURS)}${pick(ANIMALS)}`
+/** Another name idea, never the current one. */
+export function suggestName(current: string, random = Math.random) {
+  const pool = [...NAME_IDEAS, ...MORE_NAMES].filter((name) => name !== current)
+  return pool[Math.floor(random() * pool.length)]
 }
 
-/** The agent's part of its SLUG: BraveAmberFox → brave-amber-fox. */
+/** The agent's part of its SLUG: Sniper Bot → sniper-bot, BraveAmberFox → brave-amber-fox. */
 export function agentSlugPart(name: string) {
   return name.trim()
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
