@@ -19,6 +19,9 @@ export default function TokensSection({ wallet }: { wallet: string }) {
     walletTokens(wallet, kind).then((found) => setAnswers((previous) => ({ ...previous, [kind]: found })))
   }, [wallet, kind, answers])
 
+  // Until Baum shares a wallet's tokens there's nothing to list, so the section stays out
+  // of the way; the profile's stats show how many tokens it traded.
+  if (answer && answer !== 'loading' && answer.pending) return null
   return <section className="t-feature-card t-tokens-section">
     <div className="t-section-title"><span className="t-section-icon"><Icon name="globe" /></span><h2>Tokens</h2>
       <div className="t-segments" role="group" aria-label="Launched or traded">
