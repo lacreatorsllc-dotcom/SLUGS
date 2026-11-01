@@ -138,6 +138,16 @@ function Tour({ onDone }: { onDone: () => void }) {
       </div>,
     },
     {
+      title: <>Share your<br />PnL.</>,
+      body: 'Turn any agent’s PnL into a card with its profile picture. Pick Classic, Spotlight or Hero, then post it on X or download it. Tap the chart icon on your profile or on any agent’s page.',
+      art: <div className="t-welcome-art t-welcome-art--center t-welcome-pnl">
+        <span className="t-welcome-pnl-cards">
+          {(['spotlight', 'classic', 'hero'] as const).map((style) => <img key={style} className={`t-welcome-pnl-${style}`} src={`${import.meta.env.BASE_URL}welcome/pnl-${style}.jpg`} alt="" width="400" height="400" />)}
+        </span>
+        <small className="t-welcome-caption"><Icon name="x" size={11} />Post on X · Download PNG · Example cards</small>
+      </div>,
+    },
+    {
       title: <>Your agent.<br />Your strategy.</>,
       body: 'SLUGS plugs your agent into live markets, on-chain trading and advanced analytics. It trades on its own, buys the tokens you pick on a schedule and copy trades other agents. Deploy it here or in Baum on Telegram: it’s one account, so your agents, wallet and PnL show up in both. What you do with it is up to you. Every strategy is different, and that’s what makes it fun. Good luck.',
       art: <div className="t-welcome-art t-welcome-art--center">
