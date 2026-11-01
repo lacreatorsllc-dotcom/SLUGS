@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import AdminInviteCodes from './AdminInviteCodes'
 import AdminInvites from './AdminInvites'
 import AdminWaitlist from './AdminWaitlist'
 import { BAUM } from '../config'
@@ -45,7 +46,10 @@ const REASONS: Record<string, string> = {
   'expired-code': 'That link has expired or was already used. Send /admin to Baum for a new one.',
   'bad-code': 'That link has expired or was already used. Send /admin to Baum for a new one.',
   'expired-link': 'That reset link has expired or was already used. Ask for a new one.',
-  'out-of-credits': 'SLUGS is out of Baum credits, so the report can’t refresh. Top up with /apikey in Baum.',
+  'out-of-credits': 'SLUGS is out of Baum credits for that. Top up with /apikey in Baum.',
+  'not-enabled': 'Turn on personal invites first.',
+  'name-needed': 'Say who the invite is for.',
+  'not-unused': 'That invite was already used or taken back.',
   'signed-out': 'You’re signed out.',
   'not-configured': 'The admin page isn’t set up on this site yet.',
 }
@@ -214,6 +218,7 @@ function Dashboard({ who, onOut }: { who: string | null; onOut: () => void }) {
     <AdminInvites call={call} say={say} onOut={onOut} />
 
     <AdminWaitlist call={call} say={say} onOut={onOut} />
+    <AdminInviteCodes call={call} say={say} onOut={onOut} />
 
     {report && <>
       <dl className="t-stats" style={{ '--stat-count': 6, margin: '16px 0' } as React.CSSProperties}>
