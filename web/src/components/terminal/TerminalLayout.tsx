@@ -7,6 +7,7 @@ import { useAuthSession } from '../../lib/auth-context'
 import Icon from './Icon'
 import { AvatarRing, Callout, IconButton, IconLink } from './ui'
 import ChatWidget from './ChatWidget'
+import DeployEntry from './DeployEntry'
 import WelcomeTour from './WelcomeTour'
 import { timeLeft } from '../../lib/invite'
 import { count, money, price } from '../../lib/terminal-format'
@@ -24,6 +25,7 @@ export default function TerminalLayout() {
   const [query, setQuery] = useState(new URLSearchParams(search).get('q') ?? '')
   const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState('')
+  const [welcomeOpen, setWelcomeOpen] = useState(true)
   useEffect(() => { setQuery(new URLSearchParams(search).get('q') ?? '') }, [pathname, search])
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
@@ -45,14 +47,14 @@ export default function TerminalLayout() {
       <Link to="/home" className="t-logo" aria-label="SLUGS home"><img src={`${import.meta.env.BASE_URL}slugs-logo-orange.png`} alt="SLUGS" /></Link>
       <nav className="t-nav" aria-label="Main navigation">
         <NavLink to="/home" className={pathname === '/home' || pathname === '/leaderboard' ? 'active' : ''}>Leaderboard</NavLink>
-        <NavLink to="/agents">Agents</NavLink><NavLink to="/vaults">Vaults</NavLink><NavLink to="/token" className={pathname === '/token' || pathname === '/swap' ? 'active' : ''}>${TOKEN.symbol}</NavLink>
+        <NavLink to="/agents">Agents</NavLink><NavLink to="/paper">Paper trading</NavLink><NavLink to="/vaults">Vaults</NavLink><NavLink to="/token" className={pathname === '/token' || pathname === '/swap' ? 'active' : ''}>${TOKEN.symbol}</NavLink>
       </nav>
       <form className="t-search" role="search" onSubmit={(event) => { event.preventDefault(); navigate(`/agents${query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''}`); input.current?.blur() }}>
         <Icon name="search" size={14} /><input ref={input} type="search" aria-label="Search slugs, profiles, contract addresses and wallets" placeholder="Search slugs, profiles, CAs and wallets" value={query} onChange={(event) => setQuery(event.target.value)} /><kbd>⌘K</kbd>
       </form>
       {/* Every action says what it is in words: icons alone left people guessing until they clicked. */}
       <div className="t-top-actions">
-        <Link className="t-top-button t-top-button--primary" to="/deploy"><Icon name="plus" size={14} /><span>Deploy a slug</span></Link>
+        <DeployEntry welcomeOpen={welcomeOpen} />
         {user
           ? <AccountMenu name={user.username ? `@${user.username}` : 'Your account'} id={user.wallets[0] ?? user.username ?? 'you'} avatarUrl={user.avatarUrl ?? undefined} inviteLink={inviteLink} signingOut={signingOut} onSignOut={leave} />
           : <Link to="/login" className="t-top-button"><Icon name="user" size={14} /><span>Sign in</span></Link>}
@@ -67,7 +69,7 @@ export default function TerminalLayout() {
       {error && <Callout error>{error}<IconButton icon="close" label="Dismiss error" onClick={() => setError('')} /></Callout>}
       <Outlet />
     </main>
-    <WelcomeTour />
+    <WelcomeTour onOpenChange={setWelcomeOpen} />
     <footer className="t-statusbar">
       <IconLink icon="x" label={`${BRAND.name} on X`} href={`https://x.com/${BRAND.x}`} />
       <IconLink icon="telegram" label={`${BRAND.name} on Telegram`} href={BRAND.telegram} />

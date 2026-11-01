@@ -2,12 +2,12 @@
 .t-dialog.t-pnl-card .t-floating-inner { background: var(--t-panel); }
 .t-pnl-studio { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .t-pnl-preview { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 14px; background: var(--t-bg); }
-.t-pnl-preview > img { display: block; width: 100%; height: auto; }
+.t-pnl-preview > svg { display: block; width: 100%; height: auto; }
 .t-pnl-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: var(--t-secondary); background: var(--t-raised); z-index: 1; }
 .t-pnl-templates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .t-pnl-templates button { min-width: 0; overflow: hidden; border: 1px solid var(--t-strong); border-radius: 10px; padding: 4px; background: var(--t-bg); color: var(--t-secondary); font: inherit; }
 .t-pnl-templates button[aria-pressed=true] { border-color: var(--t-ivory); color: var(--t-ivory); }
-.t-pnl-templates img, .t-pnl-templates button > .t-skeleton { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 7px; }
+.t-pnl-thumb, .t-pnl-thumb > svg { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 7px; }
 .t-pnl-templates button > span:last-child { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 0 4px; }
 .t-pnl-share-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .t-pnl-share-actions > .t-submit { flex: 1; width: auto; white-space: nowrap; }

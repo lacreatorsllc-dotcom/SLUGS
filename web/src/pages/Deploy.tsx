@@ -1,135 +1,101 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { TOKEN } from '../config'
+import Coachmarks, { type CoachStep } from '../components/terminal/Coachmarks'
+import DeployChat from '../components/terminal/DeployChat'
 import Icon from '../components/terminal/Icon'
-import { AvatarRing, Callout, EmptyState, IconLink } from '../components/terminal/ui'
-import { call, reasonText } from '../lib/account'
+import { EmptyState, IconLink } from '../components/terminal/ui'
 import { useAuthSession } from '../lib/auth-context'
 import { baumLinks } from '../lib/baum'
-import { MAX_NAME, MAX_TOKENS, MIN_BUY_USD, agentSlugPart, perMonthUsd, randomName, setupMessage, setupProblem, type Every, type Setup, type TokenPick } from '../lib/deploy'
-import { money } from '../lib/terminal-format'
-import { shortAddress } from '../lib/terminal-model'
+import { savedInvitation } from '../lib/invitation'
+import { MAX_NAME, SUGGESTED_AGENTS, agentSlugPart } from '../lib/deploy'
+import { markTourSeen, shouldShowTour } from '../lib/tour'
 
-// Deploy a slug here or in Baum on Telegram. Both make the same agent on the same Baum
-// account, so it shows up in both places with the same wallet, username and PnL.
+// Deploy a slug: name it, then set it up by chat right here (bottom left) or in Baum on
+// Telegram. Both make the same agent on the same Baum account. First-timers get a short
+// walkthrough of floating cards pointing at each part.
 
-const SUGGESTED: TokenPick[] = [{ address: TOKEN.address, symbol: TOKEN.symbol }, { address: 'ETH', symbol: 'ETH' }]
-const CONTRACT = /^0x[0-9a-fA-F]{40}$/
-
-type Result = { kind: 'done'; path: string } | { kind: 'handoff'; copied: boolean } | null
-
-export function ConnectedNote() {
-  return <section className="t-connected" aria-label="SLUGS and Baum are connected">
-    <div className="t-connected-head"><span className="t-connected-marks" aria-hidden="true"><b>S</b><Icon name="refresh" size={13} /><b>B</b></span><strong>SLUGS and Baum are one account</strong></div>
-    <ul>
-      <li><Icon name="user" size={13} />Same sign-in, username and picture</li>
-      <li><Icon name="bot" size={13} />Agents made here show in Telegram, and the other way round</li>
-      <li><Icon name="wallet" size={13} />Same wallets and funds</li>
-      <li><Icon name="chart" size={13} />Same trades and PnL, live in both</li>
-    </ul>
-  </section>
-}
+const TOUR: CoachStep[] = [
+  { target: 'deploy-name', title: 'Name your slug', body: 'Its SLUG is your username, then what it does, like goobz/dca-bot. You can rename it later.' },
+  { target: 'deploy-ideas', title: 'Choose a trading agent', body: 'Pick a suggested trading agent, or type your own name. Set its tokens and buying schedule in chat.' },
+  { target: 'deploy-chat-button', title: 'Set it up in chat', body: 'Your bot pops up in the corner and asks what to buy, how much and how often. About a minute.' },
+  { target: 'deploy-telegram', title: 'Or use Telegram', body: 'Prefer Baum in Telegram? It opens with your bot’s name ready. Same agent either way.' },
+  { target: 'deploy-account', title: 'One account', body: 'SLUGS and Baum share your agents, wallet and PnL. An agent made here shows in Telegram, and the other way round.' },
+]
 
 export default function Deploy() {
   const { user, guest } = useAuthSession()
-  const [name, setName] = useState(randomName)
-  const [tokens, setTokens] = useState<TokenPick[]>([SUGGESTED[0]])
-  const [contract, setContract] = useState('')
-  const [amount, setAmount] = useState('25')
-  const [every, setEvery] = useState<Every>('day')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
-  const [result, setResult] = useState<Result>(null)
+  // Invitation suggestions lead the choices; the person chooses the name themselves.
+  const [invitation] = useState(() => savedInvitation())
+  const suggested = invitation?.bots ?? []
+  const ideas = [...suggested, ...SUGGESTED_AGENTS.map((agent) => agent.name).filter((idea) => !suggested.includes(idea))].slice(0, 6)
+  const [name, setName] = useState('')
+  const [chat, setChat] = useState(false)
+  const [telegram, setTelegram] = useState(false)
+  const [tour, setTour] = useState(false)
   useEffect(() => { document.title = 'Deploy a slug · SLUGS' }, [])
+  // The walkthrough starts once the welcome tour, if it's showing, is closed.
+  useEffect(() => {
+    if (!user || !shouldShowTour('deploy', user)) return
+    const timer = window.setInterval(() => {
+      if (document.querySelector('dialog[open]')) return
+      window.clearInterval(timer)
+      setTour(true)
+    }, 400)
+    return () => window.clearInterval(timer)
+  }, [user])
 
   if (!user) return <EmptyState title={guest ? 'Make your account to deploy' : 'Sign in to deploy'} icon="bot"
     action={guest ? <a className="t-submit" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />Create my account on Baum</a> : <IconLink icon="user" label="Sign in with Baum" to="/login" variant="outline" />}>
     Your agents live on your Baum account, so you need one before you deploy, here or in Telegram.
   </EmptyState>
 
-  const setup: Setup = { name, tokens, amountUsd: Number(amount), every }
-  const problem = setupProblem(setup)
-  const slug = `${user.username ?? 'you'}/${agentSlugPart(name) || 'your-agent'}`
-  const has = (address: string) => tokens.some((token) => token.address.toLowerCase() === address.toLowerCase())
-  const toggle = (pick: TokenPick) => setTokens((list) => (list.some((token) => token.address === pick.address) ? list.filter((token) => token.address !== pick.address) : [...list, pick]))
-  function addContract() {
-    const address = contract.trim()
-    if (!CONTRACT.test(address)) return setError('Paste a full contract address: 0x and 40 characters.')
-    if (has(address)) return setContract('')
-    setTokens((list) => [...list, { address, symbol: shortAddress(address) }])
-    setContract(''); setError('')
+  const username = user.username
+  const part = agentSlugPart(name) || 'my-bot'
+  async function openTelegram() {
+    // Telegram can't prefill a message to Baum, so the request goes on the clipboard.
+    await navigator.clipboard.writeText(`Launch an agent named ${part}`).catch(() => undefined)
+    window.open(baumLinks.launch(), '_blank', 'noopener')
+    setTelegram(true)
+    setChat(false)
   }
+  function endTour() { markTourSeen('deploy'); setTour(false) }
 
-  async function deploy(event: FormEvent) {
-    event.preventDefault()
-    if (problem || !user?.username) return
-    setBusy(true); setError('')
-    const r = await call({ action: 'launch-agent', name: name.trim(), tokens: tokens.map((token) => token.address), amountUsd: setup.amountUsd, every })
-    setBusy(false)
-    const json = r.json as { reason?: string; slug?: string; wallet?: string }
-    if (r.ok) return setResult({ kind: 'done', path: `/agents/${json.slug ?? json.wallet ?? ''}` })
-    // Baum hasn't opened deploying to partners yet: finish the same setup in Telegram.
-    if (json.reason === 'pending') {
-      const copied = await navigator.clipboard.writeText(setupMessage(setup)).then(() => true, () => false)
-      setResult({ kind: 'handoff', copied })
-      window.open(baumLinks.launch(), '_blank', 'noopener')
-      return
-    }
-    setError(reasonText(json))
-  }
+  return <div className="t-deploy">
+    <section className="t-deploy-main">
+      <span className="t-deploy-kicker">STEP 1 OF 3 · NAME IT</span>
+      <h1>Deploy a slug.</h1>
+      <p className="t-deploy-lede">Name your agent for what it does. Then set it up by chat right here, or in Baum on Telegram.</p>
 
-  return <>
-    <div className="t-page-heading"><div><h1>Deploy a slug</h1><p>Set up an AI trading agent right here, or in Baum on Telegram. It’s the same agent either way.</p></div></div>
-    <ConnectedNote />
-
-    <div className="t-deploy-ways">
-      <section className="t-feature-card t-deploy-way t-deploy-way--on" aria-label="Set it up here">
-        <div className="t-section-title"><span className="t-section-icon"><Icon name="plus" /></span><h2>Set it up here</h2><span className="t-tag">ON SLUGS</span></div>
-        <p>Pick a name, the tokens and how much to buy. We send it to Baum and it shows up in Telegram too.</p>
-      </section>
-      <section className="t-feature-card t-deploy-way" aria-label="Set it up in Telegram">
-        <div className="t-section-title"><span className="t-section-icon"><Icon name="telegram" /></span><h2>Set it up in Telegram</h2></div>
-        <p>Chat with Baum and say “launch an agent”. It shows up here as soon as it’s made.</p>
-        <a className="t-submit t-submit--secondary" href={baumLinks.launch()} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />Open Baum in Telegram</a>
-      </section>
-    </div>
-
-    {result?.kind === 'done' && <Callout>Your agent is on its way. Baum is setting up <strong>{slug}</strong> with its own wallet: fund it to start trading. <Link to={result.path}>Open its page</Link>.</Callout>}
-    {result?.kind === 'handoff' && <Callout>Almost there. Deploying straight from SLUGS turns on once Baum opens it to us, so Baum just opened in Telegram{result.copied ? ' and your setup is copied: paste it there and confirm' : ': tell it your setup and confirm'}. Your agent shows up here as soon as it’s made.</Callout>}
-
-    <form className="t-feature-card t-deploy-form" onSubmit={deploy}>
-      <div className="t-deploy-field">
-        <label htmlFor="deploy-name">Name</label>
-        <div className="t-actions"><input id="deploy-name" value={name} maxLength={MAX_NAME} autoComplete="off" spellCheck={false} onChange={(event) => setName(event.target.value)} />
-          <button type="button" className="t-submit t-submit--secondary t-deploy-shuffle" onClick={() => setName(randomName())}><Icon name="refresh" size={14} />Shuffle</button></div>
-        <div className="t-deploy-slug"><AvatarRing agent={{ id: user.wallets[0] ?? slug, name: user.username ?? 'you', avatarUrl: user.avatarUrl ?? undefined }} /><span className="t-mono">{user.username ?? 'you'}<span className="t-welcome-slug-agent">/{agentSlugPart(name) || 'your-agent'}</span></span><small>Its SLUG. You can rename it later.</small></div>
-        {!user.username && <p className="t-fine t-negative">Pick your username first: your agents’ SLUGs start with it. <Link to="/profile?edit=username">Set my username</Link></p>}
+      <label className="t-deploy-label" htmlFor="deploy-name">Its SLUG</label>
+      <div className="t-deploy-slugbox" data-tour="deploy-name">
+        {user.avatarUrl ? <img src={user.avatarUrl} alt="" /> : <span className="t-deploy-face">{(username ?? 'you').slice(0, 2).toUpperCase()}</span>}
+        <span className="t-mono t-deploy-owner">{username ?? 'you'}<span className="t-welcome-slug-agent">/</span></span>
+        <input id="deploy-name" className="t-mono" value={name} maxLength={MAX_NAME} autoComplete="off" spellCheck={false} placeholder="Name your agent or choose a suggestion"
+          onChange={(event) => setName(event.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+/, ''))} />
       </div>
-
-      <div className="t-deploy-field">
-        <span className="t-deploy-label">Strategy</span>
-        <div className="t-deploy-strategy"><strong>Buy on a schedule (DCA)</strong><span>Buys the tokens you pick, the amount you set, every day or week. It’s what Baum agents run today.</span></div>
+      <div className="t-deploy-ideas" data-tour="deploy-ideas">
+        <span className="t-faint">{suggested.length ? `Trading agents suggested by ${invitation!.from}` : 'Suggested trading agents'}</span>
+        {ideas.map((idea) => <button type="button" key={idea} className="t-chip" title={SUGGESTED_AGENTS.find((agent) => agent.name === idea)?.about} aria-pressed={name === idea} onClick={() => setName(idea)}>{idea}</button>)}
       </div>
+      <p className="t-fine t-faint">Choose a suggestion or name your own. Set up the tokens, amount and buying schedule in chat.</p>
+      {!username && <p className="t-fine t-negative">Pick your username first: your agents’ SLUGs start with it. <Link to="/profile?edit=username">Set my username</Link></p>}
 
-      <div className="t-deploy-field">
-        <span className="t-deploy-label">Tokens to buy <span className="t-faint">· up to {MAX_TOKENS}</span></span>
-        <div className="t-deploy-tokens">
-          {[...SUGGESTED, ...tokens.filter((token) => !SUGGESTED.some((item) => item.address === token.address))].map((token) =>
-            <button type="button" key={token.address} className="t-chip" aria-pressed={has(token.address)} onClick={() => toggle(token)}>{has(token.address) && <Icon name="check" size={12} />}{token.address === 'ETH' || token.symbol.startsWith('0x') ? token.symbol : `$${token.symbol}`}</button>)}
-        </div>
-        <div className="t-actions"><input value={contract} placeholder="Or paste a token’s contract address (0x…)" aria-label="Token contract address" autoComplete="off" spellCheck={false} onChange={(event) => { setContract(event.target.value); setError('') }} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addContract() } }} />
-          <button type="button" className="t-submit t-submit--secondary t-deploy-shuffle" onClick={addContract} disabled={!contract.trim() || tokens.length >= MAX_TOKENS}><Icon name="plus" size={14} />Add</button></div>
+      <div className="t-deploy-choices">
+        <button type="button" className="t-submit t-deploy-choice" data-tour="deploy-chat-button" disabled={!username || !agentSlugPart(name)} onClick={() => { setChat(true); setTelegram(false) }}>
+          <Icon name="message" size={16} />Set it up in chat
+        </button>
+        <button type="button" className="t-submit t-submit--secondary t-deploy-choice" data-tour="deploy-telegram" disabled={!username || !agentSlugPart(name)} onClick={openTelegram}>
+          <Icon name="telegram" size={16} />Set it up in Telegram
+        </button>
       </div>
+      {telegram && <p className="t-fine t-positive" role="status">Baum opened in Telegram, and “Launch an agent named {part}” is copied: paste it there. Your agent shows up here once you confirm.</p>}
 
-      <div className="t-deploy-field t-deploy-amount">
-        <div><label htmlFor="deploy-amount">Each buy</label><div className="t-deploy-money"><span>$</span><input id="deploy-amount" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value.replace(/[^0-9.]/g, ''))} /></div></div>
-        <div><span className="t-deploy-label">Every</span><div className="t-segments" role="group" aria-label="How often">{(['day', 'week'] as Every[]).map((value) => <button type="button" key={value} aria-pressed={every === value} onClick={() => setEvery(value)}>{value === 'day' ? 'Day' : 'Week'}</button>)}</div></div>
-        <p className="t-fine">{problem ? '' : `About ${money(perMonthUsd(setup))} a month across ${tokens.length} ${tokens.length === 1 ? 'token' : 'tokens'}. Minimum $${MIN_BUY_USD} a buy.`}</p>
-      </div>
+      <p className="t-deploy-account" data-tour="deploy-account"><span aria-hidden="true"><b>S</b><b>B</b></span>SLUGS and Baum are one account: agents made here show in Telegram, and the other way round.</p>
+      <button type="button" className="t-link-button t-deploy-howto" onClick={() => setTour(true)}>How this works</button>
+    </section>
 
-      {(error || problem) && <p className={`t-fine${error ? ' t-negative' : ''}`} role={error ? 'alert' : undefined}>{error || problem}</p>}
-      <button type="submit" className="t-submit" disabled={busy || Boolean(problem) || !user.username}><Icon name="rocket" size={15} />{busy ? 'Deploying…' : `Deploy ${slug}`}</button>
-      <p className="t-fine">Baum gives your agent its own wallet. It trades only after you fund it, within the rules above, and messages you each time it trades. Agents trade real funds and can lose them.</p>
-    </form>
-  </>
+    {chat && username && <DeployChat key={part} username={username} name={part} picture={user.avatarUrl} onClose={() => setChat(false)} />}
+    {!chat && username && agentSlugPart(name) && !telegram && <button type="button" className="t-deploy-bubble" onClick={() => setChat(true)}><Icon name="message" size={14} />Set up {username}/{part}</button>}
+    {tour && <Coachmarks steps={TOUR} onDone={endTour} />}
+  </div>
 }

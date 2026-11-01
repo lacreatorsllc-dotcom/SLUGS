@@ -19,12 +19,14 @@ try {
     plugins: [{
       name: 'observe-auth-navigation',
       setup(plugin) {
+        plugin.onLoad({ filter: /\.css$/ }, () => ({ contents: '', loader: 'js' }))
         // Record the route requested by the real view; routing itself belongs to React Router.
         plugin.onResolve({ filter: /^react-router-dom$/ }, () => ({ path: 'router', namespace: 'auth-test' }))
         plugin.onLoad({ filter: /.*/, namespace: 'auth-test' }, () => ({
           contents: `import React from 'react';
             export function Navigate({ to, replace }) { return React.createElement('span', { 'data-navigate': to, 'data-replace': String(Boolean(replace)) }); }
-            export function Link({ to, state, children, ...props }) { return React.createElement('a', { href: to, ...props }, children); }`,
+            export function Link({ to, state, children, ...props }) { return React.createElement('a', { href: to, ...props }, children); }
+            export function useLocation() { return { pathname: '/home', search: '' }; }`,
           loader: 'js',
         }))
       },

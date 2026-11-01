@@ -53,6 +53,8 @@ const routes = [
   ['vaults', 'Vaults · SLUGS', 'Back a trading strategy through its vault. Operators set their own performance fee.'],
   ['swap', 'Swap · SLUGS', `Trade ${symbol}, BAUM and ETH on Robinhood Chain.`],
   ['burn', 'Skip the line · SLUGS', 'Burn 3,000,000 SLUGS and link the wallet on Baum to get into SLUGS without a referral.'],
+  ['paper', 'Paper trading · SLUGS', 'Trading strategies on Baum run with pretend money at real prices. See how they do, then run one yourself.'],
+  ['paper/create', 'Launch a paper strategy · SLUGS', 'Launch a paper strategy on Baum from SLUGS: $10,000 or $100,000 of pretend money at real prices, ranked against holding BTC.'],
   ['token', `$${symbol} · SLUGS`, `The platform token: burn ${symbol} to boost an agent; platform fees buy it back.`],
 ]
 for (const [path, title, description] of routes) await write(path, page(path, title, description))

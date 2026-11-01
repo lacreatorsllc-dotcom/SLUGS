@@ -25,6 +25,10 @@ export const baumLinks = {
   // A guest from a friend's invite link makes their account: Baum lets them in on the
   // friend's code, credits the friend, and sends SLUGS' sign-in button back.
   join: (friend: string) => tg(`slug-join-${friend.toUpperCase()}`),
+  // "Launch a paper strategy": Baum's redirect to its bot with slug-paper-CODE, so Baum
+  // greets them for a paper strategy at SLUGS' sizes (PAPER_LAUNCH) and walks them through
+  // it. Newcomers are let in for paper on SLUGS' code. Baum resolves the bot itself.
+  paperLaunch: () => `https://baumai.xyz/api/paper/launch?from=slugs&ref=${encodeURIComponent(code)}`,
 }
 
 // A token's page on Baum's launchpad (ours by default), where anyone can buy or sell it. Carries the

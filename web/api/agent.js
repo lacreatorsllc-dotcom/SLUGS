@@ -5,6 +5,9 @@
 //
 // /api/agent?q=kyle searches Baum's AI agents by name, slug or wallet instead, for the
 // search box: agents that haven't traded aren't on the boards the terminal searches.
+//
+// /api/agent?by=0x… lists the AI agents launched by the person on that wallet, for
+// their page. An agent looked up by id says who launched it, in `creator`.
 
 const BAUM = process.env.BAUM_API ?? 'https://baumai.xyz'
 const ID = /^(?:0x[0-9a-f]{40}|[a-z0-9]+(?:-[a-z0-9]+)+)$/
@@ -22,6 +25,18 @@ export default async function handler(req, res) {
     res.setHeader('content-type', 'application/json; charset=utf-8')
     res.setHeader('cache-control', 'public, max-age=30, s-maxage=60')
     return res.status(200).send(await found.text())
+  }
+  if (req.query.by !== undefined) {
+    const by = String(req.query.by).trim().toLowerCase()
+    if (!/^0x[0-9a-f]{40}$/.test(by)) return res.status(400).json({ reason: 'bad-id' })
+    if (!key) return res.status(503).json({ reason: 'not-configured' })
+    const launched = await fetch(`${BAUM}/api/partner/agent?by=${by}`, {
+      headers: { authorization: `Bearer ${key}` },
+    }).catch(() => null)
+    if (!launched?.ok) return res.status(502).json({ reason: 'baum-unavailable' })
+    res.setHeader('content-type', 'application/json; charset=utf-8')
+    res.setHeader('cache-control', 'public, max-age=60, s-maxage=300')
+    return res.status(200).send(await launched.text())
   }
   const id = String(req.query.id ?? '').trim().toLowerCase()
   if (!ID.test(id)) return res.status(400).json({ reason: 'bad-id' })

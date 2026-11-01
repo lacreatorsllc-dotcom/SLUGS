@@ -2,9 +2,10 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
 import AdminInviteCodes from './AdminInviteCodes'
+import AdminInvites from './AdminInvites'
 import AdminWaitlist from './AdminWaitlist'
 import { BAUM } from '../config'
-import { count } from '../lib/terminal-format'
+import { count, money } from '../lib/terminal-format'
 import '../terminal.css'
 
 // The admin page: who opened SLUGS' invite links, the accounts that came of them, and
@@ -19,8 +20,9 @@ import '../terminal.css'
 type Report = {
   builtAt: string
   codes: { code: string; aliases: string[]; clicks: number; accounts: number }[]
-  totals: { clicks: number; direct: number; second: number; admitted: number }
-  users: { name: string; wallet: string | null; joinedAt: string; admitted: boolean; code: string; invites: { code: string; clicks: number; accounts: number }[] }[]
+  // tradedUsd and earnedUsd are missing from reports Baum built before it added them.
+  totals: { clicks: number; direct: number; second: number; admitted: number; tradedUsd?: number; earnedUsd?: number }
+  users: { name: string; wallet: string | null; joinedAt: string; admitted: boolean; code: string; invites: { code: string; clicks: number; accounts: number }[]; tradedUsd?: number; earnedUsd?: number }[]
 }
 type Login = { at: string; method: 'baum' | 'device' | 'password'; ok: boolean; who: string | null; ip: string | null; city: string | null; region: string | null; country: string | null; userAgent: string | null; reason?: string }
 
@@ -213,15 +215,19 @@ function Dashboard({ who, onOut }: { who: string | null; onOut: () => void }) {
     </div>
     {error && <p className="t-callout t-callout--error" role="alert">{error}</p>}
 
+    <AdminInvites call={call} say={say} onOut={onOut} />
+
     <AdminWaitlist call={call} say={say} onOut={onOut} />
     <AdminInviteCodes call={call} say={say} onOut={onOut} />
 
     {report && <>
-      <dl className="t-stats" style={{ '--stat-count': 4, margin: '16px 0' } as React.CSSProperties}>
+      <dl className="t-stats" style={{ '--stat-count': 6, margin: '16px 0' } as React.CSSProperties}>
         <div className="t-stat"><dt>Invite link visits</dt><dd>{count(report.totals.clicks)}</dd></div>
         <div className="t-stat"><dt>Accounts from SLUGS’ code</dt><dd>{count(report.totals.direct)}</dd><div className="t-stat-note">{count(report.totals.admitted)} let in</div></div>
         <div className="t-stat"><dt>Accounts from their codes</dt><dd>{count(report.totals.second)}</dd></div>
         <div className="t-stat"><dt>Total accounts</dt><dd>{count(report.totals.direct + report.totals.second)}</dd></div>
+        <div className="t-stat"><dt>Traded by them</dt><dd>{money(report.totals.tradedUsd)}</dd></div>
+        <div className="t-stat"><dt>Earned by SLUGS</dt><dd>{money(report.totals.earnedUsd)}</dd><div className="t-stat-note">10% of Baum’s fees from them</div></div>
       </dl>
 
       <h2>SLUGS’ invite links</h2>
@@ -231,11 +237,11 @@ function Dashboard({ who, onOut }: { who: string | null; onOut: () => void }) {
 
       <h2>People who came in on SLUGS’ code</h2>
       {report.users.length === 0 ? <p className="t-muted">Nobody yet.</p> :
-        <div className="t-table-scroll" style={{ marginBottom: 24 }}><table className="t-table"><thead><tr><th>Who</th><th>Joined</th><th>Status</th><th>Their invite link</th><th className="t-number">Visits</th><th className="t-number">Accounts</th></tr></thead><tbody>
+        <div className="t-table-scroll" style={{ marginBottom: 24 }}><table className="t-table"><thead><tr><th>Who</th><th>Joined</th><th>Status</th><th>Their invite link</th><th className="t-number">Visits</th><th className="t-number">Accounts</th><th className="t-number">Traded</th><th className="t-number">Earned</th></tr></thead><tbody>
           {report.users.map((u, i) => {
             const visits = u.invites.reduce((n, x) => n + x.clicks, 0)
             const accounts = u.invites.reduce((n, x) => n + x.accounts, 0)
-            return <tr key={`${u.wallet ?? u.name}-${i}`}><td title={u.wallet ?? ''}>{u.name}</td><td>{when(u.joinedAt)}</td><td>{u.admitted ? 'In' : 'Waiting'}</td><td>{u.invites[0] ? `slugs.run/${u.invites[0].code}` : '—'}</td><td className="t-number">{count(visits)}</td><td className="t-number">{count(accounts)}</td></tr>
+            return <tr key={`${u.wallet ?? u.name}-${i}`}><td title={u.wallet ?? ''}>{u.name}</td><td>{when(u.joinedAt)}</td><td>{u.admitted ? 'In' : 'Waiting'}</td><td>{u.invites[0] ? `slugs.run/${u.invites[0].code}` : '—'}</td><td className="t-number">{count(visits)}</td><td className="t-number">{count(accounts)}</td><td className="t-number">{money(u.tradedUsd)}</td><td className="t-number">{money(u.earnedUsd)}</td></tr>
           })}
         </tbody></table></div>}
     </>}

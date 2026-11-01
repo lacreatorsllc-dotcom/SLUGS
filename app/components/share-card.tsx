@@ -115,7 +115,7 @@ function CardRings({ trade, agentName, agentAvatarUrl }: { trade: TradeData; age
         <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', marginTop: -4 }}>
           {agentAvatarUrl ? (
             <View>
-              <Image source={{ uri: agentAvatarUrl }} style={{ width: 110, height: 130, resizeMode: 'contain' }} />
+              <Image source={{ uri: agentAvatarUrl }} style={{ width: 110, height: 110, borderRadius: 55, overflow: 'hidden', resizeMode: 'cover' }} />
               {/* Pct overlaid near top of avatar */}
               <View style={{
                 position: 'absolute', top: 6, alignSelf: 'center',
@@ -253,7 +253,7 @@ function CardCircuit({ trade, agentName, agentAvatarUrl }: { trade: TradeData; a
         {/* PnL + avatar row */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
           {agentAvatarUrl ? (
-            <Image source={{ uri: agentAvatarUrl }} style={{ width: 90, height: 110, resizeMode: 'contain', marginLeft: -10 }} />
+            <Image source={{ uri: agentAvatarUrl }} style={{ width: 90, height: 90, borderRadius: 45, overflow: 'hidden', resizeMode: 'cover', marginLeft: -10 }} />
           ) : null}
           <View style={{ flex: 1, alignItems: agentAvatarUrl ? 'flex-end' : 'center', paddingRight: agentAvatarUrl ? 4 : 0 }}>
             <Text style={{
