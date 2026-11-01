@@ -2,9 +2,13 @@
 // answers with a transaction for the person's own wallet to sign, Baum's fee in front
 // and SLUGS' fee on top. The key stays here, and so does SLUGS' fee, set in Vercel:
 //
-//   SLUGS_FEE_RECIPIENT  where SLUGS' fee goes      SLUGS_FEE_BPS  how much: 25 = 0.25%, at most 100
+//   SLUGS_FEE_BPS        how much: 25 = 0.25%, at most 100
+//   SLUGS_FEE_RECIPIENT  where it goes, optional
 //
-// Without them there's no SLUGS fee. While SLUGS is on its bonding curve an ETH buy
+// Without SLUGS_FEE_BPS there's no SLUGS fee. Without SLUGS_FEE_RECIPIENT Baum pays
+// it to SLUGS' fee wallet, a Baum wallet in the key holder's account ("SLUGS fees"),
+// which Baum makes the first time and which can be switched to another address at
+// baum-monorepo /api/partner/account/fee-wallet. While SLUGS is on its bonding curve an ETH buy
 // goes straight to the curve, which has nowhere to carry a fee; Baum's quote says so.
 //
 //   POST { amount, address }  a buy of SLUGS with `amount` ETH, for `address` to sign
@@ -15,7 +19,8 @@ const TOKEN = process.env.VITE_TOKEN_ADDRESS || '0xa5A0A37778D6b656A37b2E10c13E2
 function partnerFee() {
   const recipient = process.env.SLUGS_FEE_RECIPIENT
   const bps = Number(process.env.SLUGS_FEE_BPS ?? 0)
-  return recipient && Number.isInteger(bps) && bps > 0 ? { recipient, bps } : undefined
+  if (!Number.isInteger(bps) || bps <= 0) return undefined
+  return recipient ? { recipient, bps } : { bps }
 }
 
 export default async function handler(req, res) {
