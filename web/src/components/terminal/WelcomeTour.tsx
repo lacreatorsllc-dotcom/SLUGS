@@ -39,6 +39,19 @@ function Picture({ wallet, url, initials }: { wallet?: string; url?: string | nu
     : <span className="t-welcome-avatar">{initials}</span>
 }
 
+/** A SLUG as the tour shows it: the username bright, then /agent in gray. */
+function SlugText({ username, agent }: { username: string; agent?: string | null }) {
+  return <span>{username}{agent && <span className="t-welcome-slug-agent">/{agent}</span>}</span>
+}
+
+/** The part of the person's first agent's SLUG after their username: sniper-bot of goobz-sniper-bot. */
+function firstAgentPart(username: string, agents: { name: string; slug: string | null }[] | undefined) {
+  const agent = agents?.[0]
+  if (!agent) return null
+  if (agent.slug?.startsWith(`${username}-`)) return agent.slug.slice(username.length + 1)
+  return agent.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || null
+}
+
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
 
 // The signed-in person's own picture.
@@ -61,13 +74,15 @@ function Tour({ onDone }: { onDone: () => void }) {
   }, [])
 
   // A preview account sees the tour as a new user would: the last card asks them to claim a slug.
-  const slug = user?.username && !previewsNewUserCards(user) ? `@${user.username}` : null
+  const username = user?.username && !previewsNewUserCards(user) ? user.username : null
+  const ownAgent = username ? firstAgentPart(username, user?.agents) : null
+  const slug = username ? (ownAgent ? `${username}/${ownAgent}` : username) : null
   const steps: Step[] = [
     {
       title: <>Every agent<br />has a slug.</>,
       body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
       art: <div className="t-welcome-art t-welcome-art--center">
-        <span className="t-welcome-slug"><ExamplePicture /><span>{EXAMPLE.username}<span className="t-welcome-slug-agent">/{EXAMPLE.agent}</span></span><Icon name="copy" size={15} /></span>
+        <span className="t-welcome-slug"><ExamplePicture /><SlugText username={EXAMPLE.username} agent={EXAMPLE.agent} /><Icon name="copy" size={15} /></span>
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
       </div>,
     },
@@ -75,7 +90,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Follow agents.<br />Watch everything.</>,
       body: 'Follow any agent’s feed. See what it’s trading and how it’s performing, in real time.',
       art: <div className="t-welcome-art">
-        <span className="t-welcome-agent"><ExamplePicture /><span><strong>{EXAMPLE.username}<span className="t-welcome-slug-agent">/{EXAMPLE.agent}</span></strong><small>by {EXAMPLE.name}</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
+        <span className="t-welcome-agent"><ExamplePicture /><span><strong><SlugText username={EXAMPLE.username} agent={EXAMPLE.agent} /></strong><small>by {EXAMPLE.name}</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
         <span className="t-welcome-feed"><span>2s</span><span><b className="t-positive">BUY</b> SLUGS</span><span>1m</span><span><b className="t-negative">SELL</b> ETH</span><span>4m</span><span><b className="t-positive">BUY</b> BAUM</span></span>
         <small className="t-welcome-caption"><span className="t-dot t-dot--online" />Example feed</small>
       </div>,
@@ -96,13 +111,13 @@ function Tour({ onDone }: { onDone: () => void }) {
         <small className="t-welcome-caption">Through Baum</small>
       </div>,
     },
-    slug
+    username && slug
       ? {
           title: <>This is<br />your slug.</>,
           body: 'Your slug is your identity in the agent network. People find you, follow you and track your agents by it. It’s your Baum username.',
           art: <div className="t-welcome-art t-welcome-art--center">
-            <span className="t-welcome-slug t-welcome-slug--own"><OwnPicture initials={user!.username!.slice(0, 2).toUpperCase()} />{slug}<CopyButton value={slug} label={`Copy ${slug}`} /></span>
-            <span className="t-welcome-tips"><span><Icon name="search" size={13} />Anyone can find you with ⌘K</span><span><Icon name="copy" size={13} />Anyone can copy your @slug in one click</span></span>
+            <span className="t-welcome-slug t-welcome-slug--own"><OwnPicture initials={username.slice(0, 2).toUpperCase()} /><SlugText username={username} agent={ownAgent} /><CopyButton value={slug} label={`Copy ${slug}`} /></span>
+            <span className="t-welcome-tips"><span><Icon name="search" size={13} />Anyone can find you with ⌘K</span><span><Icon name="copy" size={13} />Anyone can copy your SLUG in one click</span></span>
           </div>,
         }
       : {
@@ -111,7 +126,7 @@ function Tour({ onDone }: { onDone: () => void }) {
             ? 'Your slug is your username on Baum. Make your account in Telegram before your invite runs out and your slug shows up here.'
             : 'Your slug is your username on Baum. Set one in Telegram and it shows up here, where people find, follow and track you by it.',
           art: <div className="t-welcome-art t-welcome-art--center">
-            <span className="t-welcome-slug t-welcome-slug--empty">@<span>your_slug</span></span>
+            <span className="t-welcome-slug t-welcome-slug--empty"><SlugText username="your-name" agent="your-agent" /></span>
             <a className="t-submit t-submit--secondary t-welcome-baum" href={guest ? baumLinks.join(guest.code) : `https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />{guest ? 'Create my account on Baum' : 'Set my username on Baum'}</a>
           </div>,
         },
