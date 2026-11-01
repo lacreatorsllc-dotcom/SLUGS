@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Welcome cards</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#050505}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+@keyframes cardIn{0%{opacity:0;transform:translateY(24px) scale(0.96)}60%{opacity:1;transform:translateY(-3px) scale(1.005)}100%{opacity:1;transform:none}}
+@keyframes lineIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(248,98,46,0.35)}100%{box-shadow:0 0 0 14px rgba(248,98,46,0)}}
+</style>
+</helmet>
+<div style="min-height: 860px; background: #050505; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; font-variant-numeric: tabular-nums">
+  <header style="display: flex; align-items: center; gap: 16px; min-height: 44px; padding: 0 14px; border-bottom: 1px solid #141413; opacity: 0.35">
+    <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated">
+    <span style="font-size: 13px; color: #9a978f">Leaderboard</span>
+  </header>
+
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px">
+
+    <sc-if value="{{s1}}" hint-placeholder-val="{{ true }}">
+      <div role="dialog" aria-labelledby="oc1" style="width: 100%; max-width: 520px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 20px; display: flex; flex-direction: column; gap: 18px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 11px; letter-spacing: 0.14em; color: #85827a">01 / 03</span>
+          <button type="button" onClick="{{skip}}" aria-label="Skip" title="Skip" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 0; background: #1a1918; color: #b8b5ad; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        </div>
+
+        <div aria-hidden="true" style="height: 190px; border: 1px solid #1f1e1c; border-radius: 14px; background-color: #0b0b0a; background-image: radial-gradient(#1c1b19 1px, transparent 1px); background-size: 16px 16px; display: flex; align-items: center; justify-content: center; gap: 14px">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; animation: lineIn 0.4s 0.1s both">
+            <span style="width: 56px; height: 56px; border-radius: 14px; border: 1px solid #2a2824; background: #111110; display: flex; align-items: center; justify-content: center; font-family: Georgia, 'Times New Roman', serif; font-size: 18px; font-weight: 700; color: #f2ede4">Baum</span>
+            <span style="display: flex; align-items: center; gap: 5px; font-size: 11px; color: #85827a"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z"></path></svg>Telegram</span>
+          </div>
+          <span style="width: 56px; height: 1px; border-top: 1px dashed #5a564f; margin-bottom: 22px"></span>
+          <div style="width: 210px; box-sizing: border-box; padding: 12px; border: 1px solid #2f2d29; border-radius: 12px; background: #141413; display: flex; flex-direction: column; gap: 10px; animation: lineIn 0.4s 0.35s both">
+            <div style="display: flex; align-items: center; gap: 8px">
+              <span style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #f8622e; color: #f8622e; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; animation: pulseRing 1.8s ease-out infinite">M</span>
+              <span style="flex: 1"><span style="display: block; font-size: 12.5px; font-weight: 600">Your slug</span><span style="display: block; font-size: 10.5px; color: #85827a">Trenchers · Robinhood Chain</span></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #85827a"><span>PnL 7d<span style="display: block; font-size: 14px; font-weight: 600; color: #2fd39a">[+$PNL]</span></span><span style="text-align: right">Rank<span style="display: block; font-size: 14px; font-weight: 600; color: #f5f3ee">[#]</span></span></div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h1 id="oc1" style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Your slug<br>lives on Baum.</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #9a978f">Your agent trades on Baum, in Telegram, on Robinhood Chain. SLUGS is where you watch it, compare it and show it off.</p>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div aria-label="Step 1 of 3" style="display: flex; gap: 5px"><span style="width: 22px; height: 4px; border-radius: 2px; background: #ece9e2"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span></div>
+          <div style="display: flex; gap: 6px">
+            <button type="button" disabled aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #1f1e1c; background: transparent; color: #3a3732"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <button type="button" onClick="{{next}}" aria-label="Next" title="Next" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-labelledby="oc2" style="width: 100%; max-width: 520px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 20px; display: flex; flex-direction: column; gap: 18px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 11px; letter-spacing: 0.14em; color: #85827a">02 / 03</span>
+          <button type="button" onClick="{{skip}}" aria-label="Skip" title="Skip" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 0; background: #1a1918; color: #b8b5ad; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        </div>
+
+        <div aria-hidden="true" style="height: 190px; box-sizing: border-box; border: 1px solid #1f1e1c; border-radius: 14px; background: #0b0b0a; padding: 14px; display: flex; gap: 12px; align-items: center">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 8px; animation: lineIn 0.4s 0.1s both">
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #85827a"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z"></path></svg>Baum · Telegram</span>
+            <div style="padding: 10px 12px; border: 1px solid #1f1e1c; border-radius: 12px 12px 12px 4px; background: #111110; font-size: 12px; color: #d6d3cb; line-height: 1.5">Tap to sign in to SLUGS. The link works once, for 10 minutes.</div>
+            <span style="align-self: flex-start; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; background: #ece9e2; color: #0b0b0a; font-size: 12px; font-weight: 600">Sign in<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+          </div>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5a564f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex: none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid #1f1e1c; border-radius: 9px; background: #111110; font-size: 11.5px; animation: lineIn 0.35s 0.5s both"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a"></span>Signed in as <span style="color: #f5f3ee; font-weight: 600">@you</span></div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid #1f1e1c; border-radius: 9px; background: #111110; font-size: 11.5px; color: #b8b5ad; animation: lineIn 0.35s 0.75s both"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18"></path></svg>Wallets · 0x7a90…31e2</div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid #1f1e1c; border-radius: 9px; background: #111110; font-size: 11.5px; color: #b8b5ad; animation: lineIn 0.35s 1s both"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"></path></svg>Strategy · Trenchers</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h1 id="oc2" style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Log in with Baum.<br>That's it.</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #9a978f">Tap Sign in from Baum in Telegram. Your agent, wallets and strategy show up here. No setup, no keys.</p>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div aria-label="Step 2 of 3" style="display: flex; gap: 5px"><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 22px; height: 4px; border-radius: 2px; background: #ece9e2"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span></div>
+          <div style="display: flex; gap: 6px">
+            <button type="button" onClick="{{back}}" aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <button type="button" onClick="{{next}}" aria-label="Next" title="Next" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-labelledby="oc3" style="width: 100%; max-width: 520px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 20px; display: flex; flex-direction: column; gap: 18px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 11px; letter-spacing: 0.14em; color: #85827a">03 / 03</span>
+          <button type="button" onClick="{{skip}}" aria-label="Skip" title="Skip" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 0; background: #1a1918; color: #b8b5ad; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        </div>
+
+        <div aria-hidden="true" style="height: 190px; box-sizing: border-box; border: 1px solid #1f1e1c; border-radius: 14px; background: #0b0b0a; padding: 14px; display: flex; flex-direction: column; gap: 9px; overflow: hidden">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9a978f"><span style="width: 22px; height: 22px; border-radius: 6px; border: 1px solid #2a2824; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-size: 11px; font-weight: 700; color: #f2ede4">B</span><span style="color: #f5f3ee; font-weight: 600">Baum</span><span style="display: flex; align-items: center; gap: 5px; margin-left: auto; color: #2fd39a; font-size: 11px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a"></span>Your slug is active</span></div>
+          <div style="align-self: flex-end; padding: 7px 12px; border: 1px solid #2a2824; border-radius: 14px 14px 4px 14px; background: #1a1918; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; animation: lineIn 0.35s 0.15s both">/copy @goobz</div>
+          <div style="align-self: flex-start; width: 78%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #1f1e1c; border-radius: 14px 14px 14px 4px; background: #111110; font-size: 12px; color: #d6d3cb; display: flex; flex-direction: column; gap: 7px; animation: lineIn 0.35s 0.6s both">
+            <span>Copy plan for @goobz: <span style="color: #f5f3ee; font-weight: 600">$25 per buy</span>. Nothing trades until you confirm.</span>
+            <span style="display: flex; gap: 6px"><span style="padding: 4px 10px; border-radius: 7px; background: #ece9e2; color: #0b0b0a; font-size: 11.5px; font-weight: 600">Confirm</span><span style="padding: 4px 10px; border-radius: 7px; border: 1px solid #2a2824; color: #9a978f; font-size: 11.5px">Edit</span></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #85827a; animation: lineIn 0.35s 1s both"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2fd39a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>Shows up on SLUGS the moment it trades</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h1 id="oc3" style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Steer it in Baum.<br>Watch it here.</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #9a978f">Set your strategy or copy a trader by chatting with Baum. Every trade is on-chain and lands on SLUGS in real time.</p>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div aria-label="Step 3 of 3" style="display: flex; gap: 5px"><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 22px; height: 4px; border-radius: 2px; background: #ece9e2"></span></div>
+          <div style="display: flex; gap: 6px">
+            <button type="button" onClick="{{back}}" aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <button type="button" onClick="{{restart}}" style="height: 38px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer">Get started<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; color: #85827a; font-size: 13px; animation: lineIn 0.4s both">
+        <span>Tour closed. In the app this lands on the leaderboard.</span>
+        <button type="button" onClick="{{restart}}" aria-label="Replay the tour" title="Replay" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8"></path><path d="M4 3v5h5"></path></svg></button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":860}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { step: 1 };
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state.step;
+    return {
+      s1: s === 1, s2: s === 2, s3: s === 3, done: s === 0,
+      next: function () { self.setState({ step: Math.min(3, self.state.step + 1) }); },
+      back: function () { self.setState({ step: Math.max(1, self.state.step - 1) }); },
+      skip: function () { self.setState({ step: 0 }); },
+      restart: function () { self.setState({ step: self.state.step === 3 ? 0 : 1 }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -285,3 +285,54 @@
 .t-mono { font-family: var(--t-mono); }
 .t-token-badge { width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center; border: 1px solid var(--t-strong); border-radius: 8px; background: var(--t-card); font-size: 11px; font-weight: 700; color: var(--t-accent); }
 .t-token-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; font-size: 13px; font-weight: 600; }.t-token-side small { font-size: 11.5px; color: var(--t-faint); }
+.t-welcome-community { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px; color: var(--t-muted); }.t-welcome-community a { color: var(--t-text); text-decoration: underline; }
+.t-welcome-slug-agent { color: var(--t-faint); }
+.t-welcome-slug--empty > span { color: var(--t-secondary); }.t-welcome-slug--empty .t-welcome-slug-agent { color: var(--t-faint); }
+.t-welcome-claim { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.t-welcome-or { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--t-muted); text-decoration: underline; text-underline-offset: 3px; }.t-welcome-or:hover { color: var(--t-text); }
+
+/* Deploy a slug */
+.t-connected { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border: 1px solid var(--t-burn-line); border-radius: 14px; background: var(--t-burn-wash); }
+.t-connected-head { display: flex; align-items: center; gap: 10px; }
+.t-connected-marks { display: inline-flex; align-items: center; gap: 4px; color: var(--t-accent); }
+.t-connected-marks b { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; background: var(--t-ivory); color: var(--t-bg); font-size: 12px; }
+.t-connected ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 6px 16px; }
+.t-connected li { display: flex; align-items: center; gap: 8px; color: var(--t-secondary); font-size: 12.5px; }
+.t-deploy-ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 14px 0; }
+.t-deploy-way--on { border-color: #5a564f; }
+.t-deploy-form { gap: 18px; max-width: 760px; }
+.t-deploy-field { display: flex; flex-direction: column; gap: 8px; }
+.t-deploy-field label, .t-deploy-label { margin: 0; font-size: 12px; color: var(--t-muted); }
+.t-deploy-field .t-actions input { flex: 1; }
+.t-deploy-shuffle { width: auto; flex: none; }
+.t-deploy-slug { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--t-line); border-radius: 10px; background: var(--t-raised); }
+.t-deploy-slug .t-mono { font-size: 14px; color: var(--t-text); }.t-deploy-slug small { margin-left: auto; font-size: 11.5px; color: var(--t-faint); }
+.t-deploy-strategy { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 1px solid #5a564f; border-radius: 10px; background: var(--t-selected); }.t-deploy-strategy span { font-size: 12.5px; color: var(--t-muted); }
+.t-deploy-tokens { display: flex; gap: 6px; flex-wrap: wrap; }.t-deploy-tokens .t-chip { display: inline-flex; align-items: center; gap: 5px; }
+.t-deploy-amount { display: grid; grid-template-columns: minmax(0, 200px) auto; gap: 12px 18px; align-items: end; }.t-deploy-amount > div { display: flex; flex-direction: column; gap: 8px; }.t-deploy-amount .t-fine { grid-column: 1 / -1; }
+.t-deploy-money { display: flex; align-items: center; gap: 6px; padding-left: 12px; border: 1px solid var(--t-strong); border-radius: 10px; background: var(--t-bg); }.t-deploy-money span { color: var(--t-faint); }.terminal .t-deploy-money input { flex: 1; border: 0; padding-left: 0; }
+.t-welcome-slugs { display: grid; grid-template-columns: repeat(2, auto); gap: 8px; justify-content: center; }
+.t-welcome-slug--small { gap: 8px; padding: 6px 12px 6px 6px; font-size: 13.5px; border-radius: 10px; animation: none; }
+.t-welcome-slug--small:first-child { animation: t-pulse-ring 1.8s .6s ease-out infinite; }
+.t-welcome-slug--small .t-welcome-avatar { width: 24px; height: 24px; font-size: 9px; }
+@media (max-width: 480px) { .t-welcome-slugs { grid-template-columns: auto; } }
+.t-welcome-pnl { gap: 10px; padding-top: 16px; }
+.t-welcome-pnl-cards { position: relative; width: 300px; height: 132px; }
+.t-welcome-pnl-cards img { position: absolute; top: 4px; left: 50%; width: 124px; height: 124px; margin-left: -62px; border-radius: 10px; border: 1px solid var(--t-strong); box-shadow: 0 10px 24px rgba(0,0,0,.55); }
+.t-welcome-pnl-cards .t-welcome-pnl-spotlight { transform: translateX(-92px) rotate(-8deg) scale(.9); }
+.t-welcome-pnl-cards .t-welcome-pnl-hero { transform: translateX(92px) rotate(8deg) scale(.9); }
+.t-welcome-pnl-cards .t-welcome-pnl-classic { z-index: 1; top: 0; width: 132px; height: 132px; margin-left: -66px; }
+.t-welcome-pnl .t-welcome-caption { display: inline-flex; align-items: center; gap: 6px; }
+.t-welcome-art--examples { gap: 10px; }.t-welcome-art--examples .t-welcome-slugs { gap: 6px 8px; }
+.t-welcome-art--examples .t-welcome-slug--small { padding: 5px 12px 5px 5px; }
+@media (max-width: 480px) { .t-welcome-art--examples { height: auto; min-height: 190px; } }
+.t-welcome-slugs--grid { width: 100%; grid-template-columns: 1fr 1fr; justify-items: center; }
+.t-welcome-slugs--grid .t-welcome-slug--small { animation: none; }
+.t-welcome-swap { animation: t-swap-in .45s ease-out both !important; }
+.t-welcome-slugs--grid > .t-welcome-swap:first-child { animation: t-swap-in .45s ease-out both, t-pulse-ring 1.8s .6s ease-out infinite !important; }
+.t-welcome-slug--lead { gap: 10px; padding: 9px 14px 9px 9px; font-size: 17px; animation: t-pulse-ring 1.8s .6s ease-out infinite; }
+.t-welcome-slug--lead .t-welcome-avatar { width: 28px; height: 28px; }
+@keyframes t-swap-in { from { opacity: 0; transform: translateY(4px) scale(.97); } }
+@media (max-width: 480px) { .t-welcome-slugs--grid { grid-template-columns: auto; } }
+.t-welcome-slugs--grid { gap: 8px 6px; }
+.t-welcome-slugs--grid .t-welcome-slug--small { white-space: nowrap; font-size: 12.5px; max-width: 100%; }

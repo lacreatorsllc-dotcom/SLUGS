@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import { BRAND } from '../config'
 import ShillPopup from '../components/ShillPopup'
 import { useAuthSession } from '../lib/auth-context'
 import { signInCodeFrom, signInMessage } from '../lib/auth'
@@ -126,6 +127,9 @@ export default function Invite() {
         <RaffleLink icon={<XMark />} label="Shill us on X" onClick={() => setShill(true)} />
         <RaffleLink icon={<span className="flame"><Flame /></span>} label="Burn our token" href="/burn" internal />
       </div>
+      <p className="invite-sub invite-community">
+        While you wait, hang out with us in the <a href={BRAND.telegram} target="_blank" rel="noreferrer">SLUGS Telegram</a>.
+      </p>
       {shill && <ShillPopup onClose={() => setShill(false)} />}
     </AuthLayout>
   )

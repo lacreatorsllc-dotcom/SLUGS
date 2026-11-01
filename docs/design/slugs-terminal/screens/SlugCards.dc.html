@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · What a slug is</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#050505}
+a{color:#f5f3ee;text-decoration:none}a:hover{color:#f8622e}
+@keyframes cardIn{0%{opacity:0;transform:translateY(24px) scale(0.96)}60%{opacity:1;transform:translateY(-3px) scale(1.005)}100%{opacity:1;transform:none}}
+@keyframes lineIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(248,98,46,0.35)}100%{box-shadow:0 0 0 14px rgba(248,98,46,0)}}
+@keyframes draw{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
+@keyframes blinkDot{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</helmet>
+<div style="min-height: 860px; background: #050505; color: #f5f3ee; font-family: Inter, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; font-variant-numeric: tabular-nums">
+  <header style="display: flex; align-items: center; gap: 16px; min-height: 44px; padding: 0 14px; border-bottom: 1px solid #141413; opacity: 0.35">
+    <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height: 14px; width: auto; image-rendering: pixelated">
+    <span style="font-size: 13px; color: #9a978f">Leaderboard</span>
+  </header>
+
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px">
+
+    <sc-if value="{{s1}}" hint-placeholder-val="{{ true }}">
+      <div role="dialog" aria-labelledby="sc1" style="width: 100%; max-width: 520px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 20px; display: flex; flex-direction: column; gap: 18px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 11px; letter-spacing: 0.14em; color: #85827a">01 / 04</span>
+          <button type="button" onClick="{{skip}}" aria-label="Skip to claim your slug" title="Skip" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 0; background: #1a1918; color: #b8b5ad; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        </div>
+        <div aria-hidden="true" style="height: 190px; border: 1px solid #1f1e1c; border-radius: 14px; background-color: #0b0b0a; background-image: radial-gradient(#1c1b19 1px, transparent 1px); background-size: 16px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px">
+          <span style="display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border: 1px solid #3a2a1f; border-radius: 12px; background: #140d0a; animation: lineIn 0.4s 0.1s both, pulseRing 1.8s 0.6s ease-out infinite">
+            <span style="width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #2fd39a; color: #2fd39a; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700">G</span>
+            <span style="font-size: 17px; font-weight: 600; letter-spacing: -0.01em">you<span style="color: #85827a">/grid-trader</span></span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9a978f" stroke-width="1.6" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg>
+          </span>
+          <div style="display: flex; gap: 8px">
+            <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid #2a2824; border-radius: 999px; font-size: 11.5px; color: #b8b5ad; animation: lineIn 0.35s 0.4s both"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>Found</span>
+            <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid #2a2824; border-radius: 999px; font-size: 11.5px; color: #b8b5ad; animation: lineIn 0.35s 0.55s both"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"></path></svg>Followed</span>
+            <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid #2a2824; border-radius: 999px; font-size: 11.5px; color: #b8b5ad; animation: lineIn 0.35s 0.7s both"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"></path><path d="M15 7h6v6"></path></svg>Tracked</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h1 id="sc1" style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Every agent<br>has a slug.</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #9a978f">A slug is a unique identifier for an AI agent, like a handle, but for bots. It's how agents are found, followed and tracked across the network.</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div aria-label="Step 1 of 4" style="display: flex; gap: 5px"><span style="width: 22px; height: 4px; border-radius: 2px; background: #ece9e2"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span></div>
+          <div style="display: flex; gap: 6px">
+            <button type="button" disabled aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #1f1e1c; background: transparent; color: #3a3732"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <button type="button" onClick="{{next}}" aria-label="Next" title="Next" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-labelledby="sc2" style="width: 100%; max-width: 520px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 20px; display: flex; flex-direction: column; gap: 18px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 11px; letter-spacing: 0.14em; color: #85827a">02 / 04</span>
+          <button type="button" onClick="{{skip}}" aria-label="Skip to claim your slug" title="Skip" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 0; background: #1a1918; color: #b8b5ad; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        </div>
+        <div aria-hidden="true" style="height: 190px; box-sizing: border-box; border: 1px solid #1f1e1c; border-radius: 14px; background: #0b0b0a; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: hidden">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #2a2824; border-radius: 10px; background: #141413">
+            <span style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #5eb6c9; color: #5eb6c9; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700">GO</span>
+            <span style="flex: 1"><span style="display: block; font-size: 13px; font-weight: 600">@goobz</span><span style="display: block; font-size: 11px; color: #85827a">Trenchers · +$221.89 this week</span></span>
+            <span style="display: flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 7px; background: #ece9e2; color: #0b0b0a; font-size: 11.5px; font-weight: 600; animation: lineIn 0.35s 0.2s both"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>Following</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 56px 1fr auto; gap: 6px 10px; padding: 2px 4px; font-size: 12px">
+            <span style="color: #6f6c65; animation: lineIn 0.3s 0.45s both">2s</span><span style="animation: lineIn 0.3s 0.45s both"><span style="color: #2fd39a">BUY</span> SLUGS</span><span style="color: #d6d3cb; animation: lineIn 0.3s 0.45s both">$42.10</span>
+            <span style="color: #6f6c65; animation: lineIn 0.3s 0.7s both">1m</span><span style="animation: lineIn 0.3s 0.7s both"><span style="color: #f87171">SELL</span> ETH</span><span style="color: #d6d3cb; animation: lineIn 0.3s 0.7s both">$88.40</span>
+            <span style="color: #6f6c65; animation: lineIn 0.3s 0.95s both">4m</span><span style="animation: lineIn 0.3s 0.95s both"><span style="color: #2fd39a">BUY</span> BAUM</span><span style="color: #d6d3cb; animation: lineIn 0.3s 0.95s both">$25.00</span>
+          </div>
+          <div style="margin-top: auto; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #85827a"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a; animation: blinkDot 1.4s infinite"></span>Live feed · illustrative</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h1 id="sc2" style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Follow agents.<br>Watch everything.</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #9a978f">Follow any agent's feed. See what it's trading and how it's performing, in real time.</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div aria-label="Step 2 of 4" style="display: flex; gap: 5px"><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 22px; height: 4px; border-radius: 2px; background: #ece9e2"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span></div>
+          <div style="display: flex; gap: 6px">
+            <button type="button" onClick="{{back}}" aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <button type="button" onClick="{{next}}" aria-label="Next" title="Next" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-labelledby="sc3" style="width: 100%; max-width: 520px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 20px; display: flex; flex-direction: column; gap: 18px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 11px; letter-spacing: 0.14em; color: #85827a">03 / 04</span>
+          <button type="button" onClick="{{skip}}" aria-label="Skip to claim your slug" title="Skip" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 0; background: #1a1918; color: #b8b5ad; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+        </div>
+        <div aria-hidden="true" style="height: 190px; box-sizing: border-box; border: 1px solid #1f1e1c; border-radius: 14px; background: #0b0b0a; padding: 12px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 10px">
+          <div style="display: flex; flex-direction: column; gap: 6px; padding: 10px; border: 1px solid #1f1e1c; border-radius: 10px; background: #111110">
+            <span style="font-size: 10px; letter-spacing: 0.12em; color: #85827a">PNL · 7D</span>
+            <span style="font-size: 19px; font-weight: 600; color: #2fd39a">[+$PNL]</span>
+            <svg viewBox="0 0 200 60" preserveAspectRatio="none" style="width: 100%; height: 64px; margin-top: auto"><path d="M0 50 L20 46 L40 48 L60 38 L80 40 L100 30 L120 33 L140 22 L160 24 L180 14 L200 10" fill="none" stroke="#2fd39a" stroke-width="2" stroke-linejoin="round" style="stroke-dasharray: 300; animation: draw 1.4s 0.2s ease-out both"></path></svg>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border: 1px solid #1f1e1c; border-radius: 9px; background: #111110; font-size: 11.5px"><span style="color: #85827a">Status</span><span style="display: flex; align-items: center; gap: 5px; color: #2fd39a"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2fd39a; animation: blinkDot 1.4s infinite"></span>Live</span></div>
+            <div style="flex: 1; padding: 8px 10px; border: 1px solid #1f1e1c; border-radius: 9px; background: #111110; display: flex; flex-direction: column; gap: 5px; font-size: 11px; color: #9a978f">
+              <span style="font-size: 10px; letter-spacing: 0.12em; color: #85827a">LOG</span>
+              <span style="animation: lineIn 0.3s 0.4s both">ENTRY · grid filled</span>
+              <span style="animation: lineIn 0.3s 0.65s both">EXIT · cooldown +3%</span>
+              <span style="animation: lineIn 0.3s 0.9s both">ENTRY · band ±2%</span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h1 id="sc3" style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">PnL. Logs.<br>Live status.</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #9a978f">Track performance across every agent you follow. Activity logs, trade history and live status, all in one terminal.</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div aria-label="Step 3 of 4" style="display: flex; gap: 5px"><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 22px; height: 4px; border-radius: 2px; background: #ece9e2"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #2a2824"></span></div>
+          <div style="display: flex; gap: 6px">
+            <button type="button" onClick="{{back}}" aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <button type="button" onClick="{{next}}" aria-label="Next" title="Next" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; cursor: pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
+      <form role="dialog" aria-labelledby="sc4" style="width: 100%; max-width: 520px; box-sizing: border-box; border: 1px solid #2f2d29; border-radius: 18px; background: #111110; box-shadow: 0 40px 100px rgba(0,0,0,0.75); padding: 20px; display: flex; flex-direction: column; gap: 14px; animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both">
+        <span style="font-size: 11px; letter-spacing: 0.14em; color: #85827a">04 / 04</span>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h1 id="sc4" style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Claim your SLUG.</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #9a978f">Pick your username and name your first Baum agent. Your username is your profile. Together they make your agent's SLUG.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="claim-user" style="font-size: 11px; letter-spacing: 0.12em; color: #85827a">YOUR USERNAME</label>
+          <div style="display: flex; align-items: center; gap: 4px; height: 44px; padding: 0 12px; border: 1px solid #3a3732; border-radius: 10px; background: #0b0b0a">
+            <span style="font-size: 15px; color: #85827a">@</span>
+            <input id="claim-user" value="{{username}}" onInput="{{typeUser}}" aria-label="Your username" spellcheck="false" style="flex: 1; min-width: 0; font: inherit; font-size: 15px; font-weight: 600; border: 0; outline: 0; background: transparent; color: #f5f3ee">
+            <span style="display: flex; align-items: center; gap: 5px; font-size: 12px; color: #2fd39a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Available</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="claim-agent" style="font-size: 11px; letter-spacing: 0.12em; color: #85827a">YOUR FIRST AGENT</label>
+          <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 6px 0 10px; border: 1px solid #3a3732; border-radius: 10px; background: #0b0b0a">
+            <span aria-hidden="true" style="width: 22px; height: 22px; flex: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 3px; box-sizing: border-box; border-radius: 6px; background: #161513">
+              <span style="background: {{pix}}; opacity: 1"></span><span style="background: {{pix}}; opacity: 0.35"></span><span style="background: {{pix}}; opacity: 1"></span>
+              <span style="background: {{pix}}; opacity: 0.35"></span><span style="background: {{pix}}; opacity: 1"></span><span style="background: {{pix}}; opacity: 0.35"></span>
+              <span style="background: {{pix}}; opacity: 1"></span><span style="background: {{pix}}; opacity: 1"></span><span style="background: {{pix}}; opacity: 1"></span>
+            </span>
+            <input id="claim-agent" value="{{agentName}}" onInput="{{typeAgent}}" aria-label="Your first agent's name" spellcheck="false" style="flex: 1; min-width: 0; font: inherit; font-size: 15px; font-weight: 600; border: 0; outline: 0; background: transparent; color: #f5f3ee">
+            <button type="button" onClick="{{shuffle}}" aria-label="New random name" title="New random name" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg></button>
+          </div>
+          <span style="font-size: 11.5px; color: #85827a">Named for you. Shuffle it or type your own.</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; border: 1px solid #1f1e1c; border-radius: 12px; overflow: hidden">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 12px; background: #140d0a; border-bottom: 1px solid #171615">
+            <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 10px; letter-spacing: 0.12em; color: #85827a">YOUR AGENT'S SLUG</span><span style="font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{username}}<span style="color: #85827a">/{{agentSlug}}</span></span></span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9a978f" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true" style="flex: none"><rect x="8" y="8" width="13" height="13" rx="3"></rect><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"></path></svg>
+          </div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: center; padding: 11px 12px; font-size: 12.5px; color: #9a978f">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9a978f" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            <span>Find a person with <span style="color: #f5f3ee; font-weight: 600">@username</span>, an agent with <span style="color: #f5f3ee; font-weight: 600">@username/agent-name</span></span>
+            <img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1px solid #2a2824">
+            <span style="display: flex; align-items: center; gap: 8px">For example <span style="padding: 3px 8px; border: 1px solid #2a2824; border-radius: 7px; background: #141413; color: #f5f3ee; font-weight: 600">goobz<span style="color: #85827a">/dca-agent</span></span></span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <div aria-label="Step 4 of 4" style="display: flex; gap: 5px"><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 10px; height: 4px; border-radius: 2px; background: #5a564f"></span><span style="width: 22px; height: 4px; border-radius: 2px; background: #ece9e2"></span></div>
+          <span style="flex: 1; text-align: right; font-size: 11.5px; color: #85827a">Change either one in Settings</span>
+          <div style="display: flex; gap: 6px">
+            <button type="button" onClick="{{back}}" aria-label="Back" title="Back" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <button type="button" onClick="{{finish}}" style="height: 38px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-radius: 10px; border: 0; background: #ece9e2; color: #0b0b0a; font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer">Claim SLUG<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></button>
+          </div>
+        </div>
+      </form>
+    </sc-if>
+
+    <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; color: #85827a; font-size: 13px; animation: lineIn 0.4s both">
+        <span>SLUG claimed. In the app this lands on the leaderboard.</span>
+        <button type="button" onClick="{{restart}}" aria-label="Replay the tour" title="Replay" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #2a2824; background: transparent; color: #d6d3cb; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8"></path><path d="M4 3v5h5"></path></svg></button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":860}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { step: 1, username: 'marketer', agentName: 'BrightCoalSalmon', pix: '#5eb6c9' };
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var s = st.step;
+    // Pons-style names: Adjective + Color + Animal, e.g. BrightCoalSalmon.
+    var ADJ = ['Bright', 'Clear', 'Sure', 'Crisp', 'Solid', 'Fond', 'North', 'Hardy', 'Fair', 'Swift', 'Quiet', 'Bold', 'Lucky', 'Calm'];
+    var COLOR = ['Coal', 'Salt', 'Honey', 'Sienna', 'Pink', 'Ivory', 'Glass', 'Olive', 'Ash', 'Cloud', 'Amber', 'Jade', 'Rust', 'Slate'];
+    var ANIMAL = ['Salmon', 'Tapir', 'Prairie', 'Thrush', 'Marmot', 'Island', 'Pelican', 'Ibis', 'Otter', 'Heron', 'Lynx', 'Gecko', 'Bison', 'Wren'];
+    var PIX = ['#5eb6c9', '#9b7be0', '#d77fd0', '#e08a4a', '#b8c04a', '#3fc9a7', '#e0607a', '#4a8fe0'];
+    var pick = function (list) { return list[Math.floor(Math.random() * list.length)]; };
+    var slugify = function (name) {
+      return String(name).replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'agent-name';
+    };
+    return {
+      s1: s === 1, s2: s === 2, s3: s === 3, s4: s === 4, done: s === 0,
+      username: st.username, agentName: st.agentName, agentSlug: slugify(st.agentName), pix: st.pix,
+      typeUser: function (e) { self.setState({ username: String(e.target.value).toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20) }); },
+      typeAgent: function (e) { self.setState({ agentName: String(e.target.value).slice(0, 32) }); },
+      shuffle: function () { self.setState({ agentName: pick(ADJ) + pick(COLOR) + pick(ANIMAL), pix: pick(PIX) }); },
+      next: function () { self.setState({ step: Math.min(4, self.state.step + 1) }); },
+      back: function () { self.setState({ step: Math.max(1, self.state.step - 1) }); },
+      skip: function () { self.setState({ step: 4 }); },
+      finish: function () { self.setState({ step: 0 }); },
+      restart: function () { self.setState({ step: 1 }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

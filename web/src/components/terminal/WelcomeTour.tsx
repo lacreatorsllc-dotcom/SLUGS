@@ -1,10 +1,10 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
-import { BAUM } from '../../config'
+import { Link, useLocation } from 'react-router-dom'
+import { BAUM, BRAND } from '../../config'
 import { useAuthSession } from '../../lib/auth-context'
 import { baumLinks } from '../../lib/baum'
 import { useTerminalData } from '../../lib/terminal-context'
-import { hasSeenWelcome, markWelcomeSeen, welcomeKey } from '../../lib/welcome'
+import { hasSeenWelcome, markWelcomeSeen, previewsNewUserCards, welcomeKey } from '../../lib/welcome'
 import Icon from './Icon'
 import { CopyButton, IconButton } from './ui'
 
@@ -23,9 +23,9 @@ export default function WelcomeTour() {
 
 type Step = { title: ReactNode; body: ReactNode; art: ReactNode }
 
-// The example profile on the first two cards: goobz, with their Baum picture from the board
+// The example profile on the first two cards: Goobz (username goobz), with their Baum picture from the board
 // when it has loaded.
-const EXAMPLE = { name: 'goobz', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
+const EXAMPLE = { name: 'Goobz', username: 'goobz', agent: 'dca-bot', strategy: 'Spot traders', wallet: '0xf6414c58f65b106232871c0d566c417054ef6b92' }
 
 // A Baum profile picture: the one Baum shares at sign-in, else the one on the board, else
 // Baum's avatar for the wallet, else initials.
@@ -37,6 +37,94 @@ function Picture({ wallet, url, initials }: { wallet?: string; url?: string | nu
   return src && broken !== src
     ? <img className="t-welcome-avatar t-welcome-picture" src={src} alt="" onError={() => setBroken(src)} />
     : <span className="t-welcome-avatar">{initials}</span>
+}
+
+/** A SLUG as the tour shows it: the username bright, then /agent in gray. */
+function SlugText({ username, agent }: { username: string; agent?: string | null }) {
+  return <span>{username}{agent && <span className="t-welcome-slug-agent">/{agent}</span>}</span>
+}
+
+/** The part of the person's first agent's SLUG after their username: sniper-bot of goobz-sniper-bot. */
+function firstAgentPart(username: string, agents: { name: string; slug: string | null }[] | undefined) {
+  const agent = agents?.[0]
+  if (!agent) return null
+  if (agent.slug?.startsWith(`${username}-`)) return agent.slug.slice(username.length + 1)
+  return agent.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || null
+}
+
+// Bots people can create, named for what they do. Each can carry its own example
+// username and Baum picture; until then they show as your-name with no picture.
+type BotExample = { agent: string; username?: string; picture?: string }
+const BOT_EXAMPLES: BotExample[] = [
+  { agent: 'sniper-bot' }, { agent: 'dca-bot' }, { agent: 'scalper-bot' }, { agent: 'momentum-bot' },
+  { agent: 'grid-bot' }, { agent: 'copy-trader' }, { agent: 'spot-trader' },
+]
+
+/** One example bot after another (held still for reduced motion). */
+function ExampleSlug() {
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setInterval(() => setIndex((value) => (value + 1) % BOT_EXAMPLES.length), 1600)
+    return () => window.clearInterval(timer)
+  }, [])
+  const example = BOT_EXAMPLES[index]
+  return <>
+    {example.picture && <img className="t-welcome-avatar t-welcome-picture" src={example.picture} alt="" />}
+    <SlugText username={example.username ?? 'your-name'} agent={example.agent} />
+  </>
+}
+
+// The first card's examples: SLUGS people and the bots they run. goobz shows alone
+// first, then opens into a 2x2 grid where goobz stays put and the other three slots
+// take turns cycling through everyone else.
+type Example = { username: string; agent: string; picture?: string }
+const OTHERS: Example[] = [
+  { username: 'brokentyrant', agent: 'sniper-bot', picture: 'welcome/brokentyrant.jpg' },
+  { username: 'brazylord', agent: 'gold-trader', picture: 'welcome/brazylord.jpg' },
+  { username: 'bagcalls', agent: 'hodl-bot', picture: 'welcome/bagcalls.jpg' },
+  { username: 'meechi', agent: 'market-maker', picture: 'welcome/meechi.jpg' },
+  { username: 'fwaz', agent: 'dev-bot', picture: 'welcome/fwaz.jpg' },
+  { username: '12g8ge', agent: 'mev-bot', picture: 'welcome/12g8ge.jpg' },
+]
+const INTRO_MS = 1800
+const SWAP_MS = 3000
+
+function ExampleChip({ example, className = '', delay }: { example: Example; className?: string; delay?: number }) {
+  return <span className={`t-welcome-slug t-welcome-slug--small ${className}`} style={delay ? { animationDelay: `${delay}ms` } : undefined}>
+    {example.picture ? <Picture url={`${import.meta.env.BASE_URL}${example.picture}`} initials={example.username.slice(0, 2).toUpperCase()} /> : <ExamplePicture />}
+    <SlugText username={example.username} agent={example.agent} />
+  </span>
+}
+
+/** goobz alone, then four at a time with three slots rotating (still for reduced motion). */
+function ExampleBots() {
+  const still = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  const [grid, setGrid] = useState(still)
+  const [paused, setPaused] = useState(false)
+  // The three rotating slots, and the next example to bring in. A window of three over
+  // six never shows anyone twice.
+  const [rotation, setRotation] = useState({ slots: [0, 1, 2], next: 3, turn: 0 })
+  useEffect(() => {
+    if (still) return
+    const timer = window.setTimeout(() => setGrid(true), INTRO_MS)
+    return () => window.clearTimeout(timer)
+  }, [still])
+  useEffect(() => {
+    if (still || !grid || paused) return
+    const timer = window.setInterval(() => setRotation(({ slots, next, turn }) => {
+      const updated = [...slots]
+      updated[turn % 3] = next % OTHERS.length
+      return { slots: updated, next: next + 1, turn: turn + 1 }
+    }), SWAP_MS)
+    return () => window.clearInterval(timer)
+  }, [still, grid, paused])
+  const goobz = { username: EXAMPLE.username, agent: EXAMPLE.agent }
+  if (!grid) return <span className="t-welcome-slugs t-welcome-slugs--one"><ExampleChip example={goobz} className="t-welcome-slug--lead" /></span>
+  return <span className="t-welcome-slugs t-welcome-slugs--grid" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <ExampleChip example={goobz} className="t-welcome-swap" />
+    {rotation.slots.map((index, slot) => <ExampleChip key={`${slot}-${OTHERS[index].username}`} example={OTHERS[index]} className="t-welcome-swap" delay={rotation.turn ? undefined : 150 * (slot + 1)} />)}
+  </span>
 }
 
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
@@ -60,13 +148,16 @@ function Tour({ onDone }: { onDone: () => void }) {
     return () => { dialog?.close(); document.body.style.overflow = previousOverflow }
   }, [])
 
-  const slug = user?.username ? `@${user.username}` : null
+  // A preview account sees the tour as a new user would: the last card asks them to claim a slug.
+  const username = user?.username && !previewsNewUserCards(user) ? user.username : null
+  const ownAgent = username ? firstAgentPart(username, user?.agents) : null
+  const slug = username ? (ownAgent ? `${username}/${ownAgent}` : username) : null
   const steps: Step[] = [
     {
       title: <>Every agent<br />has a slug.</>,
       body: 'A slug is an identifier for an AI agent, like a handle, but for bots. It’s how agents are found, followed and tracked across the network.',
-      art: <div className="t-welcome-art t-welcome-art--center">
-        <span className="t-welcome-slug"><ExamplePicture />@{EXAMPLE.name}<Icon name="copy" size={15} /></span>
+      art: <div className="t-welcome-art t-welcome-art--center t-welcome-art--examples">
+        <ExampleBots />
         <span className="t-welcome-tags"><span><Icon name="search" size={12} />Found</span><span><Icon name="user" size={12} />Followed</span><span><Icon name="chart" size={12} />Tracked</span></span>
       </div>,
     },
@@ -74,7 +165,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       title: <>Follow agents.<br />Watch everything.</>,
       body: 'Follow any agent’s feed. See what it’s trading and how it’s performing, in real time.',
       art: <div className="t-welcome-art">
-        <span className="t-welcome-agent"><ExamplePicture /><span><strong>{EXAMPLE.name}</strong><small>Creators · on Baum</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
+        <span className="t-welcome-agent"><ExamplePicture /><span><strong><SlugText username={EXAMPLE.username} agent={EXAMPLE.agent} /></strong><small>{EXAMPLE.strategy} · by {EXAMPLE.name}</small></span><span className="t-welcome-following"><Icon name="check" size={12} />Following</span></span>
         <span className="t-welcome-feed"><span>2s</span><span><b className="t-positive">BUY</b> SLUGS</span><span>1m</span><span><b className="t-negative">SELL</b> ETH</span><span>4m</span><span><b className="t-positive">BUY</b> BAUM</span></span>
         <small className="t-welcome-caption"><span className="t-dot t-dot--online" />Example feed</small>
       </div>,
@@ -88,30 +179,45 @@ function Tour({ onDone }: { onDone: () => void }) {
       </div>,
     },
     {
-      title: <>Your agent.<br />Your strategy.</>,
-      body: 'SLUGS runs on Baum, which connects your agent to live markets and trades on chain. Through Baum it can trade on its own, buy the tokens you pick on a schedule and copy the best traders. What you do with your agent is up to you. Every strategy is different, and that’s what makes it fun. Good luck.',
-      art: <div className="t-welcome-art t-welcome-art--center">
-        <span className="t-welcome-tags t-welcome-powers"><span><Icon name="chart" size={12} />Live markets</span><span><Icon name="trade" size={12} />Trades on chain</span><span><Icon name="refresh" size={12} />Buys on a schedule</span><span><Icon name="user" size={12} />Copies top traders</span></span>
-        <small className="t-welcome-caption">Through Baum</small>
+      title: <>Share your<br />PnL.</>,
+      body: 'Turn any agent’s PnL into a card with its profile picture. Pick Classic, Spotlight or Hero, then post it on X or download it. Tap the chart icon on your profile or on any agent’s page.',
+      art: <div className="t-welcome-art t-welcome-art--center t-welcome-pnl">
+        <span className="t-welcome-pnl-cards">
+          {(['spotlight', 'classic', 'hero'] as const).map((style) => <img key={style} className={`t-welcome-pnl-${style}`} src={`${import.meta.env.BASE_URL}welcome/pnl-${style}.jpg`} alt="" width="400" height="400" />)}
+        </span>
+        <small className="t-welcome-caption"><Icon name="x" size={11} />Post on X · Download PNG · Example cards</small>
       </div>,
     },
-    slug
+    {
+      title: <>Your agent.<br />Your strategy.</>,
+      body: 'SLUGS plugs your agent into live markets, on-chain trading and advanced analytics. It trades on its own, buys the tokens you pick on a schedule and copy trades other agents. Deploy it here or in Baum on Telegram: it’s one account, so your agents, wallet and PnL show up in both. What you do with it is up to you. Every strategy is different, and that’s what makes it fun. Good luck.',
+      art: <div className="t-welcome-art t-welcome-art--center">
+        <span className="t-welcome-tags t-welcome-powers"><span><Icon name="chart" size={12} />Live markets</span><span><Icon name="trade" size={12} />Trades on chain</span><span><Icon name="refresh" size={12} />Buys on a schedule</span><span><Icon name="user" size={12} />Copy trades agents</span><span><Icon name="compare" size={12} />Advanced analytics</span></span>
+        <small className="t-welcome-caption">SLUGS + Baum · one account, everything synced</small>
+      </div>,
+    },
+    username && slug
       ? {
           title: <>This is<br />your slug.</>,
-          body: 'Your slug is your identity in the agent network. People find you, follow you and track your agents by it. It’s your Baum username.',
+          body: 'Your slug is your identity in the agent network. People find you, follow you and track your agents by it. Change it anytime on your profile here, or in Telegram with Baum.',
           art: <div className="t-welcome-art t-welcome-art--center">
-            <span className="t-welcome-slug t-welcome-slug--own"><OwnPicture initials={user!.username!.slice(0, 2).toUpperCase()} />{slug}<CopyButton value={slug} label={`Copy ${slug}`} /></span>
-            <span className="t-welcome-tips"><span><Icon name="search" size={13} />Anyone can find you with ⌘K</span><span><Icon name="copy" size={13} />Anyone can copy your @slug in one click</span></span>
+            <span className="t-welcome-slug t-welcome-slug--own"><OwnPicture initials={username.slice(0, 2).toUpperCase()} /><SlugText username={username} agent={ownAgent} /><CopyButton value={slug} label={`Copy ${slug}`} /></span>
+            <span className="t-welcome-tips"><span><Icon name="search" size={13} />Anyone can find you with ⌘K</span><span><Icon name="copy" size={13} />Anyone can copy your SLUG in one click</span></span>
           </div>,
         }
       : {
           title: <>Claim<br />your slug.</>,
           body: guest
-            ? 'Your slug is your username on Baum. Make your account in Telegram before your invite runs out and your slug shows up here.'
-            : 'Your slug is your username on Baum. Set one in Telegram and it shows up here, where people find, follow and track you by it.',
+            ? 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/dca-bot. Make your Baum account in Telegram before your invite runs out to claim yours.'
+            : 'Your slug is your agent’s identifier: your username, then what the agent does, like goobz/sniper-bot. Most are named for their job: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader or spot-trader. Pick your username right here on SLUGS, or tell Baum in Telegram.',
           art: <div className="t-welcome-art t-welcome-art--center">
-            <span className="t-welcome-slug t-welcome-slug--empty">@<span>your_slug</span></span>
-            <a className="t-submit t-submit--secondary t-welcome-baum" href={guest ? baumLinks.join(guest.code) : `https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />{guest ? 'Create my account on Baum' : 'Set my username on Baum'}</a>
+            <span className="t-welcome-slug t-welcome-slug--empty" aria-label="Example bots: sniper-bot, dca-bot, scalper-bot, momentum-bot, grid-bot, copy-trader, spot-trader"><ExampleSlug /></span>
+            {guest
+              ? <a className="t-submit t-submit--secondary t-welcome-baum" href={baumLinks.join(guest.code)} target="_blank" rel="noreferrer"><Icon name="telegram" size={14} />Create my account on Baum</a>
+              : <span className="t-welcome-claim">
+                <Link className="t-submit t-welcome-baum" to="/profile?edit=username" onClick={onDone}><Icon name="user" size={14} />Set my username here</Link>
+                <a className="t-welcome-or" href={`https://t.me/${BAUM.bot}`} target="_blank" rel="noreferrer"><Icon name="telegram" size={13} />or set it in Telegram</a>
+              </span>}
           </div>,
         },
   ]
@@ -128,6 +234,7 @@ function Tour({ onDone }: { onDone: () => void }) {
       <div className="t-welcome-text">
         <h2 id={titleId}>{current.title}</h2>
         <p>{current.body}</p>
+        {last && <p className="t-welcome-community"><Icon name="telegram" size={13} />Come say hi in the <a href={BRAND.telegram} target="_blank" rel="noreferrer">SLUGS Telegram</a>.</p>}
       </div>
       <div className="t-welcome-footer">
         <span className="t-welcome-progress" aria-label={`Step ${step + 1} of ${steps.length}`}>{steps.map((_, index) => <span key={index} className={index === step ? 'on' : index < step ? 'done' : ''} />)}</span>
