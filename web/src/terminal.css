@@ -326,3 +326,5 @@
 .t-welcome-art--examples { gap: 10px; }.t-welcome-art--examples .t-welcome-slugs { gap: 6px 8px; }
 .t-welcome-art--examples .t-welcome-slug--small { padding: 5px 12px 5px 5px; }
 @media (max-width: 480px) { .t-welcome-art--examples { height: auto; min-height: 190px; } }
+.t-welcome-art--examples { height: auto; min-height: 190px; }
+.t-welcome-slugs > :last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; }

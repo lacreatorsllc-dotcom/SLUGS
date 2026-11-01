@@ -83,6 +83,7 @@ const CARD_ONE: { username: string; agent: string; picture?: string }[] = [
   { username: 'meechi', agent: 'market-maker', picture: 'welcome/meechi.jpg' },
   { username: 'fwaz', agent: 'dev-bot', picture: 'welcome/fwaz.jpg' },
   { username: '12g8ge', agent: 'mev-bot', picture: 'welcome/12g8ge.jpg' },
+  { username: 'bagcalls', agent: 'hodl-bot', picture: 'welcome/bagcalls.jpg' },
 ]
 
 const ExamplePicture = () => <Picture wallet={EXAMPLE.wallet} initials="GO" />
