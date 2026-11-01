@@ -3,9 +3,10 @@
 // their own wallet to sign. The buy aims at 3,300,000 SLUGS so slippage can't leave
 // it short of the 3,000,000 burned; what's over stays in their wallet.
 //
-// One fee, 1% of what's paid: SLUGS' 0.1% (SLUGS_FEE_RECIPIENT, set in Vercel), and
-// Baum keeps the rest after whatever the swap API charges. The curve's own 1% is the
-// market price, shown on its own line.
+// One fee, 1% of what's paid: SLUGS' 0.1%, and Baum keeps the rest after whatever the
+// swap API charges. SLUGS' 0.1% goes to SLUGS_FEE_RECIPIENT when that's set in Vercel,
+// and otherwise to SLUGS' fee wallet, which Baum makes and keeps in the key holder's
+// account ("SLUGS fees"). The curve's own 1% is the market price, shown on its own line.
 //
 //   POST { payWith: 'ETH' | 'USDG' | 'USDX', address }
 
@@ -24,7 +25,7 @@ const SLUGS_FEE_BPS = 10
 
 function slugsFee() {
   const recipient = process.env.SLUGS_FEE_RECIPIENT
-  return recipient ? { recipient, bps: SLUGS_FEE_BPS } : undefined
+  return recipient ? { recipient, bps: SLUGS_FEE_BPS } : { bps: SLUGS_FEE_BPS }
 }
 
 export default async function handler(req, res) {
