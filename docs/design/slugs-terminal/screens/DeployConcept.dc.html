@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Deploy concept</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+a{color:#f5f3ee;text-decoration:none}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid #b8b5ad;outline-offset:2px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+.dim{color:#85827a}
+.pill{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;border:1px solid #2a2824;background:transparent;color:#d6d3cb;font-size:12.5px}
+.pill:hover{border-color:#5a564f;color:#f5f3ee}
+.pill.on{background:#262522;border-color:#5a564f;color:#f5f3ee}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:12px;border:1px solid #ece9e2;background:#ece9e2;color:#0b0b0a;font-size:14px;font-weight:600}
+.btn.ghost{background:transparent;color:#f5f3ee;border-color:#2a2824}
+.btn.ghost:hover{border-color:#5a564f}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step b{width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;background:#1a1918;color:#b8b5ad;border:1px solid #2a2824}
+.step.on b{background:#f8622e;border-color:#f8622e;color:#0b0b0a}
+.msg{max-width:84%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.5}
+.msg.bot{align-self:flex-start;background:#141413;border:1px solid #1f1e1c;border-bottom-left-radius:4px;color:#d6d3cb}
+.msg.you{align-self:flex-end;background:#262522;border-bottom-right-radius:4px;color:#f5f3ee}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+@keyframes pop{0%{opacity:0;transform:translateY(18px) scale(.97)}100%{opacity:1;transform:none}}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(248,98,46,.45)}70%{box-shadow:0 0 0 12px rgba(248,98,46,0)}100%{box-shadow:0 0 0 0 rgba(248,98,46,0)}}
+.chat{animation:pop .45s cubic-bezier(.2,.8,.2,1) both}
+.slugbox{animation:ring 1.8s .4s ease-out infinite}
+</style>
+</helmet>
+<div style="position:relative;min-height:1080px;background:#0b0b0a;color:#f5f3ee;font-family:Inter,-apple-system,system-ui,sans-serif;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;overflow:hidden">
+  <header style="display:flex;align-items:center;gap:16px;min-height:44px;padding:0 14px;border-bottom:1px solid #1f1e1c;background:#0a0a09">
+    <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height:14px;width:auto;image-rendering:pixelated">
+    <nav style="display:flex;gap:2px"><a style="padding:5px 10px;border-radius:7px;color:#9a978f;font-size:13px">Leaderboard</a><a style="padding:5px 10px;border-radius:7px;color:#9a978f;font-size:13px">Agents</a><a style="padding:5px 10px;border-radius:7px;color:#9a978f;font-size:13px">Vaults</a><a style="padding:5px 10px;border-radius:7px;color:#9a978f;font-size:13px">$SLUGS</a></nav>
+    <span style="flex:0 1 420px;height:30px;border:1px solid #1f1e1c;border-radius:8px;background:#111110;color:#85827a;font-size:12.5px;display:flex;align-items:center;padding:0 10px">Search slugs, profiles, CAs and wallets</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center"><span style="height:30px;padding:0 12px;border-radius:8px;background:#ece9e2;color:#0b0b0a;font-size:12.5px;font-weight:600;display:flex;align-items:center">+ Deploy a slug</span><img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover"></span>
+  </header>
+
+  <main style="flex:1;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:48px;max-width:1180px;width:100%;margin:0 auto;box-sizing:border-box;padding:56px 32px 140px">
+    <section style="display:flex;flex-direction:column;gap:22px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:11px;letter-spacing:.16em;color:#f8622e;font-weight:700">STEP 1 OF 3 · NAME IT</span>
+        <h1 style="margin:0;font-size:40px;line-height:1.08;letter-spacing:-.03em;font-weight:800">Deploy a slug.</h1>
+        <p style="margin:0;max-width:560px;font-size:15px;line-height:1.6;color:#9a978f">Name your agent for what it does. Then set it up by chat right here, or in Baum on Telegram. Same agent, same account, either way.</p>
+      </div>
+
+      <label for="deploy-name" style="font-size:12px;color:#85827a">Its SLUG</label>
+      <div class="slugbox" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid #3a2a1f;border-radius:16px;background:#140d0a">
+        <img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #2a2824">
+        <span class="mono" style="font-size:24px;color:#f5f3ee">goobz<span style="color:#85827a">/</span></span>
+        <input id="deploy-name" value="{{name}}" onInput="{{typeName}}" maxlength="24" spellcheck="false" autocomplete="off" style="flex:1;min-width:0;font:500 24px 'JetBrains Mono',ui-monospace,monospace;border:0;outline:0;background:transparent;color:#b8b5ad">
+        <button type="button" onClick="{{shuffle}}" class="pill" aria-label="Suggest another name">↻ Shuffle</button>
+      </div>
+      <div class="quick"><span class="dim" style="font-size:12px;align-self:center;margin-right:4px">Ideas</span>
+        <sc-for list="{{ideas}}" as="i" hint-placeholder-count="5"><button type="button" class="pill" onClick="{{i.pick}}" style="border-color:{{i.border}};color:{{i.color}}">{{i.name}}</button></sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px">
+        <button type="button" onClick="{{openChat}}" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:18px;border-radius:16px;border:1px solid {{chatBorder}};background:{{chatBg}};color:#f5f3ee;text-align:left">
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700">💬 Set it up in chat <span style="font-size:10px;letter-spacing:.12em;padding:2px 7px;border-radius:999px;background:#f8622e;color:#0b0b0a">HERE</span></span>
+          <span style="font-size:13px;line-height:1.5;color:#9a978f">{{name}} asks what to buy, how much and how often. About a minute.</span>
+        </button>
+        <button type="button" onClick="{{openTelegram}}" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:18px;border-radius:16px;border:1px solid {{tgBorder}};background:transparent;color:#f5f3ee;text-align:left">
+          <span style="font-size:15px;font-weight:700">✈ Set it up in Telegram</span>
+          <span style="font-size:13px;line-height:1.5;color:#9a978f">Baum opens with goobz/{{name}} filled in. It shows up here as soon as it’s made.</span>
+        </button>
+      </div>
+      <sc-if value="{{tgOpened}}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:13px;color:#2fd39a">Baum opened in Telegram with goobz/{{name}}. Your agent shows up here once you confirm there.</p></sc-if>
+    </section>
+
+    <aside style="display:flex;flex-direction:column;gap:18px;padding-top:34px">
+      <div style="display:flex;flex-direction:column;gap:14px;padding:20px;border:1px solid #1f1e1c;border-radius:16px;background:#0f0f0e">
+        <span style="font-size:11px;letter-spacing:.14em;color:#6f6c65">HOW IT WORKS</span>
+        <div class="step on"><b>1</b><span><strong style="display:block;font-size:14px">Name it</strong><span style="font-size:12.5px;color:#9a978f">For what it does: dca-bot, hodl-bot, sniper-bot.</span></span></div>
+        <div class="step" style="{{s2}}"><b style="{{b2}}">2</b><span><strong style="display:block;font-size:14px">Tell it what to trade</strong><span style="font-size:12.5px;color:#9a978f">Tokens, how much each time, how often.</span></span></div>
+        <div class="step" style="{{s3}}"><b style="{{b3}}">3</b><span><strong style="display:block;font-size:14px">Fund it</strong><span style="font-size:12.5px;color:#9a978f">It gets its own wallet and trades only after you fund it.</span></span></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border:1px solid #3a2a1f;border-radius:14px;background:rgba(248,98,46,.06);font-size:12.5px;line-height:1.55;color:#b8b5ad">
+        <span style="display:flex;gap:3px;flex:none"><b style="width:18px;height:18px;border-radius:5px;background:#ece9e2;color:#0b0b0a;font-size:10px;display:flex;align-items:center;justify-content:center">S</b><b style="width:18px;height:18px;border-radius:5px;background:#ece9e2;color:#0b0b0a;font-size:10px;display:flex;align-items:center;justify-content:center">B</b></span>
+        SLUGS and Baum are one account. An agent made here shows in Telegram, and the other way round.
+      </div>
+    </aside>
+  </main>
+
+  <sc-if value="{{chatOpen}}" hint-placeholder-val="{{ true }}">
+    <div class="chat" role="dialog" aria-label="Set up {{name}}" style="position:absolute;left:20px;bottom:20px;width:380px;max-height:620px;display:flex;flex-direction:column;border:1px solid #2a2824;border-radius:18px;background:#111110;box-shadow:0 30px 80px rgba(0,0,0,.7);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #1f1e1c">
+        <img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:30px;height:30px;border-radius:9px;object-fit:cover">
+        <span style="flex:1;min-width:0"><span class="mono" style="display:block;font-size:13.5px">goobz<span class="dim">/{{name}}</span></span><span style="display:block;font-size:11.5px;color:#85827a">Setting up · step {{stepNo}} of 3</span></span>
+        <button type="button" onClick="{{toTelegram}}" class="pill" style="height:26px;font-size:11.5px">Telegram instead</button>
+        <button type="button" onClick="{{closeChat}}" aria-label="Close" style="width:28px;height:28px;border:0;border-radius:50%;background:#1a1918;color:#b8b5ad">✕</button>
+      </div>
+      <div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:14px">
+        <sc-for list="{{messages}}" as="m" hint-placeholder-count="4"><div class="msg {{m.who}}">{{m.text}}</div></sc-for>
+        <sc-if value="{{showSummary}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid #3a2a1f;border-radius:12px;background:#140d0a">
+            <span style="font-size:10.5px;letter-spacing:.14em;color:#85827a">READY TO DEPLOY</span>
+            <span class="mono" style="font-size:14px">goobz<span class="dim">/{{name}}</span></span>
+            <span style="font-size:13px;color:#d6d3cb">Buys {{amount}} of {{tokensText}} every {{every}}</span>
+            <span style="font-size:12px;color:#85827a">About {{monthly}} a month · trades only after you fund it</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{deployed}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid rgba(47,211,154,.35);border-radius:12px;background:rgba(47,211,154,.06)">
+            <span style="font-size:13px;color:#2fd39a;font-weight:600">● goobz/{{name}} is live</span>
+            <span style="font-size:12.5px;color:#b8b5ad">Its wallet</span>
+            <span class="mono" style="font-size:11.5px;padding:6px 8px;border:1px solid #2a2824;border-radius:7px;background:#0b0b0a;word-break:break-all">0x9b3e51f0c8a2e9d7b4316ac05e2f8b9d7c4a1e6f</span>
+            <span style="font-size:12px;color:#85827a">Send ETH on Robinhood Chain to start. It shows in Telegram too.</span>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-top:1px solid #1f1e1c">
+        <div class="quick"><sc-for list="{{replies}}" as="r" hint-placeholder-count="4"><button type="button" class="pill {{r.cls}}" onClick="{{r.go}}">{{r.label}}</button></sc-for></div>
+        <div style="display:flex;gap:8px"><input placeholder="{{placeholder}}" aria-label="Reply" style="flex:1;min-width:0;height:36px;padding:0 12px;border:1px solid #2a2824;border-radius:10px;background:#0b0b0a;color:#f5f3ee;font:inherit;font-size:13px"><button type="button" class="btn" style="height:36px;padding:0 12px;font-size:12.5px">Send</button></div>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{chatClosed}}" hint-placeholder-val="{{ false }}">
+    <button type="button" onClick="{{openChat}}" style="position:absolute;left:20px;bottom:20px;display:flex;align-items:center;gap:8px;height:44px;padding:0 16px;border-radius:999px;border:1px solid #3a2a1f;background:#140d0a;color:#f5f3ee;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.5)">💬 Set up goobz/{{name}}</button>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { name: 'dca-bot', chat: true, tg: false, step: 0, tokens: [], amount: null, every: null, deployed: false };
+  }
+  renderVals() {
+    var self = this, st = this.state;
+    var IDEAS = ['dca-bot', 'hodl-bot', 'sniper-bot', 'copy-trader', 'spot-trader'];
+    var MORE = ['slugs-stacker', 'eth-stacker', 'weekly-bags', 'quiet-compounder', 'dip-buyer'];
+    var set = function (patch) { return function () { self.setState(patch); }; };
+    var clean = function (v) { return String(v).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+/, '').slice(0, 24); };
+    var list = st.tokens.length ? st.tokens.join(' and ') : 'the tokens you pick';
+    var msgs = [{ who: 'bot', text: 'Hey, I’m ' + st.name + '. I buy tokens for you on a schedule, once you fund me. What should I buy?' }];
+    var replies = [], step = st.step;
+    if (step === 0) {
+      ['$SLUGS', 'ETH', '$BAUM'].forEach(function (t) {
+        var on = st.tokens.indexOf(t) >= 0;
+        replies.push({ label: (on ? '✓ ' : '') + t, cls: on ? 'on' : '', go: function () { self.setState({ tokens: on ? st.tokens.filter(function (x) { return x !== t; }) : st.tokens.concat(t) }); } });
+      });
+      replies.push({ label: 'Paste a contract', cls: '', go: function () {} });
+      if (st.tokens.length) replies.push({ label: 'Done →', cls: 'on', go: set({ step: 1 }) });
+    }
+    if (step >= 1) {
+      msgs.push({ who: 'you', text: list });
+      msgs.push({ who: 'bot', text: 'Got it. How much each time?' });
+      if (step === 1) ['$10', '$25', '$50', '$100'].forEach(function (a) { replies.push({ label: a, cls: '', go: set({ amount: a, step: 2 }) }); });
+    }
+    if (step >= 2) {
+      msgs.push({ who: 'you', text: st.amount + ' each time' });
+      msgs.push({ who: 'bot', text: 'And how often?' });
+      if (step === 2) [['Every day', 'day'], ['Every week', 'week']].forEach(function (p) { replies.push({ label: p[0], cls: '', go: set({ every: p[1], step: 3 }) }); });
+    }
+    if (step >= 3) {
+      msgs.push({ who: 'you', text: 'Every ' + st.every });
+      msgs.push({ who: 'bot', text: 'Here’s the plan. Deploy me when it looks right.' });
+      if (!st.deployed) {
+        replies.push({ label: '🚀 Deploy goobz/' + st.name, cls: 'on', go: set({ deployed: true }) });
+        replies.push({ label: 'Change something', cls: '', go: set({ step: 0, tokens: [], amount: null, every: null }) });
+      } else {
+        msgs.push({ who: 'bot', text: 'Done. I’m live and waiting for funds. Fund me and I start buying.' });
+        replies.push({ label: 'Fund it', cls: 'on', go: function () {} });
+        replies.push({ label: 'Open its page', cls: '', go: function () {} });
+      }
+    }
+    var amount = Number(String(st.amount || '$0').slice(1));
+    var monthly = '$' + (amount * Math.max(1, st.tokens.length) * (st.every === 'day' ? 30 : 4)).toLocaleString('en-US');
+    var stepNo = st.deployed ? 3 : step >= 3 ? 2 : step >= 1 ? 2 : 1;
+    var lit = function (n) { return stepNo >= n ? 'background:#f8622e;border-color:#f8622e;color:#0b0b0a' : ''; };
+    return {
+      name: st.name,
+      typeName: function (e) { self.setState({ name: clean(e.target.value) || 'my-bot' }); },
+      shuffle: function () { self.setState({ name: MORE[Math.floor(Math.random() * MORE.length)] }); },
+      ideas: IDEAS.map(function (n) { var on = n === st.name; return { name: n, border: on ? '#5a564f' : '#2a2824', color: on ? '#f5f3ee' : '#d6d3cb', pick: set({ name: n }) }; }),
+      openChat: set({ chat: true, tg: false }),
+      closeChat: set({ chat: false }),
+      openTelegram: set({ tg: true, chat: false }),
+      toTelegram: set({ tg: true, chat: false }),
+      chatOpen: st.chat, chatClosed: !st.chat,
+      tgOpened: st.tg,
+      chatBorder: st.chat ? '#f8622e' : '#2a2824', chatBg: st.chat ? 'rgba(248,98,46,.06)' : 'transparent', tgBorder: st.tg ? '#5a564f' : '#2a2824',
+      messages: msgs, replies: replies,
+      placeholder: step === 0 ? 'Or type a token, or paste a contract' : step === 1 ? 'Or type an amount' : 'Type a reply',
+      showSummary: step >= 3, deployed: st.deployed,
+      amount: st.amount, every: st.every, tokensText: list, monthly: monthly,
+      stepNo: stepNo, s2: '', s3: '', b2: lit(2), b3: lit(3)
+    };
+  }
+}
+</script>
+</body>
+</html>

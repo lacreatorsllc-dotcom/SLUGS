@@ -13,4 +13,10 @@ Onboarding and SLUGs (added later on 2026-10-30):
 - `OnboardingCards`: an earlier Baum-only take on the welcome cards. `OldOnboarding`: the April original, for reference.
 - Still open with Baum: today Baum's agent slugs are fixed at launch and formatted `goobz-dca-agent`; the designs assume `goobz/dca-agent`, renamable in Settings.
 
+Added 2026-10-31 (built screens link to their code):
+- `SearchResults`: the top bar's search across tokens, users and agents ($ticker, 0x contract, SLUG).
+- `PnlShare`: where Share PnL lives and the three card styles. Live: `web/src/components/terminal/PnlCard.tsx`.
+- `ExampleBots`: four ways to show example bots on welcome card 01. Option D (goobz first, then four rotating) is live in `WelcomeTour.tsx`.
+- `DeployConcept`, `DeployCompact`: Deploy page explorations. `DeployFinal` is the chosen one: a command bar (name with rolling ideas, Tab to take one), **Prompt Agent** opening the setup chat bottom right, a Telegram button, a "Just deployed" table and three compact walkthrough cards. Not built yet; today's page is `web/src/pages/Deploy.tsx`.
+
 Build guide: [`docs/handoffs/2026-10-30-slugs-terminal-codex.md`](../../handoffs/2026-10-30-slugs-terminal-codex.md).

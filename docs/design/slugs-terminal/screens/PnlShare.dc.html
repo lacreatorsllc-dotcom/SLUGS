@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Share PnL</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+a{color:#f5f3ee;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid #b8b5ad;outline-offset:2px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+.lbl{font-size:10.5px;letter-spacing:.14em;color:#6f6c65}
+.panel{border:1px solid #1f1e1c;border-radius:16px;background:#0f0f0e}
+.entry{display:flex;flex-direction:column;gap:10px;padding:14px;border:1px solid #1f1e1c;border-radius:14px;background:#0f0f0e;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.entry:hover{border-color:#3a3732}
+.mini{border:1px solid #1f1e1c;border-radius:10px;background:#0b0b0a;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:92px;box-sizing:border-box}
+.shr{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:7px;background:#ece9e2;color:#0b0b0a;font-size:11px;font-weight:700;box-shadow:0 0 0 3px rgba(248,98,46,.45)}
+.seg{display:flex;gap:4px;padding:3px;border:1px solid #1f1e1c;border-radius:10px;background:#0b0b0a}
+.seg button{flex:1;font:inherit;font-size:12px;font-weight:600;height:28px;padding:0 10px;border-radius:7px;border:0;cursor:pointer}
+.tog{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:9px 0;border:0;border-top:1px solid #171615;background:transparent;font:inherit;font-size:13px;color:#d6d3cb;cursor:pointer;text-align:left}
+.sw{width:30px;height:18px;border-radius:9px;position:relative;flex:none;transition:background .15s}
+.sw i{position:absolute;top:2px;width:14px;height:14px;border-radius:50%;background:#0b0b0a;transition:left .15s}
+.act{display:flex;align-items:center;justify-content:center;gap:8px;height:40px;border-radius:10px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid #2a2824;background:transparent;color:#f5f3ee}
+.act:hover{border-color:#5a564f}
+.act.main{background:#ece9e2;color:#0b0b0a;border:0}
+.act.main:hover{filter:brightness(1.05)}
+.card{position:relative;width:500px;height:500px;flex:none;border-radius:18px;overflow:hidden;background:#0c0c0b;font-family:Inter,-apple-system,system-ui,sans-serif;font-variant-numeric:tabular-nums;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.rings{position:absolute;inset:0}
+.k{font-size:15px;color:#8f8c84}.v{font-size:19px;font-weight:600;color:#f5f3ee;margin-top:2px}
+.pill{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:9px;font-size:15px;font-weight:600}
+.thumb{width:76px;height:76px;flex:none;border-radius:10px;overflow:hidden;position:relative;cursor:pointer;border:2px solid transparent;padding:0;background:#0c0c0b}
+</style>
+</helmet>
+<div style="min-height:1500px;box-sizing:border-box;padding:36px 40px;background:#0b0b0a;color:#f5f3ee;font-family:Inter,-apple-system,system-ui,sans-serif;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;gap:26px">
+
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <h1 style="margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em">Share your PnL</h1>
+      <span style="font-size:11px;padding:3px 9px;border:1px solid #2a2824;border-radius:999px;color:#85827a">Example numbers · goobz's real picture</span>
+    </div>
+    <p style="margin:0;max-width:900px;font-size:14px;line-height:1.6;color:#9a978f">Every PnL on SLUGS has a share button. It opens one share sheet: pick a card style, choose what it shows, then post it to X or Telegram, copy the image or download it. The card is drawn from the person's real numbers and their Baum picture. Press Play, then click a spot below or change the card.</p>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <span class="lbl">WHERE THE SHARE BUTTON IS</span>
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px">
+      <button type="button" class="entry" onClick="{{fromProfile}}" style="border-color:{{e1}}">
+        <span class="mini">
+          <span style="display:flex;align-items:center;gap:8px"><img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:24px;height:24px;border-radius:50%;object-fit:cover"><span class="mono" style="font-size:12px">goobz</span></span>
+          <span style="display:flex;gap:6px;margin-top:auto"><span style="flex:1;height:24px;border-radius:7px;border:1px solid #2a2824"></span><span class="shr">↗ Share PnL</span></span>
+        </span>
+        <span><span style="display:block;font-size:13px;font-weight:600">Your profile</span><span style="display:block;font-size:12px;color:#85827a;margin-top:2px">Next to Follow. Shares your all-time PnL.</span></span>
+      </button>
+      <button type="button" class="entry" onClick="{{fromAgent}}" style="border-color:{{e2}}">
+        <span class="mini">
+          <span style="display:flex;align-items:center;justify-content:space-between"><span class="mono" style="font-size:11.5px">goobz/dca-agent</span><span style="font-size:11px;color:#2fd39a">+27.88%</span></span>
+          <span style="display:flex;gap:6px;margin-top:auto;justify-content:flex-end"><span class="shr">↗ Share</span></span>
+        </span>
+        <span><span style="display:block;font-size:13px;font-weight:600">Agent page</span><span style="display:block;font-size:12px;color:#85827a;margin-top:2px">On the PnL chart. Shares the period on screen.</span></span>
+      </button>
+      <button type="button" class="entry" onClick="{{fromTrade}}" style="border-color:{{e3}}">
+        <span class="mini">
+          <span style="display:flex;justify-content:space-between;font-size:11.5px"><span><b style="color:#2fd39a">BUY</b> SLUGS</span><span style="color:#2fd39a">+$62.10</span></span>
+          <span style="display:flex;justify-content:space-between;font-size:11.5px;color:#6f6c65"><span>BUY BAUM</span><span>+$4.02</span></span>
+          <span style="display:flex;justify-content:flex-end;margin-top:auto"><span class="shr">↗</span></span>
+        </span>
+        <span><span style="display:block;font-size:13px;font-weight:600">A single trade</span><span style="display:block;font-size:12px;color:#85827a;margin-top:2px">On hover in the activity log. Shares that trade.</span></span>
+      </button>
+      <button type="button" class="entry" onClick="{{fromBoard}}" style="border-color:{{e4}}">
+        <span class="mini">
+          <span style="display:flex;align-items:center;gap:6px;font-size:11.5px"><span style="color:#6f6c65">8</span><img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:18px;height:18px;border-radius:50%;object-fit:cover"><span class="mono">goobz</span><span style="margin-left:auto;color:#2fd39a">+$221</span><span class="shr" style="height:20px;padding:0 6px">↗</span></span>
+          <span style="height:18px;border-radius:5px;background:#111110"></span>
+        </span>
+        <span><span style="display:block;font-size:13px;font-weight:600">Leaderboard row</span><span style="display:block;font-size:12px;color:#85827a;margin-top:2px">On your own row, and on any row on hover.</span></span>
+      </button>
+      <button type="button" class="entry" onClick="{{fromToast}}" style="border-color:{{e5}}">
+        <span class="mini">
+          <span style="font-size:11.5px;line-height:1.45;color:#d6d3cb">goobz/dca-agent just passed <b style="color:#2fd39a">+25%</b> this week</span>
+          <span style="display:flex;gap:6px;margin-top:auto"><span class="shr">↗ Share it</span><span style="font-size:11px;color:#6f6c65;align-self:center">Not now</span></span>
+        </span>
+        <span><span style="display:block;font-size:13px;font-weight:600">Milestone nudge</span><span style="display:block;font-size:12px;color:#85827a;margin-top:2px">When an agent crosses +10%, +25%, +100% or a new rank.</span></span>
+      </button>
+    </div>
+  </section>
+
+  <section class="panel" style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:32px;padding:28px">
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center">
+
+      <sc-if value="{{v1}}" hint-placeholder-val="{{ true }}">
+        <div class="card">
+          <div class="rings" style="background:repeating-radial-gradient(circle at 96% 54%,transparent 0 11px,rgba(255,255,255,.075) 11px 12px);-webkit-mask-image:radial-gradient(circle at 96% 54%,#000 0,#000 45%,transparent 78%);mask-image:radial-gradient(circle at 96% 54%,#000 0,#000 45%,transparent 78%)"></div>
+          <img src="{{pic}}" alt="" style="position:absolute;right:-30px;bottom:-24px;width:270px;height:270px;object-fit:cover;border-radius:50%;-webkit-mask-image:radial-gradient(circle,#000 58%,transparent 71%);mask-image:radial-gradient(circle,#000 58%,transparent 71%)">
+          <div style="position:absolute;left:30px;top:96px;right:30px">
+            <div style="display:flex;align-items:center;gap:12px"><span style="font-size:24px;font-weight:500">{{title}}</span><span class="pill" style="background:{{pillBg}};color:{{pillColor}}">{{pill}}</span></div>
+            <div style="font-size:66px;font-weight:700;letter-spacing:-.03em;line-height:1.05;margin-top:12px;color:{{tone}}">{{big}}</div>
+            <sc-if value="{{hasSmall}}" hint-placeholder-val="{{ true }}"><div style="font-size:28px;font-weight:500;margin-top:6px;color:{{toneSoft}}">{{small}}</div></sc-if>
+            <div style="display:flex;gap:40px;margin-top:22px">
+              <div><div class="k">{{aK}}</div><div class="v">{{aV}}</div></div>
+              <div><div class="k">{{bK}}</div><div class="v">{{bV}}</div></div>
+            </div>
+          </div>
+          <div style="position:absolute;left:30px;bottom:26px;display:flex;align-items:center;gap:10px"><img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height:13px;image-rendering:pixelated"><span class="mono" style="font-size:12px;color:#85827a">{{link}}</span></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{v2}}" hint-placeholder-val="{{ false }}">
+        <div class="card" style="background:#100f0e">
+          <div class="rings" style="background:repeating-radial-gradient(circle at 100% 50%,transparent 0 12px,rgba(248,98,46,.32) 12px 13.5px);-webkit-mask-image:radial-gradient(circle at 100% 50%,#000 0,#000 40%,transparent 85%);mask-image:radial-gradient(circle at 100% 50%,#000 0,#000 40%,transparent 85%)"></div>
+          <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="position:absolute;left:28px;top:34px;height:44px;image-rendering:pixelated;filter:drop-shadow(3px 3px 0 rgba(248,98,46,.35))">
+          <img src="{{pic}}" alt="" style="position:absolute;right:30px;top:22px;width:150px;height:150px;object-fit:cover;border-radius:50%;border:2px solid #f8622e;box-shadow:0 0 30px rgba(248,98,46,.35);z-index:2">
+          <div style="position:absolute;left:22px;right:22px;top:180px;border:1.5px solid #f8622e;border-radius:12px;background:rgba(16,15,14,.92);overflow:hidden">
+            <div style="padding:14px 18px 10px">
+              <div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px;color:#d6d3cb">{{title}}</span><span class="pill" style="height:24px;font-size:12px;background:{{pillBg}};color:{{pillColor}}">{{pill}}</span></div>
+              <div style="font-size:60px;font-weight:700;letter-spacing:-.03em;line-height:1.1;color:{{tone}}">{{big}}</div>
+              <sc-if value="{{hasSmall}}" hint-placeholder-val="{{ true }}"><div style="text-align:right;font-size:22px;font-weight:500;color:{{toneSoft}};margin-top:-4px">{{small}}</div></sc-if>
+            </div>
+            <div style="display:grid;grid-template-columns:{{v2Cols}};border-top:1.5px solid #f8622e">
+              <div style="padding:10px 16px"><div class="k" style="font-size:13px">{{aK}}</div><div class="v" style="font-size:17px">{{aV}}</div></div>
+              <div style="padding:10px 16px;border-left:1.5px solid #f8622e"><div class="k" style="font-size:13px">{{bK}}</div><div class="v" style="font-size:17px">{{bV}}</div></div>
+              <sc-if value="{{showRef}}" hint-placeholder-val="{{ true }}"><div style="padding:10px 16px;border-left:1.5px solid #f8622e"><div class="k" style="font-size:13px">Referral code</div><div class="v" style="font-size:17px">{{ref}}</div></div></sc-if>
+            </div>
+          </div>
+          <div style="position:absolute;left:40px;right:40px;bottom:22px;height:52px;border:1.5px solid #f8622e;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 0 18px rgba(248,98,46,.25);font-size:16px;color:#f5f3ee">{{cta}} <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height:18px;image-rendering:pixelated"></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{v3}}" hint-placeholder-val="{{ false }}">
+        <div class="card">
+          <div class="rings" style="background:repeating-radial-gradient(circle at 92% 47%,transparent 0 11px,rgba(255,255,255,.07) 11px 12px);-webkit-mask-image:radial-gradient(circle at 92% 47%,#000 0,#000 30%,transparent 90%);mask-image:radial-gradient(circle at 92% 47%,#000 0,#000 30%,transparent 90%)"></div>
+          <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="position:absolute;left:50%;top:40px;transform:translateX(-50%);height:46px;image-rendering:pixelated">
+          <div style="position:absolute;left:0;right:0;top:120px;display:flex;justify-content:center;align-items:center;gap:10px"><span style="font-size:22px;color:#f8622e">{{title}}</span><span class="pill" style="height:26px;font-size:13px;background:{{pillBg}};color:{{pillColor}}">{{pill}}</span></div>
+          <div style="position:absolute;left:0;right:0;top:150px;text-align:center;font-size:62px;font-weight:700;letter-spacing:-.03em;color:#f5f3ee;opacity:.12;filter:blur(1px);transform:translateY(-14px)">{{big}}</div>
+          <div style="position:absolute;left:0;right:0;top:162px;text-align:center;font-size:62px;font-weight:700;letter-spacing:-.03em;color:{{v3Tone}}">{{big}}</div>
+          <img src="{{pic}}" alt="" style="position:absolute;left:50%;top:248px;transform:translateX(-50%);width:200px;height:200px;object-fit:cover;border-radius:50%;-webkit-mask-image:linear-gradient(#000 55%,transparent 92%);mask-image:linear-gradient(#000 55%,transparent 92%)">
+          <sc-if value="{{hasSmall}}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:0;right:0;top:244px;text-align:center;font-size:18px;font-weight:600;color:{{toneSoft}};text-shadow:0 2px 10px #000;z-index:2">{{small}}</div></sc-if>
+          <div style="position:absolute;left:40px;top:300px;text-shadow:0 2px 8px #000"><div class="k" style="font-size:14px">{{aK}}</div><div class="v" style="font-size:17px">{{aV}}</div></div>
+          <div style="position:absolute;right:40px;top:300px;text-align:right;text-shadow:0 2px 8px #000"><div class="k" style="font-size:14px">{{bK}}</div><div class="v" style="font-size:17px">{{bV}}</div></div>
+          <div style="position:absolute;left:50%;bottom:28px;transform:translateX(-50%);white-space:nowrap;height:46px;padding:0 26px;border:1.5px solid rgba(248,98,46,.6);border-radius:999px;background:rgba(20,19,18,.85);display:flex;align-items:center;font-size:16px;color:#f8622e">{{cta}}&nbsp;<b>SLUGS</b></div>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;gap:10px">
+        <button type="button" class="thumb" onClick="{{pick1}}" aria-label="Clean style" style="border-color:{{t1}}"><span style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 96% 54%,transparent 0 3px,rgba(255,255,255,.12) 3px 4px)"></span><span style="position:absolute;left:8px;top:22px;font-size:13px;font-weight:800;color:{{tone}}">+$</span><span style="position:absolute;left:0;right:0;bottom:4px;font-size:10px;color:#b8b5ad;text-align:center">Clean</span></button>
+        <button type="button" class="thumb" onClick="{{pick2}}" aria-label="Framed style" style="border-color:{{t2}}"><span style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 100% 50%,transparent 0 3px,rgba(248,98,46,.4) 3px 4px)"></span><span style="position:absolute;left:8px;right:8px;top:26px;height:22px;border:1px solid #f8622e;border-radius:4px"></span><span style="position:absolute;left:0;right:0;bottom:4px;font-size:10px;color:#b8b5ad;text-align:center">Framed</span></button>
+        <button type="button" class="thumb" onClick="{{pick3}}" aria-label="Centered style" style="border-color:{{t3}}"><span style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 92% 47%,transparent 0 3px,rgba(255,255,255,.12) 3px 4px)"></span><span style="position:absolute;left:0;right:0;top:22px;text-align:center;font-size:13px;font-weight:800;color:#f5f3ee">+$</span><span style="position:absolute;left:0;right:0;bottom:4px;font-size:10px;color:#b8b5ad;text-align:center">Centered</span></button>
+      </div>
+      <span style="font-size:12px;color:#85827a">1080 × 1080 PNG · also sized 1200 × 630 for link previews</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h2 style="margin:0;font-size:18px;font-weight:600">Share PnL</h2>
+        <span style="width:30px;height:30px;border-radius:50%;background:#1a1918;display:flex;align-items:center;justify-content:center;color:#b8b5ad" aria-hidden="true">✕</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span class="lbl">WHAT TO SHARE</span>
+        <div class="seg">
+          <button type="button" onClick="{{fromProfile}}" style="background:{{s1Bg}};color:{{s1C}}">goobz · all time</button>
+          <button type="button" onClick="{{fromAgent}}" style="background:{{s2Bg}};color:{{s2C}}">dca-agent · 7d</button>
+          <button type="button" onClick="{{fromTrade}}" style="background:{{s3Bg}};color:{{s3C}}">One trade</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column">
+        <button type="button" class="tog" onClick="{{flipDollars}}"><span>Show the dollar amount<span style="display:block;font-size:11.5px;color:#85827a">Off shows only the percent</span></span><span class="sw" style="background:{{dBg}}"><i style="left:{{dLeft}}"></i></span></button>
+        <button type="button" class="tog" onClick="{{flipRef}}"><span>Add my invite code<span style="display:block;font-size:11.5px;color:#85827a">People who sign up with it count as your invites</span></span><span class="sw" style="background:{{rBg}}"><i style="left:{{rLeft}}"></i></span></button>
+        <button type="button" class="tog" onClick="{{flipLoss}}"><span>Preview a losing week<span style="display:block;font-size:11.5px;color:#85827a">Design check: losses go red, never hidden</span></span><span class="sw" style="background:{{lBg}}"><i style="left:{{lLeft}}"></i></span></button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <a class="act main" href="{{xHref}}" target="_blank" rel="noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>Post on X</a>
+        <a class="act" href="{{tgHref}}" target="_blank" rel="noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13.1l-4.8-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3z"></path></svg>Telegram</a>
+        <button type="button" class="act" onClick="{{copyImage}}">Copy image</button>
+        <button type="button" class="act" onClick="{{download}}">Download PNG</button>
+        <button type="button" class="act" onClick="{{copyLink}}" style="grid-column:1 / -1;justify-content:space-between;padding:0 12px"><span class="mono" style="font-size:12px;color:#b8b5ad">{{fullLink}}</span><span style="font-size:12.5px">{{linkLabel}}</span></button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span class="lbl">HOW IT LOOKS ON X</span>
+        <div style="border:1px solid #2f3336;border-radius:16px;background:#000;padding:12px 14px;display:flex;gap:10px">
+          <img src="{{pic}}" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none">
+          <div style="min-width:0;flex:1;font-size:13.5px;line-height:1.45;color:#e7e9ea">
+            <div><b>goobz</b> <span style="color:#71767b">@goobz · now</span></div>
+            <div style="margin-top:2px;white-space:pre-line">{{tweet}}</div>
+            <div style="margin-top:8px;border:1px solid #2f3336;border-radius:14px;overflow:hidden">
+              <div style="height:118px;position:relative;background:#0c0c0b;overflow:hidden">
+                <div style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 90% 50%,transparent 0 6px,rgba(255,255,255,.08) 6px 7px)"></div>
+                <img src="{{pic}}" alt="" style="position:absolute;right:16px;top:14px;width:90px;height:90px;border-radius:50%;object-fit:cover">
+                <div style="position:absolute;left:16px;top:22px;font-size:13px;color:#d6d3cb">{{title}}</div>
+                <div style="position:absolute;left:16px;top:42px;font-size:34px;font-weight:700;color:{{tone}}">{{big}}</div>
+              </div>
+              <div style="padding:6px 12px;font-size:12px;color:#71767b">slugs.run</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+    <div class="panel" style="padding:16px;display:flex;flex-direction:column;gap:6px"><span class="lbl">THE NUMBERS ARE EXACT</span><p style="margin:0;font-size:13px;line-height:1.6;color:#b8b5ad">The card is drawn by our server from the board data, the same way every time, at <span class="mono" style="color:#f5f3ee">slugs.run/api/pnl-card</span>. An AI image model never writes the PnL: it can misspell numbers.</p></div>
+    <div class="panel" style="padding:16px;display:flex;flex-direction:column;gap:6px"><span class="lbl">THE PICTURE CAN BE AI</span><p style="margin:0;font-size:13px;line-height:1.6;color:#b8b5ad">Optional: GPT Image 2 on OpenRouter turns the Baum profile picture into a cut-out character, like the concepts, once per person. It's saved and reused on every card. Without it, the card uses the picture as is.</p></div>
+    <div class="panel" style="padding:16px;display:flex;flex-direction:column;gap:6px"><span class="lbl">X SHOWS THE CARD</span><p style="margin:0;font-size:13px;line-height:1.6;color:#b8b5ad">X's post link can't attach an image, so the shared link's page carries the card as its preview image. The post shows the card, and a click lands on the agent or profile on SLUGS.</p></div>
+  </section>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:8px 14px;border-radius:9px;background:#ece9e2;color:#0b0b0a;font-size:12.5px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.5)">{{toastText}}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { v: 2, subj: 'agent', from: 'agent', dollars: true, ref: true, loss: false, toast: null };
+  }
+  renderVals() {
+    var self = this, st = this.state;
+    var PIC = 'https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754';
+    var SUBJ = {
+      profile: { title: 'goobz', pill: 'ALL TIME', pnl: 1245.50, pct: 61.02, a: ['Volume', '$4,812'], b: ['Win rate', '68%'], cta: 'Follow goobz on', link: 'slugs.run/goobz', what: 'I’m' },
+      agent: { title: 'goobz/dca-agent', pill: 'DCA · 7D', pnl: 184.20, pct: 27.88, a: ['Invested', '$660.64'], b: ['Trades', '17'], cta: 'Track this agent on', link: 'slugs.run/goobz/dca-agent', what: 'My agent goobz/dca-agent is' },
+      trade: { title: 'SLUGS/ETH', pill: 'BUY · DCA', pnl: 62.10, pct: 125.40, a: ['Entry price', '0.00183'], b: ['Mark price', '0.00412'], cta: 'Track this agent on', link: 'slugs.run/goobz/dca-agent', what: 'goobz/dca-agent’s SLUGS buy is' }
+    };
+    var s = SUBJ[st.subj];
+    var pnl = st.loss ? -s.pnl * 0.34 : s.pnl, pct = st.loss ? -s.pct * 0.4 : s.pct;
+    var up = pnl >= 0, sign = up ? '+' : '−';
+    var money = sign + '$' + Math.abs(pnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    var percent = sign + Math.abs(pct).toFixed(2) + '%';
+    var a = s.a, b = s.b;
+    if (st.loss && st.subj === 'trade') b = ['Mark price', '0.00168'];
+    var tone = up ? '#3ee08f' : '#f87171', soft = up ? '#5fd59a' : '#f59e9e';
+    var period = st.subj === 'agent' ? ' this week' : st.subj === 'profile' ? ' all time' : '';
+    var tweet = s.what + ' ' + (up ? 'up ' : 'down ') + (st.dollars ? money.replace(/^[+−]/, '') + ' (' + percent + ')' : percent) + period + ' on SLUGS.' + (st.ref ? '\nJoin with my code GOOBZ' : '') + '\n' + s.link;
+    var url = 'https://www.' + s.link + (st.ref ? '?ref=GOOBZ' : '');
+    var sel = function (yes) { return yes ? '#f8622e' : 'transparent'; };
+    var segOn = function (yes) { return yes ? ['#262522', '#f5f3ee'] : ['transparent', '#9a978f']; };
+    var S1 = segOn(st.subj === 'profile'), S2 = segOn(st.subj === 'agent'), S3 = segOn(st.subj === 'trade');
+    var sw = function (yes) { return { bg: yes ? '#ece9e2' : '#2a2824', left: yes ? '14px' : '2px' }; };
+    var D = sw(st.dollars), R = sw(st.ref), L = sw(st.loss);
+    var say = function (text) {
+      self.setState({ toast: text });
+      clearTimeout(self.timer);
+      self.timer = setTimeout(function () { self.setState({ toast: null }); }, 1700);
+    };
+    var go = function (subj, from) { return function () { self.setState({ subj: subj, from: from }); }; };
+    return {
+      pic: PIC, title: s.title, pill: s.pill, link: s.link, fullLink: url.replace('https://', ''), cta: s.cta,
+      big: st.dollars ? money : percent, small: st.dollars ? percent : '', hasSmall: st.dollars,
+      aK: a[0], aV: a[1], bK: b[0], bV: b[1], ref: 'GOOBZ', showRef: st.ref, v2Cols: st.ref ? '1fr 1fr 1.2fr' : '1fr 1fr',
+      tone: tone, toneSoft: soft, v3Tone: up ? '#f5f3ee' : '#f87171',
+      pillBg: up ? 'rgba(47,211,154,.18)' : 'rgba(248,113,113,.16)', pillColor: up ? '#6ee7b7' : '#fca5a5',
+      v1: st.v === 1, v2: st.v === 2, v3: st.v === 3,
+      t1: sel(st.v === 1), t2: sel(st.v === 2), t3: sel(st.v === 3),
+      pick1: function () { self.setState({ v: 1 }); }, pick2: function () { self.setState({ v: 2 }); }, pick3: function () { self.setState({ v: 3 }); },
+      e1: st.from === 'profile' ? '#f8622e' : '#1f1e1c', e2: st.from === 'agent' ? '#f8622e' : '#1f1e1c', e3: st.from === 'trade' ? '#f8622e' : '#1f1e1c', e4: st.from === 'board' ? '#f8622e' : '#1f1e1c', e5: st.from === 'toast' ? '#f8622e' : '#1f1e1c',
+      fromProfile: go('profile', 'profile'), fromAgent: go('agent', 'agent'), fromTrade: go('trade', 'trade'), fromBoard: go('profile', 'board'), fromToast: go('agent', 'toast'),
+      s1Bg: S1[0], s1C: S1[1], s2Bg: S2[0], s2C: S2[1], s3Bg: S3[0], s3C: S3[1],
+      dBg: D.bg, dLeft: D.left, rBg: R.bg, rLeft: R.left, lBg: L.bg, lLeft: L.left,
+      flipDollars: function () { self.setState({ dollars: !st.dollars }); },
+      flipRef: function () { self.setState({ ref: !st.ref }); },
+      flipLoss: function () { self.setState({ loss: !st.loss }); },
+      tweet: tweet,
+      xHref: 'https://x.com/intent/post?text=' + encodeURIComponent(tweet.replace(s.link, '').trim()) + '&url=' + encodeURIComponent(url),
+      tgHref: 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(tweet.split('\n')[0]),
+      copyImage: function () { say('Card copied. Paste it into any post.'); },
+      download: function () { say('Saved slugs-pnl-goobz.png'); },
+      copyLink: function () { try { navigator.clipboard.writeText(url); } catch (e) {} say('Copied ' + url.replace('https://', '')); },
+      linkLabel: 'Copy link',
+      toast: !!st.toast, toastText: st.toast || ''
+    };
+  }
+}
+</script>
+</body>
+</html>

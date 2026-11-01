@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SLUGS · Deploy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b0a}
+*{box-sizing:border-box}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid #b8b5ad;outline-offset:2px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500}
+.dim{color:#85827a}.faint{color:#6f6c65}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 16px;border-radius:8px;border:1px solid #ece9e2;background:#ece9e2;color:#0b0b0a;font-size:13.5px;font-weight:600;white-space:nowrap}
+.btn:hover{filter:brightness(1.05)}
+.btn.ghost{background:transparent;color:#e8e4dc;border-color:#2a2824}.btn.ghost:hover{border-color:#5a564f}
+.kbd{font:500 10.5px Inter,sans-serif;padding:1px 5px;border:1px solid #3a3732;border-radius:4px;color:#9a978f}
+.chip{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;border:1px solid #2a2824;border-radius:6px;background:transparent;color:#d6d3cb;font:500 12px 'JetBrains Mono',monospace;white-space:nowrap}
+.chip:hover{border-color:#5a564f;color:#f5f3ee}.chip.on{background:#262522;border-color:#5a564f;color:#f5f3ee}.chip.go{background:#ece9e2;border-color:#ece9e2;color:#0b0b0a;font-family:Inter,sans-serif;font-weight:600}
+.roll{position:absolute;left:0;top:0;height:22px;overflow:hidden;pointer-events:none;color:#5a564f}
+.roll b{display:block;height:22px;line-height:22px;font-weight:500;animation:roll 14s cubic-bezier(.7,0,.3,1) infinite}
+@keyframes roll{0%,11%{transform:translateY(0)}14.2%,25%{transform:translateY(-22px)}28.5%,39%{transform:translateY(-44px)}42.8%,53%{transform:translateY(-66px)}57.1%,68%{transform:translateY(-88px)}71.4%,82%{transform:translateY(-110px)}85.7%,96%{transform:translateY(-132px)}100%{transform:translateY(-154px)}}
+.coach{position:absolute;z-index:5;width:250px;padding:12px;border:1px solid #2a2824;border-radius:10px;background:#141413;box-shadow:0 18px 44px rgba(0,0,0,.65);font-size:12.5px;animation:cin .35s cubic-bezier(.2,.8,.2,1) both;text-align:left;white-space:normal}
+.coach::before{content:'';position:absolute;top:-6px;left:var(--a,28px);width:10px;height:10px;background:#141413;border-left:1px solid #2a2824;border-top:1px solid #2a2824;transform:rotate(45deg)}
+.coach strong{display:block;font-size:13px;margin-bottom:3px;color:#f5f3ee}
+.coach p{margin:0;color:#9a978f;line-height:1.5;font-weight:400;font-family:Inter,sans-serif}
+.coach .cf{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:#6f6c65}
+.coach .cf button{border:0;background:none;color:#85827a;padding:0;font-size:11.5px}
+.coach .cf .n{margin-left:auto;height:26px;padding:0 11px;border-radius:6px;background:#ece9e2;color:#0b0b0a;font-weight:600;font-size:11.5px}
+@keyframes cin{from{opacity:0;transform:translateY(6px) scale(.98)}}
+.lit{box-shadow:0 0 0 1.5px #f8622e,0 0 0 6px rgba(248,98,46,.14)!important}
+.chat{position:absolute;right:20px;bottom:46px;z-index:6;width:360px;max-height:560px;display:flex;flex-direction:column;border:1px solid #2a2824;border-radius:12px;background:#111110;box-shadow:0 26px 70px rgba(0,0,0,.7);overflow:hidden;animation:pop .4s cubic-bezier(.2,.8,.2,1) both;transform-origin:bottom right}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.96)}}
+.msg{max-width:86%;padding:8px 11px;border-radius:11px;font-size:13px;line-height:1.5;animation:cin .25s ease-out both}
+.msg.bot{align-self:flex-start;background:#141413;border:1px solid #1f1e1c;border-bottom-left-radius:3px;color:#d6d3cb}
+.msg.you{align-self:flex-end;background:#262522;border-bottom-right-radius:3px;color:#f5f3ee}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font-size:10.5px;letter-spacing:.12em;color:#6f6c65;font-weight:600;text-align:left;padding:8px 12px;border-bottom:1px solid #1f1e1c}
+td{padding:9px 12px;border-bottom:1px solid #171615}
+@media (prefers-reduced-motion:reduce){.roll b,.coach,.chat,.msg{animation:none!important}}
+</style>
+</helmet>
+<div style="position:relative;min-height:900px;background:#0b0b0a;color:#f5f3ee;font:13px/1.5 Inter,-apple-system,system-ui,sans-serif;font-variant-numeric:tabular-nums;overflow:hidden">
+  <header style="display:flex;align-items:center;gap:16px;height:44px;padding:0 14px;border-bottom:1px solid #1f1e1c;background:#0a0a09">
+    <img src="../../../../web/public/slugs-logo-orange.png" alt="SLUGS" style="height:14px;image-rendering:pixelated">
+    <nav style="display:flex;gap:2px;font-size:13px"><span style="padding:5px 10px;color:#9a978f">Leaderboard</span><span style="padding:5px 10px;color:#9a978f">Agents</span><span style="padding:5px 10px;color:#9a978f">Vaults</span><span style="padding:5px 10px;color:#9a978f">$SLUGS</span></nav>
+    <span style="flex:0 1 420px;height:30px;border:1px solid #1f1e1c;border-radius:8px;background:#111110;color:#85827a;font-size:12.5px;display:flex;align-items:center;padding:0 10px">Search slugs, profiles, CAs and wallets</span>
+    <span style="margin-left:auto;display:flex;gap:8px;align-items:center"><span style="height:30px;padding:0 12px;border-radius:8px;background:#262522;border:1px solid #5a564f;font-size:12.5px;font-weight:600;display:flex;align-items:center">+ Deploy a slug</span><img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover"></span>
+  </header>
+
+  <main style="max-width:920px;padding:28px 32px 0;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+      <h1 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-.015em">Deploy a slug</h1>
+      <span class="dim" style="font-size:13px">Name it for what it does, then prompt it here or in Telegram.</span>
+      <button type="button" onClick="{{replay}}" style="margin-left:auto;border:0;background:none;color:#85827a;font-size:12px;text-decoration:underline;text-underline-offset:3px">How this works</button>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center">
+      <div style="position:relative;flex:1">
+        <label for="slug-name" class="{{litName}}" style="display:flex;align-items:center;gap:9px;height:40px;padding:0 10px;border:1px solid #f8622e;border-radius:8px;background:#100c0a">
+          <img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:22px;height:22px;border-radius:50%;object-fit:cover">
+          <span class="mono" style="font-size:14px">goobz<span class="dim">/</span></span>
+          <span style="position:relative;flex:1;height:22px">
+            <sc-if value="{{empty}}" hint-placeholder-val="{{ true }}"><span class="roll mono" style="font-size:14px"><b>dca-bot</b><b>hodl-bot</b><b>sniper-bot</b><b>copy-trader</b><b>spot-trader</b><b>dip-buyer</b><b>eth-stacker</b><b>dca-bot</b></span></sc-if>
+            <input id="slug-name" class="mono" value="{{name}}" onInput="{{type}}" onKeyDown="{{key}}" maxlength="24" autocomplete="off" spellcheck="false" aria-label="Your agent's name" style="position:absolute;inset:0;width:100%;border:0;outline:0;background:transparent;color:#f5f3ee;font:500 14px 'JetBrains Mono',monospace;padding:0">
+          </span>
+          <sc-if value="{{empty}}" hint-placeholder-val="{{ true }}"><span class="kbd">Tab</span></sc-if>
+        </label>
+        <sc-if value="{{c1}}" hint-placeholder-val="{{ true }}"><div class="coach" style="top:50px;left:0;--a:28px"><strong>Name your agent</strong><p>Say what it does. Ideas roll by in gray; press Tab to take one, or type your own.</p><div class="cf"><span>1 / 3</span><button type="button" onClick="{{skip}}" style="margin-left:auto">Skip</button><button type="button" class="n" onClick="{{next}}">Next</button></div></div></sc-if>
+      </div>
+      <div style="position:relative">
+        <button type="button" class="btn {{litPrompt}}" onClick="{{prompt}}">💬 Prompt Agent</button>
+        <sc-if value="{{c2}}" hint-placeholder-val="{{ false }}"><div class="coach" style="top:50px;right:-60px;--a:150px"><strong>Prompt Agent</strong><p>Your agent pops up in the corner and asks what to buy, how much and how often. About a minute.</p><div class="cf"><span>2 / 3</span><button type="button" onClick="{{back}}">Back</button><button type="button" onClick="{{skip}}" style="margin-left:auto">Skip</button><button type="button" class="n" onClick="{{next}}">Next</button></div></div></sc-if>
+      </div>
+      <div style="position:relative">
+        <button type="button" class="btn ghost {{litTg}}" onClick="{{telegram}}">✈ Telegram</button>
+        <sc-if value="{{c3}}" hint-placeholder-val="{{ false }}"><div class="coach" style="top:50px;right:0;--a:214px"><strong>Or use Telegram</strong><p>Baum opens with your agent’s name ready. SLUGS and Baum are one account, so it shows up here too.</p><div class="cf"><span>3 / 3</span><button type="button" onClick="{{back}}">Back</button><button type="button" class="n" onClick="{{skip}}">Got it</button></div></div></sc-if>
+      </div>
+    </div>
+    <div style="display:flex;gap:18px;font-size:12px" class="dim"><span><span class="faint">Strategy</span> Buys on a schedule</span><span><span class="faint">Wallet</span> Its own, made by Baum</span><span><span class="faint">Account</span> One for SLUGS and Baum</span></div>
+    <sc-if value="{{tgOpened}}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:12.5px;color:#2fd39a">Baum opened in Telegram and “Launch an agent named {{shown}}” is copied. Paste it there; it shows up here once you confirm.</p></sc-if>
+
+    <section style="margin-top:14px;border:1px solid #1f1e1c;border-radius:10px;background:#0f0f0e;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #1f1e1c"><span style="font-size:13px;font-weight:600">Just deployed</span><span class="faint" style="font-size:11.5px">Example data</span></div>
+      <table>
+        <thead><tr><th>Agent</th><th>Strategy</th><th>Buys</th><th style="text-align:right">When</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">brokentyrant<span class="dim">/sniper-bot</span></td><td>The Floor</td><td class="dim">New launches</td><td class="dim" style="text-align:right">2m</td></tr>
+          <tr><td class="mono">bagcalls<span class="dim">/hodl-bot</span></td><td>Spot traders</td><td class="dim">$SLUGS weekly</td><td class="dim" style="text-align:right">14m</td></tr>
+          <tr><td class="mono">fwaz<span class="dim">/dev-bot</span></td><td>Custom</td><td class="dim">ETH daily</td><td class="dim" style="text-align:right">1h</td></tr>
+          <tr><td class="mono">brazylord<span class="dim">/gold-trader</span></td><td>Stocks</td><td class="dim">Gold daily</td><td class="dim" style="text-align:right">3h</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <sc-if value="{{chatOpen}}" hint-placeholder-val="{{ false }}">
+    <div class="chat" role="dialog" aria-label="Prompt {{shown}}">
+      <div style="display:flex;align-items:center;gap:9px;height:46px;padding:0 10px 0 12px;border-bottom:1px solid #1f1e1c">
+        <img src="https://baumai.xyz/api/avatar/0xf6414c58f65b106232871c0d566c417054ef6b92?v=1793398902754" alt="" style="width:26px;height:26px;border-radius:7px;object-fit:cover">
+        <span style="flex:1;min-width:0"><span class="mono" style="display:block;font-size:13px">goobz<span class="dim">/{{shown}}</span></span><span style="display:block;font-size:11px;color:#85827a">{{status}}</span></span>
+        <button type="button" class="chip" onClick="{{telegram}}" style="height:24px;font-family:Inter,sans-serif;font-size:11px">Telegram instead</button>
+        <button type="button" onClick="{{closeChat}}" aria-label="Close" style="width:26px;height:26px;border:0;border-radius:50%;background:#1a1918;color:#b8b5ad">✕</button>
+      </div>
+      <div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:7px;padding:12px">
+        <sc-for list="{{messages}}" as="m" hint-placeholder-count="3"><div class="msg {{m.who}}">{{m.text}}</div></sc-for>
+        <sc-if value="{{showPlan}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:5px;padding:11px;border:1px solid #3a2a1f;border-radius:9px;background:#140d0a;font-size:12.5px;color:#d6d3cb">
+            <span style="font-size:10px;letter-spacing:.14em;color:#85827a">READY TO DEPLOY</span>
+            <span class="mono" style="font-size:13px;color:#f5f3ee">goobz<span class="dim">/{{shown}}</span></span>
+            <span>Buys {{amount}} of {{tokensText}} every {{every}}</span>
+            <span style="font-size:11.5px;color:#85827a">About {{monthly}} a month · trades only after you fund it</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{deployed}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:5px;padding:11px;border:1px solid rgba(47,211,154,.35);border-radius:9px;background:rgba(47,211,154,.06);font-size:12.5px">
+            <span style="color:#2fd39a;font-weight:600">● goobz/{{shown}} is live</span>
+            <span style="font-size:11.5px;color:#85827a">Fund its wallet from its page to start. It shows in Telegram too.</span>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px;border-top:1px solid #1f1e1c">
+        <div style="display:flex;gap:5px;flex-wrap:wrap"><sc-for list="{{replies}}" as="r" hint-placeholder-count="3"><button type="button" class="chip {{r.cls}}" onClick="{{r.go}}">{{r.label}}</button></sc-for></div>
+        <div style="display:flex;gap:6px"><input placeholder="{{placeholder}}" aria-label="Reply" style="flex:1;min-width:0;height:34px;padding:0 10px;border:1px solid #2a2824;border-radius:7px;background:#0b0b0a;color:#f5f3ee;font:inherit;font-size:12.5px"><button type="button" class="chip">Send</button></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <footer style="position:absolute;left:0;right:0;bottom:0;height:34px;display:flex;align-items:center;gap:18px;padding:0 14px;border-top:1px solid #1f1e1c;background:#0a0a09;font-size:11.5px;color:#85827a">
+    <span><span style="color:#2fd39a">●</span> Baum</span><span>$SLUGS <b style="color:#f5f3ee;font-weight:500">$0.00000624</b></span><span>MC <b style="color:#f5f3ee;font-weight:500">$6,238</b></span><span style="margin-left:auto">Not financial advice. Agents trade real funds on-chain.</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { name: '', coach: 1, chat: false, tg: false, step: 0, tokens: [], amount: null, every: null, deployed: false, tabs: 0 };
+  }
+  renderVals() {
+    var self = this, st = this.state;
+    var IDEAS = ['dca-bot', 'hodl-bot', 'sniper-bot', 'copy-trader', 'spot-trader', 'dip-buyer', 'eth-stacker'];
+    var set = function (patch) { return function () { self.setState(patch); }; };
+    var shown = st.name || 'dca-bot';
+    var list = st.tokens.length ? st.tokens.join(' and ') : '';
+    var msgs = [{ who: 'bot', text: 'Hey, I’m ' + shown + '. I buy tokens for you on a schedule once you fund me. What should I buy?' }];
+    var replies = [], step = st.step;
+    if (step === 0) {
+      ['$SLUGS', 'ETH', '$BAUM'].forEach(function (t) {
+        var on = st.tokens.indexOf(t) >= 0;
+        replies.push({ label: (on ? '✓ ' : '') + t, cls: on ? 'on' : '', go: function () { self.setState({ tokens: on ? st.tokens.filter(function (x) { return x !== t; }) : st.tokens.concat(t) }); } });
+      });
+      replies.push({ label: 'Paste a contract', cls: '', go: function () {} });
+      if (st.tokens.length) replies.push({ label: 'Done', cls: 'go', go: set({ step: 1 }) });
+    }
+    if (step >= 1) {
+      msgs.push({ who: 'you', text: list }, { who: 'bot', text: 'Got it. How much each time?' });
+      if (step === 1) ['$10', '$25', '$50', '$100'].forEach(function (a) { replies.push({ label: a, cls: '', go: set({ amount: a, step: 2 }) }); });
+    }
+    if (step >= 2) {
+      msgs.push({ who: 'you', text: st.amount + ' each time' }, { who: 'bot', text: 'And how often?' });
+      if (step === 2) [['Every day', 'day'], ['Every week', 'week']].forEach(function (p) { replies.push({ label: p[0], cls: '', go: set({ every: p[1], step: 3 }) }); });
+    }
+    if (step >= 3) {
+      msgs.push({ who: 'you', text: 'Every ' + st.every }, { who: 'bot', text: 'Here’s the plan. Deploy me when it looks right.' });
+      if (!st.deployed) {
+        replies.push({ label: 'Deploy goobz/' + shown, cls: 'go', go: set({ deployed: true }) });
+        replies.push({ label: 'Change something', cls: '', go: set({ step: 0, tokens: [], amount: null, every: null }) });
+      } else {
+        msgs.push({ who: 'bot', text: 'Done. I’m live and waiting for funds.' });
+        replies.push({ label: 'Fund it', cls: 'go', go: function () {} }, { label: 'Open its page', cls: '', go: function () {} });
+      }
+    }
+    var amount = Number(String(st.amount || '$0').slice(1));
+    var monthly = '$' + (amount * Math.max(1, st.tokens.length) * (st.every === 'day' ? 30 : 4)).toLocaleString('en-US');
+    var lit = function (n) { return st.coach === n ? 'lit' : ''; };
+    return {
+      name: st.name, shown: shown, empty: !st.name,
+      type: function (e) { self.setState({ name: String(e.target.value).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+/, '').slice(0, 24) }); },
+      key: function (e) {
+        if (e.key === 'Tab' && !st.name) { e.preventDefault(); self.setState({ name: IDEAS[st.tabs % IDEAS.length], tabs: st.tabs + 1 }); }
+        if (e.key === 'Enter') self.setState({ chat: true, tg: false, coach: 0 });
+      },
+      prompt: set({ chat: true, tg: false, coach: 0, name: shown }),
+      telegram: set({ tg: true, chat: false, coach: 0, name: shown }),
+      closeChat: set({ chat: false }),
+      chatOpen: st.chat, tgOpened: st.tg,
+      c1: st.coach === 1, c2: st.coach === 2, c3: st.coach === 3,
+      litName: lit(1), litPrompt: lit(2), litTg: lit(3),
+      next: function () { self.setState({ coach: st.coach + 1 }); },
+      back: function () { self.setState({ coach: st.coach - 1 }); },
+      skip: set({ coach: 0 }), replay: set({ coach: 1, chat: false }),
+      status: st.deployed ? 'Live' : 'Setting up · step ' + (step === 0 ? 1 : step < 3 ? 2 : 3) + ' of 3',
+      messages: msgs, replies: replies,
+      placeholder: step === 0 ? 'Or paste a contract (0x…)' : step === 1 ? 'Or type an amount' : 'Type a reply',
+      showPlan: step >= 3, deployed: st.deployed,
+      amount: st.amount, every: st.every, tokensText: list, monthly: monthly
+    };
+  }
+}
+</script>
+</body>
+</html>
